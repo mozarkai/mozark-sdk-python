@@ -1,4 +1,3 @@
-
 class ApiFlow:
 
     def login_input(self, username, pwd):
