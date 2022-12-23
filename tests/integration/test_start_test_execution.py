@@ -3,6 +3,7 @@ import logging
 from app_testing.client import Client
 from app_testing.project import Project
 from app_testing.file import File
+from app_testing.schedule import Schedule
 
 from unittest import TestCase
 
@@ -25,3 +26,9 @@ class TestStartTestExecution(TestCase):
         android_application = "./5gmark.apk"
         file = File(client=client)
         file.upload_android_application(project_name=project_name, file_path=android_application)
+
+        # Schedule Time
+        schedule = Schedule(client=client)
+        schedule.makeSchedule()
+
+

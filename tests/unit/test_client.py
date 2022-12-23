@@ -3,7 +3,6 @@ import configparser
 from pathlib import Path
 from app_testing.client import Client
 
-
 class TestClient(TestCase):
     def test_config_read(self):
         config = configparser.ConfigParser()
