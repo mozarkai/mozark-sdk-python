@@ -25,6 +25,8 @@ class Schedule:
         pass
 
     def set_test_configuration(self, test_configuration = None):
+        pass
+
 
 
 
