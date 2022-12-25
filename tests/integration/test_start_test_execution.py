@@ -3,7 +3,7 @@ import logging
 from app_testing.client import Client
 from app_testing.project import Project
 from app_testing.file import File
-from app_testing.schedule import Schedule
+from app_testing.executetest import TestExecute
 from app_testing.device import Device
 from unittest import TestCase
 from datetime import tzinfo, timedelta, datetime
@@ -41,7 +41,7 @@ class TestStartTestExecution(TestCase):
         end_time = datetime(2022, 12, 25, 1, 11, 40, tzinfo=ZoneInfo('Asia/Kolkata'))
         interval = 10
         time_diff = ((end_time - start_time).total_seconds()) / 60
-        schedule = Schedule(client=client)
+        schedule = TestExecute(client=client)
         if type_exe == "NOW":
             time_schedule = {"startTime": now_time}
             res = schedule.make_schedule(list_device=list_device, app_name=android_application,
