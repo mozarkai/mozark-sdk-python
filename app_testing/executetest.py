@@ -8,6 +8,11 @@ class TestExecute:
     def __init__(self, client=None):
         self.config = client.get_config()
 
+    def execute_now(self, devices=None, schedule = None):
+        pass
+
+    def schedule(self, devices=None, schedule=None):
+        pass
     def make_schedule(self, list_device=None, app_name=None, test_app_name=None, time_schedule=None, type_exe=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
