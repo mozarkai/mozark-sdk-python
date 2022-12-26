@@ -15,8 +15,8 @@ class File:
         import hashlib
         md5_hash = ''
         with open(filepath, "rb") as f:
-            bytes = f.read()  # read file as bytes
-            readable_hash = hashlib.md5(bytes).hexdigest()
+            file_bytes = f.read()  # read file as bytes
+            readable_hash = hashlib.md5(file_bytes).hexdigest()
             md5_hash = readable_hash
         return md5_hash
 
@@ -71,41 +71,67 @@ class File:
         file_object.close()
         return status_code, status_message
 
+    def list_files(self, file_category=None, project_name=None, file_name=None):
+        # new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+        #                'Content-Type': 'application/json'}
+        new_params = {
+            "fileCategory": file_category,
+            "fileStatus": "processed",
+            "projectName": project_name,
+            "fileName": file_name
+        }
+        file_api_url = self.config.get("api_url") + "testexecute/files"
+        # Fetch list of files uploaded
+        response = requests.get(file_api_url,  params=new_params)
+        return response.status_code, response.text
+
+    def delete_file(self, file_id=None):
+        new_params = {
+            "fileId": file_id
+        }
+        file_api_url = self.config.get("api_url") + "testexecute/files"
+        # Fetch list of files uploaded
+        response = requests.delete(file_api_url, params=new_params)
+        return response.text
+
     def upload_android_application(self, project_name=None, file_path=None):
         file_category = "android-application"
         status_code, status_message = self.upload_native_package(self, project_name, file_path, file_category)
         return status_message
 
     def upload_android_native_test_application(self, project_name=None, file_path=None):
-        path_object = Path(file_path)
-        filename = path_object.name
-        data = {
-            "fileName": filename,
-            "fileCategory": "android-test-application",
-            "userName": self.config.get("username"),
-            "projectName": project_name
-        }
-
-        if self.calculate_md5 == True:
-            md5 = self.get_file_md5(file_path)
-            data["md5sum"] = md5
-        else:
-            print("no md5 sum")
-
-        file_object = open(file_path, 'rb')
-        files = {'file': file_object}
-        self.__upload(data, files)
-        file_object.close()
+        file_category = "android-test-application"
+        status_code, status_message = self.upload_native_package(self, project_name, file_path, file_category)
+        return status_message
 
     def upload_ios_application(self, project_name=None, file_path=None):
         file_category = "ios-application"
         # self.__upload(project_name, file_path, file_category)
-        pass
+        # pass
+        status_code, status_message = self.upload_native_package(project_name, file_path, file_category)
+        return status_message
 
     def upload_ios_native_test_application(self, project_name=None, file_path=None):
         file_category = "ios-test-application"
-        #self.__upload(project_name, file_path, file_category)
-        pass
+        status_code, status_message = self.upload_native_package(project_name, file_path, file_category)
+        return status_message
 
-    def list_files(self, search_filter=None):
-        pass
+    def list_android_application(self, project_name=None, file_name=None):
+        file_category = "android-application"
+        status_code, status_message = self.list_files(project_name, file_name)
+        return status_message
+
+    def list_android_native_test_application(self, project_name=None, file_name=None):
+        file_category = "android-test-application"
+        status_code, status_message = self.list_files(project_name, file_name)
+        return status_message
+
+    def list_ios_application(self, project_name=None, file_name=None):
+        file_category = "ios-application"
+        status_code, status_message = self.list_files(project_name, file_name)
+        return status_message
+
+    def list_ios_native_test_application(self, project_name=None, file_name=None):
+        file_category = "ios-test-application"
+        status_code, status_message = self.list_files(project_name, file_name)
+        return status_message
