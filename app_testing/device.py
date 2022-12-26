@@ -31,4 +31,12 @@ class Device:
     def add_device(self, project_name=None):
         pass
 
+    def get_devices(self):
+        new_params = {
+        }
+        device_api_url = self.config.get("api_url") + "testexecute/devices"
+        # Fetch list of devices
+        response = requests.get(device_api_url, params=new_params)
+        return response.status_code, response.text
+
 
