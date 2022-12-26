@@ -1,6 +1,9 @@
 import configparser
 from pathlib import Path
 
+from app_testing.file import File
+from app_testing.executetest import TestExecute
+
 import requests
 
 
@@ -125,7 +128,9 @@ class Client:
 
             "Failure: File with `{file_name}` already exists." - in case if file with checksum already exists
         """
-        pass
+        file = File()
+        status = file.upload_android_application(project_name=project_name, file_path=file_path)
+        return status
 
     def get_android_application_info(self, file_name=None):
         """ Returns android file information
@@ -594,19 +599,19 @@ class Client:
 
     def get_supported_test_configuration(self, platform=None):
         mobile_test_configuration = {
-                    "captureHAR": False,
-                    "captureCPUMetrics": False,
-                    "captureMemoryMetrics": False,
-                    "captureBatteryMetrics": False,
-                    "captureGraphicsMetrics": False,
-                    "captureDeviceScreenShots": False,
-                    "recordDeviceScreen": False,
-                    "captureDeviceNetworkPackets": False
-                }
+            "captureHAR": False,
+            "captureCPUMetrics": False,
+            "captureMemoryMetrics": False,
+            "captureBatteryMetrics": False,
+            "captureGraphicsMetrics": False,
+            "captureDeviceScreenShots": False,
+            "recordDeviceScreen": False,
+            "captureDeviceNetworkPackets": False
+        }
         living_room_test_configuration = {
-                    "captureDeviceScreenShots": False,
-                    "recordDeviceScreen": False
-                }
+            "captureDeviceScreenShots": False,
+            "recordDeviceScreen": False
+        }
         if platform == "android":
             config = mobile_test_configuration
         elif platform == "ios":
@@ -644,9 +649,63 @@ class Client:
                                 test_end_datetime=None,
                                 interval=None
                                 ):
-        pass
+        """
+
+        Args:
+            devices:
+            application_name:
+            test_application_name:
+            test_framework:
+            test_configuration:
+            test_parameters:
+            test_start_datetime:
+            test_end_datetime:
+            interval:
+
+        Returns:
+            response (dict): unique schedule ID created if successful, else Error along with error message
+
+            {
+                "message" = "Success",
+                "scheduleId" = ""
+            }
+
+        """
+        action = TestExecute()
+
+        status = action.schedule_test(device_list=devices,
+                                      test_configuration=test_configuration,
+                                      start_time=test_start_datetime,
+                                      end_time=test_end_datetime,
+                                      interval=interval,
+                                      max_duration=test_parameters["maxTestDuration"],
+                                      test_framework=test_framework,
+                                      project_name=test_parameters["projectName"],
+                                      application_url=application_name,
+                                      application_test_url=test_application_name
+                                      )
+        return status
 
     def get_test_schedule_info(self, schedule_id=None):
+        f"""
+        
+        Args:
+            schedule_id: 
+
+        Returns:
+            schedule_info (dict): 
+            
+            {
+        "scheduleId" : "schedule_id",
+                test_ids : [
+                    "test_id1",
+                    "test_id2",
+                    "test_id3"
+                ]
+                
+            }
+
+        """
         pass
 
     def cancel_test_schedule(self, schedule_id=None):
@@ -663,6 +722,3 @@ class Client:
         # Section = test_info, test_configuration, test_case_summary, test_cases, test_output_artifacts, events
         # KPIs,
         pass
-
-
-

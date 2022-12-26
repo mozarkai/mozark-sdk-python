@@ -11,6 +11,66 @@ from zoneinfo import ZoneInfo
 
 
 class TestStartTestExecution(TestCase):
+    def test_schedule_test(self):
+        client = Client()
+
+        client.login()
+
+        msg = client.create_project(project_name="Sample Project", project_description="Sample Project Description")
+
+        if msg != "Success":
+            print("Raise Error")
+
+        msg = client.upload_android_application(project_name="Sample Project", file_path="./5gmark.apk")
+
+        if msg != "Success":
+            print("Raise Error")
+
+        msg = client.upload_android_native_test_application(project_name="Sample Project", file_path="./5gmark.apk")
+
+        if msg != "Success":
+            print("Raise Error")
+
+        devices = ["abc", "xyz"]
+
+        test_configuration = {
+            "captureDeviceScreenShots": True,
+            "recordDeviceScreen": True,
+            "captureAutomationLogs": True,
+            "captureSystemDebugLogs": True
+        }
+        test_parameters = {
+            "maxTestDuration": 5,
+            # "testFramework": "android-uiautomator",
+            # "projectName": "5Gmark_Android", client.get_project_info()
+            # "testRunnerName": "androidx.test.runner.AndroidJUnitRunner", - client.get_file_info()
+            # "testCodePackageName": "com.example.fivegmark.test", - client.get_file_info()
+            # "packageName": "com.example.fivegmark" - client.get_file_info()
+        }
+        start_datetime = datetime()
+        end_datetime = datetime()
+        msg = client.schedule_test_execution(devices=devices,
+                                             application_name="5gmark.apk",
+                                             test_application_name="5gmark.apk",
+                                             test_framework="android-uiautomator",
+                                             test_configuration=test_configuration,
+                                             test_parameters=test_parameters,
+                                             start_datetime=start_datetime,
+                                             end_datetime=end_datetime,
+                                             interval=30
+                                             )
+
+        if msg["message"] != "Success":
+            print("Raise Error")
+
+        schedule_id = msg["scheduleId"]
+
+        test_ids = client.get_test_schedule_info(schedule_id)
+
+        for test_id in test_ids:
+            msg = client.get_test_execution_info_full(test_id=test_id)
+
+
 
     def test_start_test_execution_now(self):
         logging.basicConfig(filename='mozark-app-testing.log', level=logging.INFO)
