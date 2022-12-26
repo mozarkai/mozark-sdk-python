@@ -607,13 +607,12 @@ class Client:
                     "captureDeviceScreenShots": False,
                     "recordDeviceScreen": False
                 }
-        match platform:
-            case "android":
-                config = mobile_test_configuration
-            case "ios":
-                config = mobile_test_configuration
-            case "living-room":
-                config = living_room_test_configuration
+        if platform == "android":
+            config = mobile_test_configuration
+        elif platform == "ios":
+            config = mobile_test_configuration
+        elif platform == "living-room":
+            config = living_room_test_configuration
         pass
 
     def get_mandatory_test_parameters(self, platform=None):
