@@ -49,25 +49,13 @@ class TestExecute:
         response = requests.post(select_device_url, json=data, headers=new_headers)
         return response
 
-    def execute_test(self, device_list=None, schedule_configuration={}, test_params={},
+    def execute_test(self, device_list=None, test_configuration={}, schedule_configuration={}, test_params={},
                      execution_type=None, application_url=None, application_test_url=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         data = {
             "deviceId": device_list,
-            "testConfiguration": {
-                "captureHAR": False,
-                "captureCPUMetrics": False,
-                "captureMemoryMetrics": False,
-                "captureBatteryMetrics": False,
-                "captureGraphicsMetrics": False,
-                "captureDeviceScreenShots": True,
-                "recordDeviceScreen": False,
-                "captureDeviceNetworkPackets": False,
-                "captureAutomationLogs": True,
-                "captureSystemDebugLogs": True,
-                "captureLiveLogs": True
-            },
+            "testConfiguration": test_configuration,
             "scheduleConfiguration": schedule_configuration,
             "testAction": {
                 "pre": {},
@@ -88,7 +76,7 @@ class TestExecute:
         new_params = {
         }
         test_api_url = self.config.get("api_url") + "testexecute/schedules"
-        # Fetch list of files uploaded
+        # Fetch list of schedules
         response = requests.get(test_api_url,  params=new_params)
         return response.status_code, response.text
 
@@ -97,7 +85,7 @@ class TestExecute:
             "scheduleId": schedule_id
         }
         test_api_url = self.config.get("api_url") + "testexecute/schedules"
-        # Fetch list of files uploaded
+        # Delete schedule
         response = requests.delete(test_api_url, params=new_params)
         return response.text
 
@@ -108,11 +96,11 @@ class TestExecute:
             "testId": test_id
         }
         test_api_url = self.config.get("api_url") + "testexecute/tests"
-        # Fetch list of files uploaded
-        response = requests.delete(test_api_url, json=data, headers=new_headers)
+        # abort test
+        response = requests.put(test_api_url, json=data, headers=new_headers)
         return response.text
 
-    def schedule_test(self, device_list=None, start_time=None, end_time=None, interval=0, max_duration=0,
+    def schedule_test(self, device_list=None, test_configuration={}, start_time=None, end_time=None, interval=0, max_duration=0,
                       test_framework=None, project_name=None, application_url=None, application_test_url=None):
         schedule_configuration = {
             "startTime": start_time,
@@ -125,12 +113,12 @@ class TestExecute:
             "projectName": project_name
         }
         execution_type = "SCHEDULE"
-        status_code, status_message = self.execute_test(device_list, schedule_configuration,
+        status_code, status_message = self.execute_test(device_list, test_configuration, schedule_configuration,
                                                         test_parameters, execution_type, project_name,
                                                         application_url, application_test_url)
         return status_message
 
-    def test_now(self, device_list=None, max_duration=0, test_framework=None, project_name=None,
+    def test_now(self, device_list=None, test_configuration={}, max_duration=0, test_framework=None, project_name=None,
                  application_url=None, application_test_url=None):
         schedule_configuration = {}
         test_parameters = {
@@ -139,7 +127,7 @@ class TestExecute:
             "projectName": project_name
         }
         execution_type = "NOW"
-        status_code, status_message = self.execute_test(device_list, schedule_configuration,
+        status_code, status_message = self.execute_test(device_list, test_configuration, schedule_configuration,
                                                         test_parameters, execution_type, project_name,
                                                         application_url, application_test_url)
         return status_message
