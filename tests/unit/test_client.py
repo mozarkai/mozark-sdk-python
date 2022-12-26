@@ -17,3 +17,27 @@ class TestClient(TestCase):
         client = Client()
         api_url, username, password = client.get_config()
         print(api_url, username, password)
+
+    def test_doc(self):
+        client = Client()
+        help(client.get_project_list)
+
+        projects = [
+            {
+                "projectName": "abc",
+                "projectDescription" : "abc desc",
+                "projectUUID": "aabbcc"
+            },
+            {
+                "projectName": "xyz",
+                "projectDescription": "xyz desc",
+                "projectUUID": "aabbcd"
+            }
+        ]
+
+        print(type(projects))
+
+    def test_test_configuration(self):
+        client = Client()
+        config = client.get_supported_test_configuration(platform="living-room")
+        print(config)
