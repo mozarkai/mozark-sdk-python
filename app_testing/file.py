@@ -32,10 +32,10 @@ class File:
             print("Leg 1 - response: " + response.text)
             if response.json()['status'] == 409:
                 print("Leg 1 - File already exists")
-                return
+                return response.status_code, "File already exists"
         else:
             print("Error: Leg 1" + response.text)
-            return
+            return response.status_code, response.text
 
         s3_file_upload_url = response.json()['data']['uploadUrl']
 
@@ -44,13 +44,37 @@ class File:
 
         if response.status_code == 200:
             print("File uploaded successfully: " + s3_file_upload_url)
+            return response.status_code, "File uploaded successfully: " + s3_file_upload_url
         else:
             print("Error uploading file")
+            return response.status_code, "Error uploading file"
+
+    def upload_native_package(self, project_name=None, file_path=None, file_category=None):
+        path_object = Path(file_path)
+        filename = path_object.name
+        data = {
+            "fileName": filename,
+            "fileCategory": file_category,
+            "userName": self.config.get("username"),
+            "projectName": project_name
+        }
+
+        if self.calculate_md5:
+            md5 = self.get_file_md5(file_path)
+            data["md5sum"] = md5
+        else:
+            print("no md5 sum")
+
+        file_object = open(file_path, 'rb')
+        files = {'file': file_object}
+        status_code, status_message = self.__upload(data, files)
+        file_object.close()
+        return status_code, status_message
 
     def upload_android_application(self, project_name=None, file_path=None):
         file_category = "android-application"
-        # self.__upload(project_name, file_path, file_category)
-        pass
+        status_code, status_message = self.upload_native_package(self, project_name, file_path, file_category)
+        return status_message
 
     def upload_android_native_test_application(self, project_name=None, file_path=None):
         path_object = Path(file_path)
