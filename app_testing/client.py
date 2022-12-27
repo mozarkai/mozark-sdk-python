@@ -6,6 +6,8 @@ from app_testing.executetest import TestExecute
 
 import requests
 
+from app_testing.project import Project
+
 
 class Client:
     config = None
@@ -50,6 +52,7 @@ class Client:
         pass
 
     # Project
+
     def create_project(self, project_name=None, project_description=None):
         """Create a new project
         Args:
@@ -61,7 +64,10 @@ class Client:
 
             "Failure: Project with `{project_name}` already exists." - in case if project with the given name already exists
         """
-        pass
+        project = Project()
+        status_message = project.create_project(project, project_name, project_description)
+        return status_message
+        # pass
 
     def get_project_info(self, project_name=None):
         """ Returns project information -
@@ -76,7 +82,10 @@ class Client:
                 "projectUUID": ""
             }
         """
-        pass
+        project = Project()
+        status_message = project.get_projects(project, project_name)
+        return status_message
+        # pass
 
     def rename_project(self, project_name_old=None, project_name_new=None):
         pass
@@ -112,7 +121,10 @@ class Client:
             ]
 
         """
-        pass
+        project = Project()
+        status_message = project.get_projects(project)
+        return status_message
+        # pass
 
     # Android Application
 
@@ -150,15 +162,21 @@ class Client:
                 "packageName": ""
             }
         """
-        pass
+        # pass
+        file = File()
+        app_list = file.list_android_application(file, file_name=file_name)
+        return app_list
 
     def rename_android_application(self, file_name_old=None, file_name_new=None):
         pass
 
-    def delete_android_application(self, file_name=None):
-        pass
+    def delete_android_application(self, file_id=None):
+        # pass
+        file = File()
+        status = file.delete_file(file, file_id=file_id)
+        return status
 
-    def get_android_application_list(self):
+    def get_android_application_list(self, project_name=None):
         """ Returns list of all android application file information
 
         Returns:
@@ -183,7 +201,10 @@ class Client:
                 }
             ]
         """
-        pass
+        # pass
+        file = File()
+        app_list = file.list_android_application(file, project_name=project_name)
+        return app_list
 
     # iOS Application
     def upload_ios_application(self, project_name=None, file_path=None):
