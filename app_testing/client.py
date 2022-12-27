@@ -246,15 +246,21 @@ class Client:
                 "packageName": ""
             }
         """
-        pass
+        # pass
+        file = File()
+        app_list = file.list_ios_application(file, file_name=file_name)
+        return app_list
 
     def rename_ios_application(self, file_name_old=None, file_name_new=None):
         pass
 
-    def delete_ios_application(self, file_name=None):
-        pass
+    def delete_ios_application(self, file_id=None):
+        # pass
+        file = File()
+        status = file.delete_file(file, file_id=file_id)
+        return status
 
-    def get_ios_application_list(self):
+    def get_ios_application_list(self, project_name=None):
         """ Returns list of all ios application file information
 
         Returns:
@@ -279,7 +285,10 @@ class Client:
                 }
             ]
         """
-        pass
+        # pass
+        file = File()
+        app_list = file.list_ios_application(file, project_name=project_name)
+        return app_list
 
     # Android Native Test Application
 
@@ -319,15 +328,18 @@ class Client:
                 "testRunnerName": ""
             }
         """
-        pass
+        # pass
 
     def rename_android_native_test_application(self, file_name_old=None, file_name_new=None):
         pass
 
-    def delete_android_native_test_application(self, file_name=None):
-        pass
+    def delete_android_native_test_application(self, file_id=None):
+        # pass
+        file = File()
+        status = file.delete_file(file, file_id=file_id)
+        return status
 
-    def get_android_native_test_application_list(self):
+    def get_android_native_test_application_list(self, project_name=None, file_name=None):
         """ Returns list of all android native test application file information
 
         Returns:
@@ -354,7 +366,10 @@ class Client:
                 }
             ]
         """
-        pass
+        # pass
+        file = File()
+        app_list = file.list_android_native_test_application(file, project_name=project_name, file_name=file_name)
+        return app_list
 
     # iOS Application
     def upload_ios_native_test_application(self, project_name=None, file_path=None):
@@ -374,10 +389,11 @@ class Client:
         status = file.upload_ios_native_test_application(project_name=project_name, file_path=file_path)
         return status
 
-    def get_ios_native_test_application_info(self, file_name=None):
+    def get_ios_native_test_application_info(self, project_name=None, file_name=None):
         """ Returns ios native test application file information
 
         Args:
+            project_name (str): project names
             file_name (str): unique file name
 
         Returns:
@@ -392,15 +408,21 @@ class Client:
                 "XCTestRunFileUrl": ""
             }
         """
-        pass
+        # pass
+        file = File()
+        status = file.list_ios_native_test_application(project_name=project_name, file_name=file_name)
+        return status
 
     def rename_ios_native_test_application(self, file_name_old=None, file_name_new=None):
         pass
 
-    def delete_ios_native_test_application(self, file_name=None):
-        pass
+    def delete_ios_native_test_application(self, file_id=None):
+        # pass
+        file = File()
+        status = file.delete_file(file, file_id=file_id)
+        return status
 
-    def get_ios_native_test_application_list(self):
+    def get_ios_native_test_application_list(self, project_name=None):
         """ Returns list of all ios native test application file information
 
         Returns:
@@ -425,8 +447,10 @@ class Client:
                 }
             ]
         """
-        pass
-
+        # pass
+        file = File()
+        status = file.list_ios_native_test_application(project_name=project_name)
+        return status
     # Device
 
     def get_device_info(self, device_serial=None):
@@ -535,6 +559,8 @@ class Client:
         # pass
         device = Device()
         device_list = device.get_devices(device, "ios")
+        return device_list
+
     def get_living_room_device_list(self):
         """ Returns device information of all living room devices
 
@@ -570,7 +596,10 @@ class Client:
                 }
             ]
         """
-        pass
+        # pass
+        device = Device()
+        device_list = device.get_lr_devices()
+        return device_list
 
     def create_tray(self, tray_name=None, tray_category=None):
         """ Create tray for a given device platform category
