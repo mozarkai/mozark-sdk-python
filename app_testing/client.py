@@ -4,6 +4,7 @@ from pathlib import Path
 from app_testing.file import File
 from app_testing.executetest import TestExecute
 from app_testing.device import Device
+from app_testing.testanalytics import TestAnalytics
 
 import requests
 
@@ -25,6 +26,7 @@ class Client:
         password = config.get("default", "MOZARK_APP_TESTING_PASSWORD")
         client_id = config.get("default", "MOZARK_APP_TESTING_CLIENTID")
         config = {"username": username, "password": password, "api_url": api_url, "client_id": client_id}
+        print(str(config))
         self.config = config
 
     def get_config(self):
@@ -35,7 +37,7 @@ class Client:
                        'Content-Type': 'application/x-amz-json-1.1'}
 
         login_url = "https://cognito-idp.ap-south-1.amazonaws.com/"
-
+        print(login_url)
         data = {
             "AuthParameters": {
                 "USERNAME": self.config.get("username"),
@@ -44,10 +46,11 @@ class Client:
             "AuthFlow": "USER_PASSWORD_AUTH",
             "ClientId": self.config.get("client_id")
         }
-
+        print(str(data))
         resp = requests.post(login_url, json=data, headers=new_headers)
         api_access_token = resp.json()['AuthenticationResult']['IdToken']
         self.config["api_access_token"] = api_access_token
+        print(str(self.config))
 
     def logout(self):
         pass
@@ -756,10 +759,61 @@ class Client:
         return schedule_list
 
     # Test Analytics
+
+    def get_test_list(self):
+        # pass
+        analytics = TestAnalytics(client=self)
+        test_list = analytics.get_test_list(analytics)
+        return test_list
+
     def get_test_execution_info_full(self, test_id=None):
-        pass
+        analytics = TestAnalytics(client=self)
+        test_info = analytics.get_test_information(analytics, test_id)
+        test_cases = analytics.get_test_testcases(analytics, test_id)
+        test_events = analytics.get_test_events(analytics, test_id)
+        test_kpis = analytics.get_test_kpis(analytics, test_id)
+        test_http_apis = analytics.get_test_apis(analytics, test_id)
+        test_screenshots = analytics.get_test_screenshot_list(analytics, test_id)
+        test_logs = analytics.get_test_output_file_list(analytics, test_id)
+
+        return {
+            "test_info": test_info,
+            "test_cases": test_cases,
+            "events": test_events,
+            "kpis": test_kpis,
+            "http_api": test_http_apis,
+            "screenshots": test_screenshots,
+            "logs": test_logs
+        }
 
     def get_test_execution_info_by_section(self, test_id=None, section=None):
         # Section = test_info, test_configuration, test_case_summary, test_cases, test_output_artifacts, events
         # KPIs,
-        pass
+        # pass
+        analytics = TestAnalytics(client=self)
+        response = None
+        if section == "test_info":
+            response = analytics.get_test_information(analytics, test_id)
+        elif section == "test_cases":
+            response = analytics.get_test_testcases(analytics, test_id)
+        elif section == "events":
+            response = analytics.get_test_events(analytics, test_id)
+        elif section == "kpis":
+            response = analytics.get_test_kpis(analytics, test_id)
+        elif section == "http_api":
+            response = analytics.get_test_apis(analytics, test_id)
+        elif section == "screenshots":
+            response = analytics.get_test_screenshot_list(analytics, test_id)
+        elif section == "logs":
+            response = analytics.get_test_output_file_list(analytics, test_id)
+        return response
+
+    def download_test_screenshot(self, test_id=None, image_name=None, file_name=None):
+        analytics = TestAnalytics(client=self)
+        response = analytics.download_test_screenshot(test_id=test_id, file_name=image_name, output_file=file_name)
+        return response
+
+    def download_test_log(self, test_id=None, log_name=None, file_name=None):
+        analytics = TestAnalytics(client=self)
+        response = analytics.download_test_output_file(test_id=test_id, file_name=log_name, output_file=file_name)
+        return response
