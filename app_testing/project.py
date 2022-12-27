@@ -20,12 +20,15 @@ class Project:
         # pass
 
     def get_projects(self, project_name=None, project_description=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
         new_params = {
-            "name": project_name
+            "name": project_name,
+            "description": project_description
         }
         project_api_url = self.config.get("api_url") + "testexecute/projects"
         # Fetch list of projects
-        response = requests.get(project_api_url,  params=new_params)
+        response = requests.get(project_api_url,  params=new_params, headers=new_headers)
         return response.status_code, response.text
         # pass
 

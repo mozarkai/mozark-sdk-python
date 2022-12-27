@@ -3,6 +3,7 @@ from pathlib import Path
 
 from app_testing.file import File
 from app_testing.executetest import TestExecute
+from app_testing.device import Device
 
 import requests
 
@@ -219,7 +220,10 @@ class Client:
 
             "Failure: File with `{file_name}` already exists." - in case if file with checksum already exists
         """
-        pass
+        # pass
+        file = File()
+        status = file.upload_ios_application(project_name=project_name, file_path=file_path)
+        return status
 
     def get_ios_application_info(self, file_name=None):
         """ Returns ios application file information
@@ -288,7 +292,10 @@ class Client:
 
             "Failure: File with `{file_name}` already exists." - in case if file with checksum already exists
         """
-        pass
+        # pass
+        file = File()
+        status = file.upload_android_native_test_application(project_name=project_name, file_path=file_path)
+        return status
 
     def get_android_native_test_application_info(self, file_name=None):
         """ Returns android native test application file information
@@ -359,7 +366,10 @@ class Client:
 
             "Failure: File with `{file_name}` already exists." - in case if file with checksum already exists
         """
-        pass
+        # pass
+        file = File()
+        status = file.upload_ios_native_test_application(project_name=project_name, file_path=file_path)
+        return status
 
     def get_ios_native_test_application_info(self, file_name=None):
         """ Returns ios native test application file information
@@ -479,7 +489,10 @@ class Client:
                 }
             ]
         """
-        pass
+        # pass
+        device = Device()
+        device_list = device.get_devices(device, "android")
+        return device_list
 
     def get_ios_device_list(self):
         """ Returns device information of all iOS devices
@@ -516,8 +529,9 @@ class Client:
                 }
             ]
         """
-        pass
-
+        # pass
+        device = Device()
+        device_list = device.get_devices(device, "ios")
     def get_living_room_device_list(self):
         """ Returns device information of all living room devices
 
@@ -730,10 +744,16 @@ class Client:
         pass
 
     def cancel_test_schedule(self, schedule_id=None):
-        pass
+        # pass
+        action = TestExecute()
+        status = action.delete_schedule(action, schedule_id=schedule_id)
+        return status
 
     def get_test_schedule_list(self):
-        pass
+        # pass
+        action = TestExecute()
+        schedule_list = action.list_schedules(action)
+        return schedule_list
 
     # Test Analytics
     def get_test_execution_info_full(self, test_id=None):

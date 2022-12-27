@@ -72,8 +72,8 @@ class File:
         return status_code, status_message
 
     def list_files(self, file_category=None, project_name=None, file_name=None):
-        # new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
-        #                'Content-Type': 'application/json'}
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
         new_params = {
             "fileCategory": file_category,
             "fileStatus": "processed",
@@ -82,16 +82,18 @@ class File:
         }
         file_api_url = self.config.get("api_url") + "testexecute/files"
         # Fetch list of files uploaded
-        response = requests.get(file_api_url,  params=new_params)
+        response = requests.get(file_api_url,  params=new_params, headers=new_headers)
         return response.status_code, response.text
 
     def delete_file(self, file_id=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
         new_params = {
             "fileId": file_id
         }
         file_api_url = self.config.get("api_url") + "testexecute/files"
         # Fetch list of files uploaded
-        response = requests.delete(file_api_url, params=new_params)
+        response = requests.delete(file_api_url, params=new_params, headers=new_headers)
         return response.text
 
     def upload_android_application(self, project_name=None, file_path=None):

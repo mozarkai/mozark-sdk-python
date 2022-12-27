@@ -31,12 +31,26 @@ class Device:
     def add_device(self, project_name=None):
         pass
 
-    def get_devices(self):
+    def get_devices(self, platform):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
         new_params = {
+            "platform": platform
         }
         device_api_url = self.config.get("api_url") + "testexecute/devices"
         # Fetch list of devices
-        response = requests.get(device_api_url, params=new_params)
+        response = requests.get(device_api_url, params=new_params, headers=new_headers)
         return response.status_code, response.text
+
+    def get_lr_devices(self):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+        new_params = {
+        }
+        device_api_url = self.config.get("api_url") + "tv/devices"
+        # Fetch list of devices
+        response = requests.get(device_api_url, params=new_params, headers=new_headers)
+        return response.status_code, response.text
+
 
 

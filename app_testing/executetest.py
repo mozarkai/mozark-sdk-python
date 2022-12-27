@@ -70,23 +70,25 @@ class TestExecute:
         response = requests.post(test_api_url, json=data, headers=new_headers)
         return response.status_code, response.text
 
-    def list_schedules(self, file_category=None, project_name=None, file_name=None):
-        # new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
-        #                'Content-Type': 'application/json'}
+    def list_schedules(self):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
         new_params = {
         }
         test_api_url = self.config.get("api_url") + "testexecute/schedules"
         # Fetch list of schedules
-        response = requests.get(test_api_url,  params=new_params)
+        response = requests.get(test_api_url,  params=new_params, headers=new_headers)
         return response.status_code, response.text
 
     def delete_schedule(self, schedule_id=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
         new_params = {
             "scheduleId": schedule_id
         }
         test_api_url = self.config.get("api_url") + "testexecute/schedules"
         # Delete schedule
-        response = requests.delete(test_api_url, params=new_params)
+        response = requests.delete(test_api_url, params=new_params, headers=new_headers)
         return response.text
 
     def abort_test(self, test_id=None):
