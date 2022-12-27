@@ -91,19 +91,19 @@ class Client:
         return status_message
         # pass
 
-    def rename_project(self, project_name_old=None, project_name_new=None):
-        pass
+    # def rename_project(self, project_name_old=None, project_name_new=None):
+    #     pass
 
-    def delete_project(self, project_name=None):
-        """ Delete project with given project name
-
-        Args:
-            project_name (str): project name
-
-        Returns:
-            message (str): 'Success' if successful, 'Failure' along with failure reason
-        """
-        pass
+    # def delete_project(self, project_name=None):
+    #     """ Delete project with given project name
+    #
+    #     Args:
+    #         project_name (str): project name
+    #
+    #     Returns:
+    #         message (str): 'Success' if successful, 'Failure' along with failure reason
+    #     """
+    #     pass
 
     def get_project_list(self):
         """ Returns list of all projects
@@ -171,8 +171,8 @@ class Client:
         app_list = file.list_android_application(file, file_name=file_name)
         return app_list
 
-    def rename_android_application(self, file_name_old=None, file_name_new=None):
-        pass
+    # def rename_android_application(self, file_name_old=None, file_name_new=None):
+    #     pass
 
     def delete_android_application(self, file_id=None):
         # pass
@@ -251,8 +251,8 @@ class Client:
         app_list = file.list_ios_application(file, file_name=file_name)
         return app_list
 
-    def rename_ios_application(self, file_name_old=None, file_name_new=None):
-        pass
+    # def rename_ios_application(self, file_name_old=None, file_name_new=None):
+    #     pass
 
     def delete_ios_application(self, file_id=None):
         # pass
@@ -329,9 +329,12 @@ class Client:
             }
         """
         # pass
+        file = File()
+        app_list = file.list_android_native_test_application(file, file_name=file_name)
+        return app_list
 
-    def rename_android_native_test_application(self, file_name_old=None, file_name_new=None):
-        pass
+    # def rename_android_native_test_application(self, file_name_old=None, file_name_new=None):
+    #     pass
 
     def delete_android_native_test_application(self, file_id=None):
         # pass
@@ -389,7 +392,7 @@ class Client:
         status = file.upload_ios_native_test_application(project_name=project_name, file_path=file_path)
         return status
 
-    def get_ios_native_test_application_info(self, project_name=None, file_name=None):
+    def get_ios_native_test_application_info(self, file_name=None):
         """ Returns ios native test application file information
 
         Args:
@@ -410,11 +413,11 @@ class Client:
         """
         # pass
         file = File()
-        status = file.list_ios_native_test_application(project_name=project_name, file_name=file_name)
+        status = file.list_ios_native_test_application(file_name=file_name)
         return status
 
-    def rename_ios_native_test_application(self, file_name_old=None, file_name_new=None):
-        pass
+    # def rename_ios_native_test_application(self, file_name_old=None, file_name_new=None):
+    #     pass
 
     def delete_ios_native_test_application(self, file_id=None):
         # pass
@@ -451,6 +454,7 @@ class Client:
         file = File()
         status = file.list_ios_native_test_application(project_name=project_name)
         return status
+
     # Device
 
     def get_device_info(self, device_serial=None):
@@ -478,8 +482,8 @@ class Client:
         """
         pass
 
-    def get_device_busy_slots(self, devices=None):
-        pass
+    # def get_device_busy_slots(self, devices=None):
+    #     pass
 
     def get_android_device_list(self):
         """ Returns device information of all android devices
@@ -694,21 +698,25 @@ class Client:
 
     def start_test_execution(self,
                              devices=None,
-                             application_name=None,
-                             test_application_name=None,
-                             test_framework=None,
+                             application_url=None,
+                             test_application_url=None,
                              test_configuration=None,
                              test_parameters=None
                              ):
-        pass
+        # pass
+        action = TestExecute()
+        status = action.test_now(device_list=devices, application_url=application_url,
+                                 application_test_url=test_application_url,
+                                 test_configuration=test_configuration, test_parameters=test_parameters)
+        return status
 
     def abort_test_execution(self, test_id=None):
         pass
 
     def schedule_test_execution(self,
                                 devices=None,
-                                application_name=None,
-                                test_application_name=None,
+                                application_url=None,
+                                test_application_url=None,
                                 test_framework=None,
                                 test_configuration=None,
                                 test_parameters=None,
@@ -720,8 +728,8 @@ class Client:
 
         Args:
             devices:
-            application_name:
-            test_application_name:
+            application_url:
+            test_application_url:
             test_framework:
             test_configuration:
             test_parameters:
@@ -738,19 +746,23 @@ class Client:
             }
 
         """
+        # action = TestExecute()
+        #
+        # status = action.schedule_test(device_list=devices,
+        #                               test_configuration=test_configuration,
+        #                               start_time=test_start_datetime,
+        #                               end_time=test_end_datetime,
+        #                               interval=interval,
+        #                               max_duration=test_parameters["maxTestDuration"],
+        #                               test_framework=test_framework,
+        #                               project_name=test_parameters["projectName"],
+        #                               application_url=application_url,
+        #                               application_test_url=test_application_url
+        #                               )
         action = TestExecute()
-
-        status = action.schedule_test(device_list=devices,
-                                      test_configuration=test_configuration,
-                                      start_time=test_start_datetime,
-                                      end_time=test_end_datetime,
-                                      interval=interval,
-                                      max_duration=test_parameters["maxTestDuration"],
-                                      test_framework=test_framework,
-                                      project_name=test_parameters["projectName"],
-                                      application_url=application_name,
-                                      application_test_url=test_application_name
-                                      )
+        status = action.schedule_test(device_list=devices, application_url=application_url,
+                                      application_test_url=test_application_url,
+                                      test_configuration=test_configuration, test_parameters=test_parameters)
         return status
 
     def get_test_schedule_info(self, schedule_id=None):

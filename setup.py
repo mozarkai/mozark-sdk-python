@@ -9,7 +9,7 @@ setup(
     author='Mozark',
     author_email='mozark-aws-staging@mozark.ai',
     url='https://mozark.ai',
-    download_url='https://github.com/user/reponame/archive/v_01.tar.gz',  # I explain this later on
+    # download_url='https://github.com/user/reponame/archive/v_01.tar.gz',  # I explain this later on
     keywords=['MOZARK', 'AUTOMATION', 'EXPERIENCE'],
     install_requires=[
         'configparser'

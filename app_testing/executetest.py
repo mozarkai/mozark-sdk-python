@@ -102,34 +102,38 @@ class TestExecute:
         response = requests.put(test_api_url, json=data, headers=new_headers)
         return response.text
 
-    def schedule_test(self, device_list=None, test_configuration={}, start_time=None, end_time=None, interval=0, max_duration=0,
-                      test_framework=None, project_name=None, application_url=None, application_test_url=None):
-        schedule_configuration = {
-            "startTime": start_time,
-            "endTime": end_time,
-            "interval": interval
-        }
-        test_parameters = {
-            "maxTestDuration": max_duration,
-            "testFramework": test_framework,
-            "projectName": project_name
-        }
+    def schedule_test(self, device_list=None, schedule_configuration={}, test_parameters={},
+                      test_configuration={}, application_url=None, application_test_url=None):
+        # schedule_configuration = {
+        #     "startTime": start_time,
+        #     "endTime": end_time,
+        #     "interval": interval
+        # }
+        # test_parameters = {
+        #     "maxTestDuration": max_duration,
+        #     "testFramework": test_framework,
+        #     "projectName": project_name
+        # }
         execution_type = "SCHEDULE"
-        status_code, status_message = self.execute_test(device_list, test_configuration, schedule_configuration,
-                                                        test_parameters, execution_type, project_name,
-                                                        application_url, application_test_url)
+        status_code, status_message = self.execute_test(device_list=device_list, test_configuration=test_configuration,
+                                                        schedule_configuration=schedule_configuration,
+                                                        test_parameters=test_parameters, execution_type=execution_type,
+                                                        application_url=application_url,
+                                                        application_test_url=application_test_url)
         return status_message
 
-    def test_now(self, device_list=None, test_configuration={}, max_duration=0, test_framework=None, project_name=None,
+    def test_now(self, device_list=None, test_configuration={}, test_parameters={},
                  application_url=None, application_test_url=None):
         schedule_configuration = {}
-        test_parameters = {
-            "maxTestDuration": max_duration,
-            "testFramework": test_framework,
-            "projectName": project_name
-        }
+        # test_parameters = {
+        #     "maxTestDuration": max_duration,
+        #     "testFramework": test_framework,
+        #     "projectName": project_name
+        # }
         execution_type = "NOW"
-        status_code, status_message = self.execute_test(device_list, test_configuration, schedule_configuration,
-                                                        test_parameters, execution_type, project_name,
-                                                        application_url, application_test_url)
+        status_code, status_message = self.execute_test(device_list=device_list, test_configuration=test_configuration,
+                                                        schedule_configuration=schedule_configuration,
+                                                        test_parameters=test_parameters, execution_type=execution_type,
+                                                        application_url=application_url,
+                                                        application_test_url=application_test_url)
         return status_message
