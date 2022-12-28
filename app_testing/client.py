@@ -9,6 +9,7 @@ from app_testing.testanalytics import TestAnalytics
 import requests
 
 from app_testing.project import Project
+from app_testing.tray import Tray
 
 
 class Client:
@@ -521,7 +522,7 @@ class Client:
             ]
         """
         # pass
-        device = Device()
+        device = Device(client=self)
         device_list = device.get_devices(device, "android")
         return device_list
 
@@ -561,7 +562,7 @@ class Client:
             ]
         """
         # pass
-        device = Device()
+        device = Device(client=self)
         device_list = device.get_devices(device, "ios")
         return device_list
 
@@ -601,34 +602,47 @@ class Client:
             ]
         """
         # pass
-        device = Device()
+        device = Device(client=self)
         device_list = device.get_lr_devices()
         return device_list
 
-    def create_tray(self, tray_name=None, tray_category=None):
+    def create_tray(self, tray_name=None, platform=None, device_list=None):
         """ Create tray for a given device platform category
 
         Args:
             tray_name (str): Unique tray name
-            tray_category (str): device platform category: android, ios, living-room
+            device_list (str): device list
+            platform(str): type of devices
 
         Returns:
             message (str): 'Success' if tray is created successfully, 'Failure' along with failure reason
 
             "Failure: Tray with `{tray_name}` already exists" - in case if a tray with a given name already exists
         """
-        pass
+        # pass
+        tray = Tray(client=self)
+        status = tray.create_tray(name=tray_name, platform=platform, device_list=device_list)
+        return status
 
-    def get_tray_info(self, tray_name=None):
-        pass
+    def get_tray_list(self):
+        # pass
+        tray = Tray(client=self)
+        status = tray.list_tray()
+        return status
 
-    def rename_tray(self, tray_name_old=None, tray_name_new=None):
-        pass
+    def update_tray_devices(self, tray_id=None, device_list=None):
+        # pass
+        tray = Tray(client=self)
+        status = tray.update_tray(tray_id=tray_id, device_list=device_list)
+        return status
 
-    def delete_tray(self, tray_name=None):
-        pass
+    def delete_tray(self, tray_id=None):
+        # pass
+        tray = Tray(client=self)
+        status = tray.delete_tray(tray_id=tray_id)
+        return status
 
-    def get_device_list_by_tray(self, tray_name=None):
+    def get_device_list_by_tray(self, tray_id=None):
         """ Returns device information of all devices added as part of a given tray
 
         Returns:
@@ -664,7 +678,12 @@ class Client:
             ]
         """
 
-        pass
+        # pass
+        tray = Tray(client=self)
+        status = tray.get_tray_info(tray_id=tray_id)
+        return status
+
+
 
     # Test Configuration & Test Parameters
 

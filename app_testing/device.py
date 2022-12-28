@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import requests
@@ -9,7 +10,7 @@ class Device:
     def __init__(self, client=None):
         self.config = client.get_config()
 
-    # def get_device(self):
+    # def get_device(self, client=None):
     #     get_device_url = "https://development-api.mozark.ai/testexecute/devices?deviceParameters.controllerId=Staging NUC"
     #     new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
     #                    'Content-Type': 'application/json'}
@@ -28,10 +29,10 @@ class Device:
     #
     #         return DeviceId
 
-    def add_device(self, project_name=None):
+    def add_device(self, client=None, project_name=None):
         pass
 
-    def get_devices(self, platform):
+    def get_devices(self, client=None, platform=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         new_params = {
@@ -40,9 +41,15 @@ class Device:
         device_api_url = self.config.get("api_url") + "testexecute/devices"
         # Fetch list of devices
         response = requests.get(device_api_url, params=new_params, headers=new_headers)
-        return response.status_code, response.text
+        if response.status_code == 200:
+            my_resp = json.loads(response.text)
+            my_resp = my_resp['data']['list']
+            return my_resp
+        else:
+            return {"statusCode:": response.status_code, "message": response.text}
+        # return response.status_code, response.text
 
-    def get_lr_devices(self):
+    def get_lr_devices(self, client=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         new_params = {
@@ -50,7 +57,13 @@ class Device:
         device_api_url = self.config.get("api_url") + "tv/devices"
         # Fetch list of devices
         response = requests.get(device_api_url, params=new_params, headers=new_headers)
-        return response.status_code, response.text
+        if response.status_code == 200:
+            my_resp = json.loads(response.text)
+            my_resp = my_resp['data']['list']
+            return my_resp
+        else:
+            return {"statusCode:": response.status_code, "message": response.text}
+        # return response.status_code, response.text
 
 
 
