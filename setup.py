@@ -1,9 +1,9 @@
 from distutils.core import setup
 
 setup(
-    name='mozark-sdk-python',
-    packages=['mozark-sdk-python'],
-    version='0.1',
+    name='mozark_sdk',
+    packages=['mozark_sdk'],
+    version='0.3',
     license='MIT',
     description='Automation test APIs',
     author='Mozark',
@@ -12,8 +12,8 @@ setup(
     # download_url='https://github.com/user/reponame/archive/v_01.tar.gz',  # I explain this later on
     keywords=['MOZARK', 'AUTOMATION', 'EXPERIENCE'],
     install_requires=[
-        'configparser'
-        'requests'
+        'configparser==5.3.0',
+        'requests==2.28.1'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

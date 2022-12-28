@@ -1,10 +1,6 @@
 import os
 import logging
-from app_testing.client import Client
-from app_testing.project import Project
-from app_testing.file import File
-from app_testing.executetest import TestExecute
-from app_testing.device import Device
+from mozark_sdk.client import Client
 from unittest import TestCase
 
 
