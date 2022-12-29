@@ -68,6 +68,30 @@ class File:
         file_object.close()
         return response_message
 
+    def get_android_application_info(self, file_name=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+        new_params = {
+            "fileName": file_name
+        }
+        file_api_url = self.config.get("api_url") + "testexecute/files"
+        # Fetch list of files uploaded
+        response = requests.get(file_api_url, params=new_params, headers=new_headers)
+
+        file_list = response.json()['data']['list']
+        return_message = {}
+        if len(file_list) == 0:
+            return "Failure: File with name `" + file_name + "` not found."
+        elif len(file_list) == 1:
+            return_message = {"fileName": file_name,
+                              "fileCategory": file_list[0]['fileCategory'],
+                              "md5": file_list[0]['meta']['md5sum'],
+                              "fileURL": file_list[0]['meta']['s3Url'],
+                              "fileUUID": file_list[0]['uuid'],
+                              "packageName": file_list[0]['fileParameters']['packageName']
+                              }
+            return return_message
+
     def list_files(self, client=None, file_category=None, project_name=None, file_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
@@ -79,7 +103,7 @@ class File:
         }
         file_api_url = self.config.get("api_url") + "testexecute/files"
         # Fetch list of files uploaded
-        response = requests.get(file_api_url,  params=new_params, headers=new_headers)
+        response = requests.get(file_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             my_resp = json.loads(response.text)
             my_resp = my_resp['data']['list']
@@ -105,7 +129,7 @@ class File:
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
-    def upload_android_application(self, client=None, project_name=None, file_path=None):
+    def upload_android_application(self, project_name=None, file_path=None):
         file_category = "android-application"
         status_message = self.__upload_native_package(self, project_name, file_path, file_category)
         return status_message

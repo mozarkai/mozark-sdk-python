@@ -167,10 +167,12 @@ class Client:
                 "fileUUID": "",
                 "packageName": ""
             }
+
+            errorMessage (str): "Failure: File with name `{file_name}` not found."
         """
         # pass
         file = File(client=self)
-        app_list = file.list_android_application(file, file_name=file_name)
+        app_list = file.get_android_application_info(file_name=file_name)
         return app_list
 
     # def rename_android_application(self, file_name_old=None, file_name_new=None):

@@ -12,6 +12,14 @@ class TestFile(unittest.TestCase):
 
         response = client.upload_android_application(project_name="Sample Android Project", file_path="./5gmark.apk")
         print(response)
+
+    def test_get_android_application_info(self):
+        client = Client()
+        client.login()
+
+        response = client.get_android_application_info(file_name="netflix-debug.apk")
+        print(response)
+
     def test_upload_android_test_application(self):
         logging.basicConfig(filename='mozark-app-testing.log', level=logging.INFO)
 
