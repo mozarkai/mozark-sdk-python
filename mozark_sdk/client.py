@@ -27,7 +27,6 @@ class Client:
         password = config.get("default", "MOZARK_APP_TESTING_PASSWORD")
         client_id = config.get("default", "MOZARK_APP_TESTING_CLIENTID")
         config = {"username": username, "password": password, "api_url": api_url, "client_id": client_id}
-        print(str(config))
         self.config = config
 
     def get_config(self):
@@ -38,7 +37,6 @@ class Client:
                        'Content-Type': 'application/x-amz-json-1.1'}
 
         login_url = "https://cognito-idp.ap-south-1.amazonaws.com/"
-        print(login_url)
         data = {
             "AuthParameters": {
                 "USERNAME": self.config.get("username"),
@@ -47,11 +45,9 @@ class Client:
             "AuthFlow": "USER_PASSWORD_AUTH",
             "ClientId": self.config.get("client_id")
         }
-        print(str(data))
         resp = requests.post(login_url, json=data, headers=new_headers)
         api_access_token = resp.json()['AuthenticationResult']['IdToken']
         self.config["api_access_token"] = api_access_token
-        print(str(self.config))
 
     def logout(self):
         pass
@@ -69,10 +65,9 @@ class Client:
 
             "Failure: Project with `{project_name}` already exists." - in case if project with the given name already exists
         """
-        project = Project()
+        project = Project(self)
         status_message = project.create_project(project, project_name, project_description)
         return status_message
-        # pass
 
     def get_project_info(self, project_name=None):
         """ Returns project information -

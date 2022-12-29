@@ -18,8 +18,10 @@ class Project:
         }
         project_api_url = self.config.get("api_url") + "testexecute/projects"
         response = requests.post(project_api_url, json=data, headers=new_headers)
-        return response.text
-        # pass
+        if response.json()["status"] == 200 and response.json()["message"] == "Success":
+            return "Success"
+        elif response.json()["status"] == 409 and response.json()["message"] == "Project already exists":
+            return "Failure: Project already exists"
 
     def get_projects(self, client=None, project_name=None, project_description=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -37,6 +39,3 @@ class Project:
             return my_resp
         else:
             return {"statusCode:": response.status_code, "message": response.text}
-        # return response.text
-        # pass
-
