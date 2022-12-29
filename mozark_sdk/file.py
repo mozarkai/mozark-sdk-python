@@ -134,19 +134,17 @@ class File:
         status_message = self.__upload_native_package(self, project_name, file_path, file_category)
         return status_message
 
-    def upload_android_native_test_application(self, client=None, project_name=None, file_path=None):
+    def upload_android_native_test_application(self, project_name=None, file_path=None):
         file_category = "android-test-application"
         status_message = self.__upload_native_package(self, project_name, file_path, file_category)
         return status_message
 
-    def upload_ios_application(self, client=None, project_name=None, file_path=None):
+    def upload_ios_application(self, project_name=None, file_path=None):
         file_category = "ios-application"
-        # self.__upload(project_name, file_path, file_category)
-        # pass
         status_message = self.__upload_native_package(project_name, file_path, file_category)
         return status_message
 
-    def upload_ios_native_test_application(self, client=None, project_name=None, file_path=None):
+    def upload_ios_native_test_application(self, project_name=None, file_path=None):
         file_category = "ios-test-application"
         status_message = self.__upload_native_package(project_name, file_path, file_category)
         return status_message
