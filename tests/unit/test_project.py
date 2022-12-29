@@ -25,3 +25,15 @@ class TestProject(TestCase):
         project_name = "Sample Android Projectt"
         response = client.get_project_info(project_name=project_name)
         self.assertEqual(response, "Failure: Project with name `" + project_name + "` not found.")
+
+    def test_delete_project(self):
+        project_name = "Sample Android Project"
+        client = Client()
+        client.login()
+
+        response = client.delete_project(project_name=project_name)
+        self.assertEqual(response, "Success")
+
+        response = client.delete_project(project_name=project_name)
+        self.assertEqual(response, "Failure: Project with name `" + project_name + "` not found.")
+

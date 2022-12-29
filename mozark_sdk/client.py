@@ -91,16 +91,18 @@ class Client:
     # def rename_project(self, project_name_old=None, project_name_new=None):
     #     pass
 
-    # def delete_project(self, project_name=None):
-    #     """ Delete project with given project name
-    #
-    #     Args:
-    #         project_name (str): project name
-    #
-    #     Returns:
-    #         message (str): 'Success' if successful, 'Failure' along with failure reason
-    #     """
-    #     pass
+    def delete_project(self, project_name=None):
+        """ Delete project with given project name
+
+        Args:
+            project_name (str): project name
+
+        Returns:
+            message (str): 'Success' if successful, 'Failure' along with failure reason
+        """
+        project = Project(self)
+        status_message = project.delete_project(project_name=project_name)
+        return status_message
 
     def get_project_list(self):
         """ Returns list of all projects

@@ -47,6 +47,18 @@ class Project:
         elif response.status_code == 200 and len(project_list) == 0:
             return "Failure: Project with name `" + project_name + "` not found."
 
+    def delete_project(self, project_name=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+        project_info = self.get_project_info(project_name=project_name)
+        if project_info == "Failure: Project with name `" + project_name + "` not found.":
+            return project_info
+        else:
+            delete_project_url = self.config.get("api_url") + "testexecute/projects?projectId=" + project_info["projectUUID"]
+            response = requests.delete(delete_project_url, headers=new_headers)
+            if response.json()["status"] == 200 and response.json()["message"] == "Success":
+                return "Success"
+
     def get_projects(self, project_name=None, project_description=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
