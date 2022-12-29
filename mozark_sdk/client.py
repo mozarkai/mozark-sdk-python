@@ -142,7 +142,9 @@ class Client:
         Returns:
             message (str): 'Success' if uploaded successfully, 'Failure' along with failure reason
 
-            "Failure: File with `{file_name}` already exists." - in case if file with checksum already exists
+            "Success: File `" + file_name + "` uploaded successfully."
+            "Failure: File `" + file_name + "` not uploaded."
+            "Error: File `" + file_name + "` already exists."
         """
         file = File(client=self)
         status = file.upload_android_application(project_name=project_name, file_path=file_path)

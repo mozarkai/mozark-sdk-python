@@ -26,17 +26,15 @@ class File:
                        'Content-Type': 'application/json'}
 
         file_api_url = self.config.get("api_url") + "testexecute/files"
+        file_name = data["fileName"]
         # Leg 1 - get the s3 file upload URL
         response = requests.post(file_api_url, json=data, headers=new_headers)
 
         if response.status_code == 200:
-            print("Leg 1 - response: " + response.text)
             if response.json()['status'] == 409:
-                print("Leg 1 - File already exists")
-                return response.status_code, "File already exists"
+                return "Error: File `" + file_name + "` already exists."
         else:
-            print("Error: Leg 1" + response.text)
-            return response.status_code, response.text
+            return "Error: " + response.text
 
         s3_file_upload_url = response.json()['data']['uploadUrl']
 
@@ -44,13 +42,11 @@ class File:
         response = requests.put(s3_file_upload_url, files=files)
 
         if response.status_code == 200:
-            print("File uploaded successfully: " + s3_file_upload_url)
-            return "File uploaded successfully"
+            return "Success: File `" + file_name + "` uploaded successfully."
         else:
-            print("Error uploading file")
-            return {"statusCode:": response.status_code, "message": response.text}
+            return "Failure: File `" + file_name + "` not uploaded."
 
-    def upload_native_package(self, client=None, project_name=None, file_path=None, file_category=None):
+    def __upload_native_package(self, client=None, project_name=None, file_path=None, file_category=None):
         path_object = Path(file_path)
         filename = path_object.name
         data = {
@@ -68,9 +64,9 @@ class File:
 
         file_object = open(file_path, 'rb')
         files = {'file': file_object}
-        status_message = self.__upload(data=data, files=files)
+        response_message = self.__upload(data=data, files=files)
         file_object.close()
-        return status_message
+        return response_message
 
     def list_files(self, client=None, file_category=None, project_name=None, file_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -111,24 +107,24 @@ class File:
 
     def upload_android_application(self, client=None, project_name=None, file_path=None):
         file_category = "android-application"
-        status_message = self.upload_native_package(self, project_name, file_path, file_category)
+        status_message = self.__upload_native_package(self, project_name, file_path, file_category)
         return status_message
 
     def upload_android_native_test_application(self, client=None, project_name=None, file_path=None):
         file_category = "android-test-application"
-        status_message = self.upload_native_package(self, project_name, file_path, file_category)
+        status_message = self.__upload_native_package(self, project_name, file_path, file_category)
         return status_message
 
     def upload_ios_application(self, client=None, project_name=None, file_path=None):
         file_category = "ios-application"
         # self.__upload(project_name, file_path, file_category)
         # pass
-        status_message = self.upload_native_package(project_name, file_path, file_category)
+        status_message = self.__upload_native_package(project_name, file_path, file_category)
         return status_message
 
     def upload_ios_native_test_application(self, client=None, project_name=None, file_path=None):
         file_category = "ios-test-application"
-        status_message = self.upload_native_package(project_name, file_path, file_category)
+        status_message = self.__upload_native_package(project_name, file_path, file_category)
         return status_message
 
     def list_android_application(self, client=None, project_name=None, file_name=None):

@@ -1,17 +1,17 @@
 import logging
 import unittest
 
-from app_testing.file import File
-from app_testing.client import Client
+from mozark_sdk.client import Client
 
 
 class TestFile(unittest.TestCase):
     def test_upload_android_application(self):
         logging.basicConfig(filename='mozark-app-testing.log', level=logging.INFO)
-        file = File()
-        file.upload_android_application(project_name="Sample Android Project", file_path="./sample.apk")
-        self.assertEqual(True, False)
+        client = Client()
+        client.login()
 
+        response = client.upload_android_application(project_name="Sample Android Project", file_path="./5gmark.apk")
+        print(response)
     def test_upload_android_test_application(self):
         logging.basicConfig(filename='mozark-app-testing.log', level=logging.INFO)
 
