@@ -66,7 +66,7 @@ class Client:
             "Failure: Project with `{project_name}` already exists." - in case if project with the given name already exists
         """
         project = Project(self)
-        status_message = project.create_project(project, project_name, project_description)
+        status_message = project.create_project(project_name, project_description)
         return status_message
 
     def get_project_info(self, project_name=None):
@@ -81,11 +81,12 @@ class Client:
                 "projectDescription": "",
                 "projectUUID": ""
             }
+
+            errorMessage (str): 'Failure: Project with name `{project_name}` not found.'
         """
-        project = Project()
-        status_message = project.get_projects(project, project_name)
+        project = Project(self)
+        status_message = project.get_project_info(project_name=project_name)
         return status_message
-        # pass
 
     # def rename_project(self, project_name_old=None, project_name_new=None):
     #     pass
