@@ -123,11 +123,12 @@ class Client:
                 }
             ]
 
+            errorMessage (str): "Failure: Project list is empty."
+
         """
         project = Project(client=self)
-        status_message = project.get_projects(project)
+        status_message = project.get_project_list()
         return status_message
-        # pass
 
     # Android Application
 

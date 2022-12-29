@@ -59,20 +59,22 @@ class Project:
             if response.json()["status"] == 200 and response.json()["message"] == "Success":
                 return "Success"
 
-    def get_projects(self, project_name=None, project_description=None):
+    def get_project_list(self):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
-        new_params = {
-            "name": project_name,
-            "description": project_description
-        }
+
         project_api_url = self.config.get("api_url") + "testexecute/projects"
         # Fetch list of projects
-        response = requests.get(project_api_url,  params=new_params, headers=new_headers)
-        print(response.text)
-        if response.status_code == 200:
-            my_resp = json.loads(response.text)
-            my_resp = my_resp['data']['list']
-            return my_resp
-        else:
-            return {"statusCode:": response.status_code, "message": response.text}
+        response = requests.get(project_api_url, headers=new_headers)
+        project_list = response.json()["data"]["list"]
+
+        response_project_list = []
+        if response.status_code == 200 and len(project_list) > 0:
+            for p in project_list:
+                project_info = {"projectName": p["name"],
+                                "projectDescription": p["description"],
+                                "projectUUID": p["uuid"]}
+                response_project_list.append(project_info)
+            return response_project_list
+        elif response.status_code == 200 and len(project_list) == 0:
+            return "Failure: Project list is empty."

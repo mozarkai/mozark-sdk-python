@@ -37,3 +37,9 @@ class TestProject(TestCase):
         response = client.delete_project(project_name=project_name)
         self.assertEqual(response, "Failure: Project with name `" + project_name + "` not found.")
 
+    def test_get_project_list(self):
+        client = Client()
+        client.login()
+
+        project_list = client.get_project_list()
+        print(project_list)
