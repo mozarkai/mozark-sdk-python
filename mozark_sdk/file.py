@@ -92,6 +92,38 @@ class File:
                               }
             return return_message
 
+    def get_android_application_info_list(self, file_category=None, project_name=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+
+        if project_name is None:
+            project_name = ""
+
+        new_params = {
+            "fileCategory": file_category,
+            "projectName": project_name,
+            "fileStatus": "processed"
+        }
+        file_api_url = self.config.get("api_url") + "testexecute/files"
+        # Fetch list of files uploaded
+        response = requests.get(file_api_url, params=new_params, headers=new_headers)
+
+        file_list = response.json()['data']['list']
+        return_message = []
+
+        if len(file_list) > 0:
+            for f in file_list:
+                file_info = {"fileName": f['fileName'],
+                             "fileCategory": f['fileCategory'],
+                             "md5": f['meta']['md5sum'],
+                             "fileURL": f['meta']['s3Url'],
+                             "fileUUID": f['uuid'],
+                             "packageName": f['fileParameters']['packageName'],
+                             "projectName": project_name
+                             }
+                return_message.append(file_info)
+            return return_message
+
     def list_files(self, client=None, file_category=None, project_name=None, file_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
@@ -112,22 +144,20 @@ class File:
             return {"statusCode:": response.status_code, "message": response.text}
         # return response.status_code, response.text
 
-    def delete_file(self, client=None, file_id=None):
+    def delete_file(self, file_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
-        new_params = {
-            "fileId": file_id
-        }
-        file_api_url = self.config.get("api_url") + "testexecute/files"
-        # Fetch list of files uploaded
-        response = requests.delete(file_api_url, params=new_params, headers=new_headers)
+
+        file_info = self.get_android_application_info(file_name=file_name)
+
+        file_api_url = self.config.get("api_url") + "testexecute/files?fileId=" + file_info["fileUUID"]
+
+        response = requests.delete(file_api_url, headers=new_headers)
         # return response.text
         if response.status_code == 200:
-            my_resp = json.loads(response.text)
-            my_resp = my_resp['message']
-            return my_resp
+            return "Success"
         else:
-            return {"statusCode:": response.status_code, "message": response.text}
+            return "Failure: " + response.text
 
     def upload_android_application(self, project_name=None, file_path=None):
         file_category = "android-application"
@@ -149,9 +179,9 @@ class File:
         status_message = self.__upload_native_package(project_name, file_path, file_category)
         return status_message
 
-    def list_android_application(self, client=None, project_name=None, file_name=None):
+    def get_android_application_list(self, project_name=None):
         file_category = "android-application"
-        status_message = self.list_files(project_name, file_name)
+        status_message = self.get_android_application_info_list(file_category=file_category, project_name=project_name)
         return status_message
 
     def list_android_native_test_application(self, client=None, project_name=None, file_name=None):

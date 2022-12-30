@@ -20,6 +20,24 @@ class TestFile(unittest.TestCase):
         response = client.get_android_application_info(file_name="netflix-debug.apk")
         print(response)
 
+    def test_delete_android_application(self):
+        client = Client()
+        client.login()
+        response = client.delete_android_application(file_name="5gmark.apk")
+        print(response)
+
+    def test_get_android_application_list(self):
+        project_name = "prime_android"
+
+        client = Client()
+        client.login()
+
+        response = client.get_android_application_list(project_name=project_name)
+        print(response)
+
+        response = client.get_android_application_list()
+        print(response)
+
     def test_upload_android_test_application(self):
         logging.basicConfig(filename='mozark-app-testing.log', level=logging.INFO)
 

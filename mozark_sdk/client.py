@@ -170,7 +170,6 @@ class Client:
 
             errorMessage (str): "Failure: File with name `{file_name}` not found."
         """
-        # pass
         file = File(client=self)
         app_list = file.get_android_application_info(file_name=file_name)
         return app_list
@@ -178,14 +177,17 @@ class Client:
     # def rename_android_application(self, file_name_old=None, file_name_new=None):
     #     pass
 
-    def delete_android_application(self, file_id=None):
+    def delete_android_application(self, file_name=None):
         # pass
         file = File(client=self)
-        status = file.delete_file(file, file_id=file_id)
+        status = file.delete_file(file_name=file_name)
         return status
 
     def get_android_application_list(self, project_name=None):
         """ Returns list of all android application file information
+
+        Args:
+            project_name (str): optional project_name to filter the android application files
 
         Returns:
             fileinfo (list): dictionary containing the metadata about the file
@@ -197,7 +199,8 @@ class Client:
                     "md5": "",
                     "fileURL": "",
                     "fileUUID": "",
-                    "packageName": ""
+                    "packageName": "",
+                    "projectName": ""
                 },
                 {
                     "fileName" : "",
@@ -205,13 +208,16 @@ class Client:
                     "md5": "",
                     "fileURL": "",
                     "fileUUID": "",
-                    "packageName": ""
+                    "packageName": "",
+                    "projectName": ""
                 }
             ]
+
+            Note: "projectName" will be present in response if passed in a filter, else the value will be ""
         """
         # pass
         file = File(client=self)
-        app_list = file.list_android_application(file, project_name=project_name)
+        app_list = file.get_android_application_list(project_name=project_name)
         return app_list
 
     # iOS Application
