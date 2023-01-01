@@ -37,7 +37,7 @@ class Client:
         self.config["api_access_token"] = api_access_token
 
     def logout(self):
-        pass
+        self.config["api_access_token"] = ""
 
     # Project
 
