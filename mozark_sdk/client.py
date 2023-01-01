@@ -75,7 +75,6 @@ class Client:
         status_message = project.get_project_info(project_name=project_name)
         return status_message
 
-
     def delete_project(self, project_name=None):
         """ Delete project with given project name
 
@@ -164,6 +163,14 @@ class Client:
         return app_list
 
     def delete_application(self, file_name=None):
+        """ Delete application with given file name
+        Args:
+            file_name (str): unique file name
+
+        Returns:
+            "Success: File `" + file_name + "` deleted successfully."
+            "Failure: File `" + file_name + "` not deleted."
+        """
         file = File(client=self)
         status = file.delete_file(file_name=file_name)
         return status
@@ -259,6 +266,14 @@ class Client:
         return app_list
 
     def delete_native_test_application(self, file_name=None):
+        """ Delete native test application with given file name
+        Args:
+            file_name (str): unique file name
+
+        Returns:
+            "Success: File `" + file_name + "` deleted successfully."
+            "Failure: File `" + file_name + "` not deleted."
+        """
         file = File(client=self)
         status = file.delete_file(file_name=file_name)
         return status
@@ -303,153 +318,63 @@ class Client:
 
     # Device
 
-    def get_device_info(self, device_serial=None):
-        """ Returns device information given a device serial
-
+    def get_device_list(self, platform=None, device_serial=None):
+        """ Returns device information of all devices for a given platform or device_serial
         Args:
+            platform (str): device platform type: 'android', 'ios', or 'living-room'
             device_serial (str): unique device serial
 
         Returns:
-            device_info (dict): dictionary containing the information about the device
+            device_info (list): list of dictionary containing the information about the device
 
-            {
-                "deviceSerial": "",
-                "deviceBrand": "",
-                "deviceCity": "",
-                "deviceCountry": "",
-                "deviceModelName": "",
-                "deviceModelNumber": "",
-                "devicePlatform": "android | ios",
-                "deviceOSVersion": "",
-                "deviceSDKVersion": ["", ""],
-                "deviceUUID": "",
-                "deviceNetwork": ""
-            }
+            [
+                {
+                    "deviceSerial": "",
+                    "deviceBrand": "",
+                    "deviceCity": "",
+                    "deviceCountry": "",
+                    "deviceModelName": "",
+                    "deviceModelNumber": "",
+                    "devicePlatform": "android",
+                    "deviceOSVersion": "",
+                    "deviceSDKVersion": ["", ""],
+                    "deviceUUID": "",
+                    "deviceNetwork": ""
+                },
+                {
+                    "deviceSerial": "",
+                    "deviceBrand": "",
+                    "deviceCity": "",
+                    "deviceCountry": "",
+                    "deviceModelName": "",
+                    "deviceModelNumber": "",
+                    "devicePlatform": "ios",
+                    "deviceOSVersion": "",
+                    "deviceSDKVersion": ["", ""],
+                    "deviceUUID": "",
+                    "deviceNetwork": ""
+                },
+                {
+                    "deviceSerial": "",
+                    "deviceBrand": "",
+                    "deviceCity": "",
+                    "deviceCountry": "",
+                    "deviceModelName": "",
+                    "deviceModelNumber": "",
+                    "devicePlatform": "living-room",
+                    "deviceOSVersion": "",
+                    "deviceSDKVersion": ["", ""],
+                    "deviceUUID": "",
+                    "deviceNetwork": ""
+                }
+            ]
         """
-        pass
+        device = Device(client=self)
+        device_list = device.get_devices(platform=platform, device_serial=device_serial)
+        return device_list
 
     # def get_device_busy_slots(self, devices=None):
     #     pass
-
-    def get_android_device_list(self):
-        """ Returns device information of all android devices
-
-        Returns:
-            device_info (list): list of dictionary containing the information about the device
-
-            [
-                {
-                    "deviceSerial": "",
-                    "deviceBrand": "",
-                    "deviceCity": "",
-                    "deviceCountry": "",
-                    "deviceModelName": "",
-                    "deviceModelNumber": "",
-                    "devicePlatform": "android",
-                    "deviceOSVersion": "",
-                    "deviceSDKVersion": ["", ""],
-                    "deviceUUID": "",
-                    "deviceNetwork": ""
-                },
-                {
-                    "deviceSerial": "",
-                    "deviceBrand": "",
-                    "deviceCity": "",
-                    "deviceCountry": "",
-                    "deviceModelName": "",
-                    "deviceModelNumber": "",
-                    "devicePlatform": "android",
-                    "deviceOSVersion": "",
-                    "deviceSDKVersion": ["", ""],
-                    "deviceUUID": "",
-                    "deviceNetwork": ""
-                }
-            ]
-        """
-        # pass
-        device = Device(client=self)
-        device_list = device.get_devices(device, "android")
-        return device_list
-
-    def get_ios_device_list(self):
-        """ Returns device information of all iOS devices
-
-        Returns:
-            device_info (list): list of dictionary containing the information about the device
-
-            [
-                {
-                    "deviceSerial": "",
-                    "deviceBrand": "",
-                    "deviceCity": "",
-                    "deviceCountry": "",
-                    "deviceModelName": "",
-                    "deviceModelNumber": "",
-                    "devicePlatform": "ios",
-                    "deviceOSVersion": "",
-                    "deviceSDKVersion": ["", ""],
-                    "deviceUUID": "",
-                    "deviceNetwork": ""
-                },
-                {
-                    "deviceSerial": "",
-                    "deviceBrand": "",
-                    "deviceCity": "",
-                    "deviceCountry": "",
-                    "deviceModelName": "",
-                    "deviceModelNumber": "",
-                    "devicePlatform": "ios",
-                    "deviceOSVersion": "",
-                    "deviceSDKVersion": ["", ""],
-                    "deviceUUID": "",
-                    "deviceNetwork": ""
-                }
-            ]
-        """
-        # pass
-        device = Device(client=self)
-        device_list = device.get_devices(device, "ios")
-        return device_list
-
-    def get_living_room_device_list(self):
-        """ Returns device information of all living room devices
-
-        Returns:
-            device_info (list): list of dictionary containing the information about the device
-
-            [
-                {
-                    "deviceSerial": "",
-                    "deviceBrand": "",
-                    "deviceCity": "",
-                    "deviceCountry": "",
-                    "deviceModelName": "",
-                    "deviceModelNumber": "",
-                    "devicePlatform": "living-room",
-                    "deviceOSVersion": "",
-                    "deviceSDKVersion": ["", ""],
-                    "deviceUUID": "",
-                    "deviceNetwork": ""
-                },
-                {
-                    "deviceSerial": "",
-                    "deviceBrand": "",
-                    "deviceCity": "",
-                    "deviceCountry": "",
-                    "deviceModelName": "",
-                    "deviceModelNumber": "",
-                    "devicePlatform": "living-room",
-                    "deviceOSVersion": "",
-                    "deviceSDKVersion": ["", ""],
-                    "deviceUUID": "",
-                    "deviceNetwork": ""
-                }
-            ]
-        """
-        # pass
-        device = Device(client=self)
-        device_list = device.get_lr_devices()
-        return device_list
 
     def create_tray(self, tray_name=None, platform=None, device_list=None):
         """ Create tray for a given device platform category

@@ -213,6 +213,6 @@ class File:
 
         response = requests.delete(file_api_url, headers=new_headers)
         if response.status_code == 200:
-            return "Success"
+            return "Success: File `" + file_name + "` deleted successfully."
         else:
-            return "Failure: " + response.text
+            return "Failure: File `" + file_name + "` not deleted."
