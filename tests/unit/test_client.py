@@ -1,7 +1,9 @@
 from unittest import TestCase
 import configparser
 from pathlib import Path
-from app_testing.client import Client
+
+from mozark_sdk.client import Client
+
 
 class TestClient(TestCase):
     def test_config_read(self):
@@ -13,29 +15,9 @@ class TestClient(TestCase):
         password = config.get("default", "MOZARK_APP_TESTING_PASSWORD")
         client_id = config.get("default", "MOZARK_APP_TESTING_CLIENTID")
 
-    def test_init_object(self):
+    def test_documentation(self):
         client = Client()
-        api_url, username, password = client.get_config()
-        print(api_url, username, password)
-
-    def test_doc(self):
-        client = Client()
-        help(client.get_project_list)
-
-        projects = [
-            {
-                "projectName": "abc",
-                "projectDescription" : "abc desc",
-                "projectUUID": "aabbcc"
-            },
-            {
-                "projectName": "xyz",
-                "projectDescription": "xyz desc",
-                "projectUUID": "aabbcd"
-            }
-        ]
-
-        print(type(projects))
+        help(client)
 
     def test_test_configuration(self):
         client = Client()
