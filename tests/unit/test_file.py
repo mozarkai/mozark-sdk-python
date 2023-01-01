@@ -1,3 +1,4 @@
+import json
 import logging
 import unittest
 
@@ -5,64 +6,77 @@ from mozark_sdk.client import Client
 
 
 class TestFile(unittest.TestCase):
-    def test_upload_android_application(self):
-        logging.basicConfig(filename='mozark-app-testing.log', level=logging.INFO)
+
+    def test_upload_application(self):
+        client = Client()
+        client.login()
+        response = client.upload_application(file_category="android-application",
+                                             project_name="Sample Android Project",
+                                             file_path="./tests/unit/5gmark.apk")
+        print(response)
+
+    def test_get_application_info(self):
         client = Client()
         client.login()
 
-        response = client.upload_android_application(project_name="Sample Android Project", file_path="./5gmark.apk")
+        response = client.get_application_info(file_name="netflix-debug.apk")
+        print(response)
+        response = client.get_application_info(file_name="5gmark_build.ipa")
         print(response)
 
-    def test_get_android_application_info(self):
+    def test_delete_application(self):
         client = Client()
         client.login()
-
-        response = client.get_android_application_info(file_name="netflix-debug.apk")
+        response = client.delete_application(file_name="5gmark.apk")
         print(response)
 
-    def test_delete_android_application(self):
-        client = Client()
-        client.login()
-        response = client.delete_android_application(file_name="5gmark.apk")
-        print(response)
-
-    def test_get_android_application_list(self):
+    def test_get_application_list(self):
+        # Android
         project_name = "prime_android"
 
         client = Client()
         client.login()
 
-        response = client.get_android_application_list(project_name=project_name)
-        print(response)
+        response = client.get_application_list(file_category='android-application', project_name=project_name)
+        print(json.dumps(response))
 
-        response = client.get_android_application_list()
-        print(response)
+        project_name = '5Gmark_ios'
+        response = client.get_application_list(file_category='ios-application', project_name=project_name)
+        print(json.dumps(response))
 
-    def test_upload_android_test_application(self):
-        logging.basicConfig(filename='mozark-app-testing.log', level=logging.INFO)
+        response = client.get_application_list()
+        print(json.dumps(response))
 
+    def test_get_native_application_info(self):
         client = Client()
-        # login using the credentials configured in ~/.mozark/config
         client.login()
 
-        # pass client object to reuse the configuration and api access token, default send md5 sum of the file
-        file = File(client=client)
+        response = client.get_native_test_application_info(file_name="netflix-androidTest.apk")
+        print(json.dumps(response))
+        response = client.get_native_test_application_info(file_name="fivegmark_script.ipa")
+        print(json.dumps(response))
 
-        # upload file
-        file.upload_android_native_test_application(project_name="5Gmark_Android", file_path="./5gmark.apk")
+    def test_get_native_application_list(self):
+        # Android
+        project_name = "prime_android"
 
-        # pass client object to reuse the configuration and api access token, do not send the md5sum
-        file = File(client=client, calculate_md5=False)
+        client = Client()
+        client.login()
 
-        # upload file
-        file.upload_android_native_test_application(project_name="5Gmark_Android", file_path="./5gmark.apk")
+        response = client.get_native_test_application_list(file_category='android-test-application', project_name=project_name)
+        print(json.dumps(response))
 
-        self.assertEqual(True, True)
+        project_name = '5Gmark_ios'
+        response = client.get_native_test_application_list(file_category='ios-test-application', project_name=project_name)
+        print(json.dumps(response))
+
+        response = client.get_native_test_application_list()
+        print(json.dumps(response))
 
     def test_md5(self):
         import hashlib
 
-        filename = "./5gmark.apk"
+        filename = "./tests/unit/5gmark.apk"
         md5_hash = ''
         with open(filename, "rb") as f:
             bytes = f.read()  # read file as bytes

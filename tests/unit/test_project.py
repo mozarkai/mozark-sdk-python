@@ -20,6 +20,7 @@ class TestProject(TestCase):
         client.login()
 
         response = client.get_project_info(project_name=project_name)
+        print(response)
         self.assertEqual(response["projectName"], project_name)
 
         project_name = "Sample Android Projectt"

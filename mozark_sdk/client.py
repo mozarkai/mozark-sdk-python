@@ -88,8 +88,6 @@ class Client:
         status_message = project.get_project_info(project_name=project_name)
         return status_message
 
-    # def rename_project(self, project_name_old=None, project_name_new=None):
-    #     pass
 
     def delete_project(self, project_name=None):
         """ Delete project with given project name
@@ -130,12 +128,13 @@ class Client:
         status_message = project.get_project_list()
         return status_message
 
-    # Android Application
+    # Application
 
-    def upload_android_application(self, project_name=None, file_path=None):
-        """ Upload android application(.apk) from given file path
+    def upload_application(self, file_category=None, project_name=None, file_path=None):
+        """ Upload android or ios application(.apk or .ipa) from given file path
 
         Args:
+            file_category (str): Mandatory 'android-application' or 'ios-application'
             project_name (str): Container project for the application
             file_path (str): relative or absolute path of the file
 
@@ -147,11 +146,11 @@ class Client:
             "Error: File `" + file_name + "` already exists."
         """
         file = File(client=self)
-        status = file.upload_android_application(project_name=project_name, file_path=file_path)
+        status = file.upload_application(file_category=file_category, project_name=project_name, file_path=file_path)
         return status
 
-    def get_android_application_info(self, file_name=None):
-        """ Returns android file information
+    def get_application_info(self, file_name=None):
+        """ Returns file information
 
         Args:
             file_name (str): unique file name
@@ -161,7 +160,7 @@ class Client:
 
             {
                 "fileName" : "",
-                "fileCategory": "android-application",
+                "fileCategory": "android-application | ios-application",
                 "md5": "",
                 "fileURL": "",
                 "fileUUID": "",
@@ -169,24 +168,24 @@ class Client:
             }
 
             errorMessage (str): "Failure: File with name `{file_name}` not found."
+
+            Note:
+                "packageName" is present in case of 'android-application'
         """
         file = File(client=self)
-        app_list = file.get_android_application_info(file_name=file_name)
+        app_list = file.get_application_info(file_name=file_name)
         return app_list
 
-    # def rename_android_application(self, file_name_old=None, file_name_new=None):
-    #     pass
-
-    def delete_android_application(self, file_name=None):
-        # pass
+    def delete_application(self, file_name=None):
         file = File(client=self)
         status = file.delete_file(file_name=file_name)
         return status
 
-    def get_android_application_list(self, project_name=None):
-        """ Returns list of all android application file information
+    def get_application_list(self, file_category=None, project_name=None):
+        """ Returns list of all application file information
 
         Args:
+            file_category (str): mandatory 'android-application' or 'ios-application'
             project_name (str): optional project_name to filter the android application files
 
         Returns:
@@ -204,27 +203,27 @@ class Client:
                 },
                 {
                     "fileName" : "",
-                    "fileCategory": "android-application",
+                    "fileCategory": "ios-application",
                     "md5": "",
                     "fileURL": "",
                     "fileUUID": "",
-                    "packageName": "",
                     "projectName": ""
                 }
             ]
 
             Note: "projectName" will be present in response if passed in a filter, else the value will be ""
         """
-        # pass
         file = File(client=self)
-        app_list = file.get_android_application_list(project_name=project_name)
+        app_list = file.get_application_list(file_category=file_category, project_name=project_name)
         return app_list
 
-    # iOS Application
-    def upload_ios_application(self, project_name=None, file_path=None):
-        """ Upload ios application(.ipa) from given file path
+    # Native Test Application
+
+    def upload_native_test_application(self, file_category=None, project_name=None, file_path=None):
+        """ Upload native test application(.apk or .ipa) from given file path
 
         Args:
+            file_category (str): Mandatory 'android-application' or 'ios-application'
             project_name (str): Container project for the application
             file_path (str): relative or absolute path of the file
 
@@ -236,11 +235,13 @@ class Client:
             "Error: File `" + file_name + "` already exists."
         """
         file = File(client=self)
-        status = file.upload_ios_application(project_name=project_name, file_path=file_path)
+        status = file.upload_native_test_application(file_category=file_category,
+                                                     project_name=project_name,
+                                                     file_path=file_path)
         return status
 
-    def get_ios_application_info(self, file_name=None):
-        """ Returns ios application file information
+    def get_native_test_application_info(self, file_name=None):
+        """ Returns file information
 
         Args:
             file_name (str): unique file name
@@ -250,198 +251,37 @@ class Client:
 
             {
                 "fileName" : "",
-                "fileCategory": "ios-application",
-                "md5": "",
-                "fileURL": "",
-                "fileUUID": "",
-                "packageName": ""
-            }
-        """
-        # pass
-        file = File(client=self)
-        app_list = file.list_ios_application(file, file_name=file_name)
-        return app_list
-
-    # def rename_ios_application(self, file_name_old=None, file_name_new=None):
-    #     pass
-
-    def delete_ios_application(self, file_id=None):
-        # pass
-        file = File(client=self)
-        status = file.delete_file(file, file_id=file_id)
-        return status
-
-    def get_ios_application_list(self, project_name=None):
-        """ Returns list of all ios application file information
-
-        Returns:
-            fileinfo (list): dictionary containing the metadata about the file
-
-            [
-                {
-                    "fileName" : "",
-                    "fileCategory": "ios-application",
-                    "md5": "",
-                    "fileURL": "",
-                    "fileUUID": "",
-                    "packageName": ""
-                },
-                {
-                    "fileName" : "",
-                    "fileCategory": "ios-application",
-                    "md5": "",
-                    "fileURL": "",
-                    "fileUUID": "",
-                    "packageName": ""
-                }
-            ]
-        """
-        # pass
-        file = File(client=self)
-        app_list = file.list_ios_application(file, project_name=project_name)
-        return app_list
-
-    # Android Native Test Application
-
-    def upload_android_native_test_application(self, project_name=None, file_path=None):
-        """ Upload android native test application(.apk) from given file path
-
-        Args:
-            project_name (str): Container project for the application
-            file_path (str): relative or absolute path of the file
-
-        Returns:
-            message (str): 'Success' if uploaded successfully, 'Failure' along with failure reason
-
-            "Success: File `" + file_name + "` uploaded successfully."
-            "Failure: File `" + file_name + "` not uploaded."
-            "Error: File `" + file_name + "` already exists."
-        """
-        # pass
-        file = File(client=self)
-        status = file.upload_android_native_test_application(project_name=project_name, file_path=file_path)
-        return status
-
-    def get_android_native_test_application_info(self, file_name=None):
-        """ Returns android native test application file information
-
-        Args:
-            file_name (str): unique file name
-
-        Returns:
-            fileinfo (dict): dictionary containing the metadata about the file
-
-            {
-                "fileName" : "",
-                "fileCategory": "android-test-application",
+                "fileCategory": "android-test-application | ios-test-application",
                 "md5": "",
                 "fileURL": "",
                 "fileUUID": "",
                 "testCodePackageName": "",
-                "testRunnerName": ""
-            }
-        """
-        # pass
-        file = File(client=self)
-        app_list = file.list_android_native_test_application(file, file_name=file_name)
-        return app_list
-
-    # def rename_android_native_test_application(self, file_name_old=None, file_name_new=None):
-    #     pass
-
-    def delete_android_native_test_application(self, file_id=None):
-        # pass
-        file = File(client=self)
-        status = file.delete_file(file, file_id=file_id)
-        return status
-
-    def get_android_native_test_application_list(self, project_name=None, file_name=None):
-        """ Returns list of all android native test application file information
-
-        Returns:
-            fileinfo (list): dictionary containing the metadata about the file
-
-            [
-                {
-                    "fileName" : "",
-                    "fileCategory": "android-test-application",
-                    "md5": "",
-                    "fileURL": "",
-                    "fileUUID": "",
-                    "testCodePackageName": "",
-                    "testRunnerName": ""
-                },
-                {
-                    "fileName" : "",
-                    "fileCategory": "android-test-application",
-                    "md5": "",
-                    "fileURL": "",
-                    "fileUUID": "",
-                    "testCodePackageName": "",
-                    "testRunnerName": ""
-                }
-            ]
-        """
-        # pass
-        file = File(client=self)
-        app_list = file.list_android_native_test_application(file, project_name=project_name, file_name=file_name)
-        return app_list
-
-    # iOS Application
-    def upload_ios_native_test_application(self, project_name=None, file_path=None):
-        """ Upload ios native test application(.ipa) from given file path
-
-        Args:
-            project_name (str): Container project for the application
-            file_path (str): relative or absolute path of the file
-
-        Returns:
-            message (str): 'Success' if uploaded successfully, 'Failure' along with failure reason
-
-            "Success: File `" + file_name + "` uploaded successfully."
-            "Failure: File `" + file_name + "` not uploaded."
-            "Error: File `" + file_name + "` already exists."
-        """
-        # pass
-        file = File(client=self)
-        status = file.upload_ios_native_test_application(project_name=project_name, file_path=file_path)
-        return status
-
-    def get_ios_native_test_application_info(self, file_name=None):
-        """ Returns ios native test application file information
-
-        Args:
-            project_name (str): project names
-            file_name (str): unique file name
-
-        Returns:
-            fileinfo (dict): dictionary containing the metadata about the file
-
-            {
-                "fileName" : "",
-                "fileCategory": "ios-test-application",
-                "md5": "",
-                "fileURL": "",
-                "fileUUID": "",
+                "testRunnerName": "",
                 "XCTestRunFileUrl": ""
             }
+
+            errorMessage (str): "Failure: File with name `{file_name}` not found."
+
+            Note:
+                "testCodePackageName" and "testRunnerName" is present in case of 'android-test-application'
+                "XCTestRunFileUrl" is present in case of 'ios-test-application'
+
         """
-        # pass
         file = File(client=self)
-        status = file.list_ios_native_test_application(file_name=file_name)
+        app_list = file.get_native_test_application_info(file_name=file_name)
+        return app_list
+
+    def delete_native_test_application(self, file_name=None):
+        file = File(client=self)
+        status = file.delete_file(file_name=file_name)
         return status
 
-    # def rename_ios_native_test_application(self, file_name_old=None, file_name_new=None):
-    #     pass
+    def get_native_test_application_list(self, file_category=None, project_name=None):
+        """ Returns list of all application file information
 
-    def delete_ios_native_test_application(self, file_id=None):
-        # pass
-        file = File(client=self)
-        status = file.delete_file(file, file_id=file_id)
-        return status
-
-    def get_ios_native_test_application_list(self, project_name=None):
-        """ Returns list of all ios native test application file information
+        Args:
+            file_category (str): mandatory 'android-application' or 'ios-application'
+            project_name (str): optional project_name to filter the android application files
 
         Returns:
             fileinfo (list): dictionary containing the metadata about the file
@@ -449,11 +289,13 @@ class Client:
             [
                 {
                     "fileName" : "",
-                    "fileCategory": "ios-test-application",
+                    "fileCategory": "android-test-application",
                     "md5": "",
                     "fileURL": "",
                     "fileUUID": "",
-                    "XCTestRunFileUrl": ""
+                    "testCodePackageName": "",
+                    "testRunnerName": "",
+                    "projectName": ""
                 },
                 {
                     "fileName" : "",
@@ -462,13 +304,15 @@ class Client:
                     "fileURL": "",
                     "fileUUID": "",
                     "XCTestRunFileUrl": ""
+                    "projectName": ""
                 }
             ]
+
+            Note: "projectName" will be present in response if passed in a filter, else the value will be ""
         """
-        # pass
         file = File(client=self)
-        status = file.list_ios_native_test_application(project_name=project_name)
-        return status
+        app_list = file.get_native_test_application_list(file_category=file_category, project_name=project_name)
+        return app_list
 
     # Device
 
@@ -696,8 +540,6 @@ class Client:
         tray = Tray(client=self)
         status = tray.get_tray_info(tray_id=tray_id)
         return status
-
-
 
     # Test Configuration & Test Parameters
 
