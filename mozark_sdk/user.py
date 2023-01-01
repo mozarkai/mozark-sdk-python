@@ -22,8 +22,7 @@ class User:
 
         resp = requests.post(login_url, json=data, headers=new_headers)
         api_access_token = resp.json()['AuthenticationResult']['IdToken']
-        self.config["api_access_token"] = api_access_token
-        return resp.status_code, resp.text
+        return api_access_token
 
     def logout(self):
         pass

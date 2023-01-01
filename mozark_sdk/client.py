@@ -1,15 +1,14 @@
 import configparser
+import requests
 from pathlib import Path
 
-from mozark_sdk.file import File
-from mozark_sdk.executetest import TestExecute
-from mozark_sdk.device import Device
-from mozark_sdk.testanalytics import TestAnalytics
-
-import requests
-
+from mozark_sdk.user import User
 from mozark_sdk.project import Project
+from mozark_sdk.file import File
+from mozark_sdk.device import Device
 from mozark_sdk.tray import Tray
+from mozark_sdk.executetest import TestExecute
+from mozark_sdk.testanalytics import TestAnalytics
 
 
 class Client:
@@ -33,20 +32,8 @@ class Client:
         return self.config
 
     def login(self):
-        new_headers = {'X-Amz-Target': 'AWSCognitoIdentityProviderService.InitiateAuth',
-                       'Content-Type': 'application/x-amz-json-1.1'}
-
-        login_url = "https://cognito-idp.ap-south-1.amazonaws.com/"
-        data = {
-            "AuthParameters": {
-                "USERNAME": self.config.get("username"),
-                "PASSWORD": self.config.get("password")
-            },
-            "AuthFlow": "USER_PASSWORD_AUTH",
-            "ClientId": self.config.get("client_id")
-        }
-        resp = requests.post(login_url, json=data, headers=new_headers)
-        api_access_token = resp.json()['AuthenticationResult']['IdToken']
+        user = User(self)
+        api_access_token = user.login()
         self.config["api_access_token"] = api_access_token
 
     def logout(self):
