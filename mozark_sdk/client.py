@@ -840,10 +840,10 @@ class Client:
     # Test Analytics
 
     def get_test_execution_info_full(self, test_id=None):
-        """
+        """ Get test execution info by test id
 
         Args:
-            test_id:
+            test_id: test id
 
         Returns:
             {
@@ -924,28 +924,39 @@ class Client:
             }
         """
         analytics = TestAnalytics(client=self)
-        test_info = analytics.get_test_information(analytics, test_id)
-        test_cases = analytics.get_test_testcases(analytics, test_id)
-        test_events = analytics.get_test_events(analytics, test_id)
-        test_kpis = analytics.get_test_kpis(analytics, test_id)
-        test_http_apis = analytics.get_test_apis(analytics, test_id)
-        test_screenshots = analytics.get_test_screenshot_list(analytics, test_id)
-        test_logs = analytics.get_test_output_file_list(analytics, test_id)
-
-        return {
-            "test_info": test_info,
-            "test_cases": test_cases,
-            "events": test_events,
-            "kpis": test_kpis,
-            "http_api": test_http_apis,
-            "screenshots": test_screenshots,
-            "logs": test_logs
-        }
+        result = analytics.get_test_execution_info_full(test_id=test_id)
+        return result
 
     def get_test_execution_info_by_section(self, test_id=None, section=None):
-        # Section = test_info, test_configuration, test_case_summary, test_cases, test_output_artifacts, events
-        # KPIs,
-        # pass
+        """ Get Test Execution info by information section
+
+        Args:
+            test_id(str): test id
+            section(str): supported info section names
+                        - 'basic_test_info'
+                        - 'test_configuration'
+                        - 'test_cases'
+                        - 'events'
+                        - 'kpis_user_experience'
+                        - 'kpis_api_performance_http'
+                        - 'files_device_screenshots'
+                        - 'files_device_screen_record'
+                        - 'files_har'
+                        - 'files_device_cpu_metrics'
+                        - 'files_device_memory_metrics'
+                        - 'files_device_battery_metrics'
+                        - 'files_device_graphics_metrics'
+                        - 'files_device_network_packets'
+                        - 'files_device_debug_logs'
+                        - 'files_test_execution_output'
+                        - 'files_test_framework_output'
+                        - 'kpis_system_performance_cpu_metrics'
+                        - 'kpis_system_performance_memory_metrics'
+                        - 'kpis_system_performance_battery_metrics'
+                        - 'kpis_app_performance_graphics_metrics'
+        Returns:
+            section_info(dict): section information
+        """
         analytics = TestAnalytics(client=self)
         response = None
         if section == "test_info":
@@ -964,12 +975,34 @@ class Client:
             response = analytics.get_test_output_file_list(analytics, test_id)
         return response
 
-    def download_test_screenshot(self, test_id=None, image_name=None, file_name=None):
-        analytics = TestAnalytics(client=self)
-        response = analytics.download_test_screenshot(test_id=test_id, file_name=image_name, output_file=file_name)
-        return response
+    def download_by_section(self, test_id=None, section=None):
+        """ Download test analytics information as a json file, raw file, list of raw files
 
-    def download_test_log(self, test_id=None, log_name=None, file_name=None):
-        analytics = TestAnalytics(client=self)
-        response = analytics.download_test_output_file(test_id=test_id, file_name=log_name, output_file=file_name)
-        return response
+        Args:
+            test_id(str): test id
+            section(str): supported info section names
+                        - 'basic_test_info'                         - json
+                        - 'test_configuration'                      - json
+                        - 'test_cases'                              - json
+                        - 'events'                                  - json
+                        - 'kpis_user_experience'                    - json
+                        - 'kpis_api_performance_http'               - json
+                        - 'files_device_screenshots'                - png
+                        - 'files_device_screen_record'              - mp4
+                        - 'files_har'                               - har
+                        - 'files_device_cpu_metrics'                - csv
+                        - 'files_device_memory_metrics'             - csv
+                        - 'files_device_battery_metrics'            - csv
+                        - 'files_device_graphics_metrics'           - csv
+                        - 'files_device_network_packets'            - pcap
+                        - 'files_device_debug_logs'                 - log
+                        - 'files_test_execution_output'             - log
+                        - 'files_test_framework_output'             - log | xml | json | html
+                        - 'kpis_system_performance_cpu_metrics'     - json
+                        - 'kpis_system_performance_memory_metrics'  - json
+                        - 'kpis_system_performance_battery_metrics' - json
+                        - 'kpis_app_performance_graphics_metrics'   - json
+        Returns:
+            file(binary): based on the section/file requested.
+        """
+        pass
