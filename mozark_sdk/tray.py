@@ -80,9 +80,6 @@ class Tray:
             return {"statusCode:": response.status_code, "message": response.text}
 
     def delete_tray(self, tray_name=None):
-        # DELETE
-        # https://hotstar-api.mozark.ai/tray/delete?trayid=bd7670e1-a54d-4db6-a007-b0af8cead544
-        # pass
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
 
@@ -111,7 +108,6 @@ class Tray:
                         return {"statusCode:": response.status_code, "message": response.text}
             else:
                 return "Failure: tray with name " + tray_name + " not exists."
-        # return response.text
 
     def get_tray_list(self):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -127,18 +123,3 @@ class Tray:
             return my_resp
         else:
             return {"statusCode:": response.status_code, "message": response.text}
-
-# def list_tray(self):
-#     new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
-#                    'Content-Type': 'application/json'}
-#     new_params = {
-#     }
-#     tray_api_url = self.config.get("api_url") + "tray/list"
-#     # Get list of tray created
-#     response = requests.get(tray_api_url, params=new_params, headers=new_headers)
-#     if response.status_code == 200:
-#         my_resp = json.loads(response.text)
-#         my_resp = my_resp['body']['trays']
-#         return my_resp
-#     else:
-#         return {"statusCode:": response.status_code, "message": response.text}

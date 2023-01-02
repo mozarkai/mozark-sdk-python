@@ -433,7 +433,6 @@ class Client:
                         "deviceNetwork": ""
                     }
                 ]
-
             }
         """
         tray = Tray(client=self)
