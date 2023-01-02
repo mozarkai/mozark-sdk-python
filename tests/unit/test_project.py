@@ -12,7 +12,7 @@ class TestProject(TestCase):
         response = client.create_project(project_name=project_name, project_description=project_description)
         self.assertEqual(response, "Success")
         response = client.create_project(project_name=project_name, project_description=project_description)
-        self.assertEqual(response, "Failure: Project already exists")
+        self.assertEqual(response, "Failure: Project with "+project_name+" already exists.")
 
     def test_get_project_info(self):
         project_name = "Sample Android Project"

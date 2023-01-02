@@ -21,7 +21,7 @@ class Project:
         if response.json()["status"] == 200 and response.json()["message"] == "Success":
             return "Success"
         elif response.json()["status"] == 409 and response.json()["message"] == "Project already exists":
-            return "Failure: Project already exists"
+            return "Failure: Project with "+project_name+" already exists."
 
     def get_project_info(self, project_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),

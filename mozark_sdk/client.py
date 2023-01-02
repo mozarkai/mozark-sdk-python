@@ -1,5 +1,4 @@
 import configparser
-import requests
 from pathlib import Path
 
 from mozark_sdk.user import User
@@ -376,82 +375,128 @@ class Client:
     # def get_device_busy_slots(self, devices=None):
     #     pass
 
-    def create_tray(self, tray_name=None, platform=None, device_list=None):
+    def create_tray(self, platform=None, tray_name=None, device_list=None):
         """ Create tray for a given device platform category
 
         Args:
-            tray_name (str): Unique tray name
-            device_list (str): device list
             platform(str): type of devices
+            tray_name (str): Unique tray name(without spaces)
+            device_list (str): device list
 
         Returns:
             message (str): 'Success' if tray is created successfully, 'Failure' along with failure reason
 
-            "Failure: Tray with `{tray_name}` already exists" - in case if a tray with a given name already exists
+            "Failure: Tray with `{tray_name}` already exists." - in case if a tray with a given name already exists
         """
-        # pass
         tray = Tray(client=self)
-        status = tray.create_tray(name=tray_name, platform=platform, device_list=device_list)
+        status = tray.create_tray(platform=platform, tray_name=tray_name, device_list=device_list)
+        return status
+
+    def get_tray_info(self, tray_name=None):
+        """ Returns tray information for a given tray name
+        Args:
+            tray_name (str): Tray Name
+
+        Returns:
+
+            tray_info(dict): tray information along with device info
+
+            {
+                "trayName": "",
+                "trayPlatform": "android",
+                "trayUUID": "",
+                "trayDevices" : [
+                    {
+                        "deviceSerial": "",
+                        "deviceBrand": "",
+                        "deviceCity": "",
+                        "deviceCountry": "",
+                        "deviceModelName": "",
+                        "deviceModelNumber": "",
+                        "devicePlatform": "android",
+                        "deviceOSVersion": "",
+                        "deviceSDKVersion": ["", ""],
+                        "deviceUUID": "",
+                        "deviceNetwork": ""
+                    },
+                    {
+                        "deviceSerial": "",
+                        "deviceBrand": "",
+                        "deviceCity": "",
+                        "deviceCountry": "",
+                        "deviceModelName": "",
+                        "deviceModelNumber": "",
+                        "devicePlatform": "android",
+                        "deviceOSVersion": "",
+                        "deviceSDKVersion": ["", ""],
+                        "deviceUUID": "",
+                        "deviceNetwork": ""
+                    }
+                ]
+
+            }
+        """
+        tray = Tray(client=self)
+        tray_info = tray.get_tray_info(tray_name=tray_name)
+        return tray_info
+
+    def update_tray(self, tray_name=None, device_list=None):
+        """ Update List of devices for a given tray name
+
+        Args:
+            tray_name(str): Tray name
+            device_list(list): Updated device list
+
+        Returns:
+            message (str): 'Success' if tray is updated successfully, 'Failure' along with failure reason
+
+            "Failure" in case of failure
+        """
+        tray = Tray(client=self)
+        status = tray.update_tray(tray_name=tray_name, device_list=device_list)
+        return status
+
+    def delete_tray(self, tray_name=None):
+        """ Delete tray with a given tray name
+
+        Args:
+            tray_name(str): Tray name
+
+        Returns:
+            message (str): 'Success' if tray is updated successfully, 'Failure' along with failure reason
+
+            "Failure" in case of failure
+        """
+        tray = Tray(client=self)
+        status = tray.delete_tray(tray_name=tray_name)
         return status
 
     def get_tray_list(self):
-        # pass
-        tray = Tray(client=self)
-        status = tray.list_tray()
-        return status
-
-    def update_tray_devices(self, tray_id=None, device_list=None):
-        # pass
-        tray = Tray(client=self)
-        status = tray.update_tray(tray_id=tray_id, device_list=device_list)
-        return status
-
-    def delete_tray(self, tray_id=None):
-        # pass
-        tray = Tray(client=self)
-        status = tray.delete_tray(tray_id=tray_id)
-        return status
-
-    def get_device_list_by_tray(self, tray_id=None):
-        """ Returns device information of all devices added as part of a given tray
-
+        """ Get tray list
         Returns:
-            device_info (list): list of dictionary containing the information about the device
+            tray_list(list): List of tray info
 
             [
                 {
-                    "deviceSerial": "",
-                    "deviceBrand": "",
-                    "deviceCity": "",
-                    "deviceCountry": "",
-                    "deviceModelName": "",
-                    "deviceModelNumber": "",
-                    "devicePlatform": "android",
-                    "deviceOSVersion": "",
-                    "deviceSDKVersion": ["", ""],
-                    "deviceUUID": "",
-                    "deviceNetwork": ""
+                    "trayName": "",
+                    "trayPlatform": "android",
+                    "trayUUID": ""
                 },
                 {
-                    "deviceSerial": "",
-                    "deviceBrand": "",
-                    "deviceCity": "",
-                    "deviceCountry": "",
-                    "deviceModelName": "",
-                    "deviceModelNumber": "",
-                    "devicePlatform": "android",
-                    "deviceOSVersion": "",
-                    "deviceSDKVersion": ["", ""],
-                    "deviceUUID": "",
-                    "deviceNetwork": ""
+                    "trayName": "",
+                    "trayPlatform": "ios",
+                    "trayUUID": ""
+                },
+                {
+                    "trayName": "",
+                    "trayPlatform": "living-room",
+                    "trayUUID": ""
                 }
             ]
         """
-
-        # pass
         tray = Tray(client=self)
-        status = tray.get_tray_info(tray_id=tray_id)
-        return status
+        tray_list = tray.get_tray_list()
+        return tray_list
 
     # Test Configuration & Test Parameters
 

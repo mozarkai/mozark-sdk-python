@@ -6,6 +6,14 @@ from unittest import TestCase
 
 class TestTray(TestCase):
 
+    def test_create_tray(self):
+        client = Client()
+        client.login()
+
+        device_list = ["RF8R70LNY6W"]
+        response = client.create_tray(platform="android", tray_name="Sample_Tray_4", device_list=device_list)
+        print(response)
+
     def test_tray_functionalities(self):
         client = Client()
         # client.set_config()
