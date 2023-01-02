@@ -25,8 +25,8 @@ class TestStartTestExecution(TestCase):
         #                                      test_parameters=test_parameters)
         # print(status)
         time_format = "%Y-%m-%dT%H:%M:%S"
-        start_time = datetime.datetime(2022, 12, 28, 2, 12, 40)
-        end_time = datetime.datetime(2022, 12, 29, 1, 11, 40)
+        start_time = datetime.datetime(2023, 1, 5, 2, 12, 40)
+        end_time = datetime.datetime(2023, 1, 6, 1, 11, 40)
         start_time = start_time.strftime(time_format)
         end_time = end_time.strftime(time_format)
         interval = 10

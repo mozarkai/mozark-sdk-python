@@ -97,8 +97,8 @@ class TestStartTestExecution(TestCase):
         # type_exe = "NOW"
         type_exe = "SCHEDULE"
         now_time = datetime.now(tz=ZoneInfo('Asia/Kolkata')).isoformat()
-        start_time = datetime(2022, 12, 24, 2, 12, 40, tzinfo=ZoneInfo('Asia/Kolkata'))
-        end_time = datetime(2022, 12, 25, 1, 11, 40, tzinfo=ZoneInfo('Asia/Kolkata'))
+        start_time = datetime(2022, 12, 29, 2, 12, 40, tzinfo=ZoneInfo('Asia/Kolkata'))
+        end_time = datetime(2022, 12, 30, 1, 11, 40, tzinfo=ZoneInfo('Asia/Kolkata'))
         interval = 10
         time_diff = ((end_time - start_time).total_seconds()) / 60
         schedule = TestExecute(client=client)
