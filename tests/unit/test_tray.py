@@ -11,28 +11,48 @@ class TestTray(TestCase):
         client.login()
 
         device_list = ["RF8R70LNY6W"]
-        response = client.create_tray(platform="android", tray_name="Sample_Tray_4", device_list=device_list)
-        print(response)
+        response = client.create_tray(platform="android", tray_name="Sample_Tray_10", device_list=device_list)
+        print("\n 1 create tray : ", response)
 
-    def test_tray_functionalities(self):
+    def test_get_tray_info(self):
         client = Client()
-        # client.set_config()
         client.login()
-        # device_list = client.get_android_device_list()
-        # print(device_list)
-        message = client.create_tray(tray_name='Sumit_Test', platform="android", device_list=["RF8R70LNY6W"])
-        print(message)
-        tray_list = client.get_tray_list()
-        print(tray_list)
-        tray_id = tray_list[0]['trayID']
-        tray_info = client.get_device_list_by_tray(tray_id=tray_id)
-        print(tray_info)
-        message = client.update_tray_devices(tray_id=tray_id, device_list=[])
-        print(message)
-        tray_info = client.get_device_list_by_tray(tray_id=tray_id)
-        print(tray_info)
-        message = client.delete_tray(tray_id=tray_id)
-        print(message)
+        response = client.get_tray_info(tray_name="Sample_Tray_10")
+        print("\n 2 get tray info : ", response)
+
+    def test_get_tray_list(self):
+        client = Client()
+        client.login()
+        response = client.get_tray_list()
+        print("\n 3 get tray list : ", response)
+
+    def test_delete_tray(self):
+
+        client = Client()
+        client.login()
+        response = client.delete_tray(tray_name="Sample_Tray_10")
+        print("\n 5 delete tray by name : ", response)
+
+
+    # def test_tray_functionalities(self):
+    #     client = Client()
+    #     # client.set_config()
+    #     client.login()
+    #     # device_list = client.get_android_device_list()
+    #     # print(device_list)
+    #     message = client.create_tray(tray_name='Sumit_Test', platform="android", device_list=["RF8R70LNY6W"])
+    #     print(message)
+    #     tray_list = client.get_tray_list()
+    #     print(tray_list)
+    #     tray_id = tray_list[0]['trayID']
+    #     tray_info = client.get_device_list_by_tray(tray_id=tray_id)
+    #     print(tray_info)
+    #     message = client.update_tray_devices(tray_id=tray_id, device_list=[])
+    #     print(message)
+    #     tray_info = client.get_device_list_by_tray(tray_id=tray_id)
+    #     print(tray_info)
+    #     message = client.delete_tray(tray_id=tray_id)
+    #     print(message)
 
         # Tray
         # Created
@@ -60,6 +80,3 @@ class TestTray(TestCase):
         # Successfully
         # {"statusCode": 200, "body": []}
         # []
-
-
-
