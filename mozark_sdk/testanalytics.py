@@ -8,7 +8,7 @@ class TestAnalytics:
     def __init__(self, client=None):
         self.config = client.get_config()
 
-    def get_test_list(self, client=None):
+    def get_test_list(self, from_date_time=None, to_date_time=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         new_params = {

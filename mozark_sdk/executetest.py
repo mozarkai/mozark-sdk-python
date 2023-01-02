@@ -5,50 +5,84 @@ import requests
 
 class TestExecute:
     config = None
+    client = None
 
     def __init__(self, client=None):
         self.config = client.get_config()
+        self.client = client
 
-    # def execute_now(self, devices=None, schedule=None):
-    #     pass
-    #
-    # def schedule(self, devices=None, schedule=None):
-    #     pass
+    def execute_test_now(self,
+                         project_name=None,
+                         test_framework=None,
+                         application_file_name=None,
+                         test_application_file_name=None,
+                         devices=None,
+                         test_configuration=None,
+                         test_parameters=None
+                         ):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+        test_parameters_req = {
+            "testType": "app-automation",
+            "maxTestDuration": test_parameters["maxTestDuration"],
+            "testFramework": test_framework,
+            "projectName": project_name,
+            "packageName": ""
+        }
+        application_url = self.client.get_application_info(file_name=application_file_name)["fileURL"]
+        test_application_url = self.client.get_native_test_application_info(file_name=test_application_file_name)[
+            "fileURL"]
 
-    # def make_schedule(self, list_device=None, app_name=None, test_app_name=None, time_schedule=None, type_exe=None):
-    #     new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
-    #                    'Content-Type': 'application/json'}
-    #     data = {
-    #         "deviceId": list_device,
-    #         "testConfiguration": {
-    #             "captureHAR": True,
-    #             "captureCPUMetrics": True,
-    #             "captureMemoryMetrics": False,
-    #             "captureBatteryMetrics": True,
-    #             "captureGraphicsMetrics": False,
-    #             "captureDeviceScreenShots": False,
-    #             "recordDeviceScreen": False,
-    #             "captureDeviceNetworkPackets": False
-    #         },
-    #         "scheduleConfiguration": time_schedule,
-    #         "testAction": {
-    #             "pre": {},
-    #             "post": {}
-    #         },
-    #         "testParameters": {
-    #             "maxTestDuration": 600,
-    #             "testFramework": "android-uiautomator",
-    #             "testRuntime": "robot",
-    #             "projectName": "test"
-    #         },
-    #         "applicationUrl": app_name,
-    #         "testApplicationUrl": test_app_name,
-    #         "executionType": type_exe
-    #     }
-    #
-    #     select_device_url = "https://development-api.mozark.ai/testexecute/schedules"
-    #     response = requests.post(select_device_url, json=data, headers=new_headers)
-    #     return response
+        data = {
+            "deviceId": devices,
+            "testConfiguration": test_configuration,
+            "scheduleConfiguration": {},
+            "testAction": {
+                "pre": {},
+                "post": {}
+            },
+            "testParameters": test_parameters_req,
+            "applicationUrl": application_url,
+            "testApplicationUrl": test_application_url,
+            "executionType": "NOW"
+        }
+
+        print(data)
+
+        test_api_url = self.config.get("api_url") + "testexecute/schedules"
+        response = requests.post(test_api_url, json=data, headers=new_headers)
+        if response.status_code == 200:
+            schedule_id = {
+                "scheduleId": response.json()["data"]["scheduleId"]
+            }
+            test_api_url = self.config.get("api_url") + "testexecute/schedules"
+            response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
+
+        print(response.json())
+        return response
+
+    def get_test_info(self, test_id=None):
+        pass
+
+    def schedule_test_executions(self,
+                                 project_name=None,
+                                 test_framework=None,
+                                 application_file_name=None,
+                                 test_application_file_name=None,
+                                 devices=None,
+                                 test_configuration=None,
+                                 test_parameters=None,
+                                 start_date_time=None,
+                                 end_date_time=None,
+                                 interval=None
+                                 ):
+        pass
+
+    def get_test_schedule_info(self, schedule_id=None):
+        pass
+
+    def get_test_schedule_list(self, from_date_time=None, to_date_time=None):
+        pass
 
     def execute_test(self, client=None, device_list=None, test_configuration={}, schedule_configuration={},
                      test_parameters={},

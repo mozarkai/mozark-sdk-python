@@ -537,100 +537,307 @@ class Client:
     # Test Execution
 
     def start_test_execution(self,
+                             project_name=None,
+                             test_framework=None,
+                             application_file_name=None,
+                             test_application_file_name=None,
                              devices=None,
-                             application_url=None,
-                             test_application_url=None,
                              test_configuration=None,
                              test_parameters=None
                              ):
-        # pass
-        action = TestExecute(client=self)
-        status = action.test_now(device_list=devices, application_url=application_url,
-                                 application_test_url=test_application_url,
-                                 test_configuration=test_configuration, test_parameters=test_parameters)
-        return status
-
-    def abort_test_execution(self, test_id=None):
-        pass
-
-    def schedule_test_execution(self,
-                                devices=None,
-                                application_url=None,
-                                test_application_url=None,
-                                schedule_configuration=None,
-                                test_configuration=None,
-                                test_parameters=None,
-                                ):
-        """
+        """ Execute test now for a given configuration
 
         Args:
-            devices:
-            application_url:
-            test_application_url:
-            test_framework:
-            test_configuration:
-            test_parameters:
-            test_start_datetime:
-            test_end_datetime:
-            interval:
+            project_name(str): project name
+            test_framework(str): supported test framework 'android-uiautomator' or 'ios-xcuitest'
+            application_file_name(str): file name of an application .apk or .ipa
+            test_application_file_name: file name of a test application .apk or .ipa
+            devices(list): list of device serial
+            test_configuration(dict): test configuration as a key value pairs
+            test_parameters(dict): test parameters as a key value pairs
 
         Returns:
-            response (dict): unique schedule ID created if successful, else Error along with error message
+            test_status(dict): test status containing the message and a test id to monitor
 
             {
-                "message" = "Success",
-                "scheduleId" = ""
+                "message": "Success: Executed/Scheduled successfully",
+                "testId": ""
+            }
+        """
+        action = TestExecute(client=self)
+        status = action.execute_test_now(project_name=project_name,
+                                         test_framework=test_framework,
+                                         application_file_name=application_file_name,
+                                         test_application_file_name=test_application_file_name,
+                                         devices=devices,
+                                         test_configuration=test_configuration,
+                                         test_parameters=test_parameters
+                                         )
+        return status
+
+    def get_test_info(self, test_id=None):
+        """ get test info
+
+        Args:
+            test_id(str):
+
+        Returns:
+            {
+                "projectName" : "",
+                "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+                "applicationFileName": "",
+                "testApplicationFileName": "",
+                "device": "",
+                "testStartTime": "",
+                "testEndTime": "",
+                "testUUID": "",
+                "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                "testStatusDescription": ""
             }
 
         """
         action = TestExecute(client=self)
-        status = action.schedule_test(device_list=devices, application_url=application_url,
-                                      application_test_url=test_application_url,
-                                      schedule_configuration=schedule_configuration,
-                                      test_configuration=test_configuration, test_parameters=test_parameters)
+        status = action.get_test_info(test_id=test_id)
         return status
 
-    # def get_test_schedule_info(self, schedule_id=None):
-    #     f"""
-    #
-    #     Args:
-    #         schedule_id:
-    #
-    #     Returns:
-    #         schedule_info (dict):
-    #
-    #         {
-    #     "scheduleId" : "schedule_id",
-    #             test_ids : [
-    #                 "test_id1",
-    #                 "test_id2",
-    #                 "test_id3"
-    #             ]
-    #
-    #         }
-    #
-    #     """
-    #     pass
+    def abort_test_execution(self, test_id=None):
+        """ Abort a test which is running
 
-    def cancel_test_schedule(self, schedule_id=None):
-        # pass
+        Args:
+            test_id(str):
+
+        Returns:
+            testStatus(str): 'Success' if aborted successfully. 'Failure' with failure reason
+        """
         action = TestExecute(client=self)
-        status = action.delete_schedule(action, schedule_id=schedule_id)
+        status = action.abort_test(test_id=test_id)
         return status
 
-    def get_test_schedule_list(self):
+    def get_test_list(self, from_date_time=None, to_date_time=None):
+        """ get list of test info
+
+        Returns:
+            test_info(list): list of test info
+
+            [
+                {
+                    "projectName" : "",
+                    "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+                    "applicationFileName": "",
+                    "testApplicationFileName": "",
+                    "device": "",
+                    "testStartTime": "",
+                    "testEndTime": "",
+                    "testUUID": "",
+                    "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                    "testStatusDescription": ""
+                },
+                {
+                    "projectName" : "",
+                    "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+                    "applicationFileName": "",
+                    "testApplicationFileName": "",
+                    "device": "",
+                    "testStartTime": "",
+                    "testEndTime": "",
+                    "testUUID": "",
+                    "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                    "testStatusDescription": ""
+                }
+            ]
+        """
         # pass
+        analytics = TestAnalytics(client=self)
+        test_list = analytics.get_test_list(from_date_time=from_date_time, to_date_time=to_date_time)
+        return test_list
+
+    def schedule_test_execution(self,
+                                project_name=None,
+                                test_framework=None,
+                                application_file_name=None,
+                                test_application_file_name=None,
+                                devices=None,
+                                test_configuration=None,
+                                test_parameters=None,
+                                start_date_time=None,
+                                end_date_time=None,
+                                interval=None
+                                ):
+        """ Execute test now for a given configuration
+
+        Args:
+            project_name(str): project name
+            test_framework(str): supported test framework 'android-uiautomator' or 'ios-xcuitest'
+            application_file_name(str): file name of an application .apk or .ipa
+            test_application_file_name: file name of a test application .apk or .ipa
+            devices(list): list of device serial
+            test_configuration(dict): test configuration as a key value pairs
+            test_parameters(dict): test parameters as a key value pairs
+            start_date_time(datetime): schedule start date and time
+            end_date_time(datetime): schedule end date and time
+            interval(number): interval between two test runs
+
+        Returns:
+            test_status(dict): test status containing the message and a test id to monitor
+
+            {
+                "message": "Success: Executed/Scheduled successfully",
+                "scheduleId": "",
+                testIds: [
+                    {
+                        "test_id" : "",
+                        "test_start_time": "",
+                    },
+                    {
+                        "test_id" : "",
+                        "test_start_time": "",
+                    }
+                ]
+            }
+
+        """
         action = TestExecute(client=self)
-        schedule_list = action.list_schedules(action)
+        status = action.schedule_test_executions(project_name=project_name,
+                                                 test_framework=test_framework,
+                                                 application_file_name=application_file_name,
+                                                 test_application_file_name=test_application_file_name,
+                                                 devices=devices,
+                                                 test_configuration=test_configuration,
+                                                 test_parameters=test_parameters,
+                                                 start_date_time=start_date_time,
+                                                 end_date_time=end_date_time,
+                                                 interval=interval
+                                                 )
+        return status
+
+    def get_test_schedule_info(self, schedule_id=None):
+        """ get test schedule info
+
+        Args:
+            schedule_id(str): schedule id
+
+        Returns:
+            schedule_info (dict): schedule information containing the list of test info
+
+            {
+                "scheduleUUID": "",
+                "scheduleStartTime": "",
+                "scheduleEndTime": "",
+                "testInterval": "",
+                "testConfiguration": {}
+                "testParameters": {},
+                "projectName" : "",
+                "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+                "applicationFileName": "",
+                "testApplicationFileName": "",
+                "testInfo": [
+                    {
+                        "device": "",
+                        "testStartTime": "",
+                        "testEndTime": "",
+                        "testUUID": "",
+                        "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                        "testStatusDescription": ""
+                    },
+                    {
+                        "device": "",
+                        "testStartTime": "",
+                        "testEndTime": "",
+                        "testUUID": "",
+                        "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                        "testStatusDescription": ""
+                    }
+            }
+        """
+        action = TestExecute(client=self)
+        status = action.get_test_schedule_info(schedule_id=schedule_id)
+        return status
+
+    def delete_test_schedule(self, schedule_id=None):
+        """ Delete the test schedule
+
+        Args:
+            schedule_id(str):
+
+        Returns:
+            testScheduleStatus(str): 'Success' if deleted successfully. 'Failure' with failure reason
+        """
+        action = TestExecute(client=self)
+        status = action.delete_test_schedule_info(schedule_id=schedule_id)
+        return status
+
+    def get_test_schedule_list(self, from_date_time=None, to_date_time=None):
+        """ get list of test schedule info
+
+        Returns:
+            schedule_info(list): list of schedule info
+
+            [
+                {
+                    "scheduleUUID": "",
+                    "scheduleStartTime": "",
+                    "scheduleEndTime": "",
+                    "testInterval": "",
+                    "testConfiguration": {}
+                    "testParameters": {},
+                    "projectName" : "",
+                    "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+                    "applicationFileName": "",
+                    "testApplicationFileName": "",
+                    "testInfo": [
+                        {
+                            "device": "",
+                            "testStartTime": "",
+                            "testEndTime": "",
+                            "testUUID": "",
+                            "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                            "testStatusDescription": ""
+                        },
+                        {
+                            "device": "",
+                            "testStartTime": "",
+                            "testEndTime": "",
+                            "testUUID": "",
+                            "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                            "testStatusDescription": ""
+                        }
+                },
+                {
+                    "scheduleUUID": "",
+                    "scheduleStartTime": "",
+                    "scheduleEndTime": "",
+                    "testInterval": "",
+                    "testConfiguration": {}
+                    "testParameters": {},
+                    "projectName" : "",
+                    "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+                    "applicationFileName": "",
+                    "testApplicationFileName": "",
+                    "testInfo": [
+                        {
+                            "device": "",
+                            "testStartTime": "",
+                            "testEndTime": "",
+                            "testUUID": "",
+                            "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                            "testStatusDescription": ""
+                        },
+                        {
+                            "device": "",
+                            "testStartTime": "",
+                            "testEndTime": "",
+                            "testUUID": "",
+                            "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                            "testStatusDescription": ""
+                        }
+                }
+            ]
+        """
+        action = TestExecute(client=self)
+        schedule_list = action.get_test_schedule_list(from_date_time=from_date_time, to_date_time=to_date_time)
         return schedule_list
 
     # Test Analytics
-
-    def get_test_list(self):
-        # pass
-        analytics = TestAnalytics(client=self)
-        test_list = analytics.get_test_list(analytics)
-        return test_list
 
     def get_test_execution_info_full(self, test_id=None):
         analytics = TestAnalytics(client=self)

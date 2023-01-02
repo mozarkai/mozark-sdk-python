@@ -30,6 +30,8 @@ class Tray:
         # pass
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
+
+
         new_params = {
             "trayid": tray_name
         }
