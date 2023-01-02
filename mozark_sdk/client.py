@@ -7,7 +7,7 @@ from mozark_sdk.file import File
 from mozark_sdk.device import Device
 from mozark_sdk.tray import Tray
 from mozark_sdk.executetest import TestExecute
-from mozark_sdk.testanalytics import TestAnalytics
+from mozark_sdk.test_analytics import TestAnalytics
 
 
 class Client:
@@ -840,6 +840,89 @@ class Client:
     # Test Analytics
 
     def get_test_execution_info_full(self, test_id=None):
+        """
+
+        Args:
+            test_id:
+
+        Returns:
+            {
+                "testUUID": "",
+                "testStartDateTime": "",
+                "testEndDateTime": "",
+                "projectName": "",
+                "applicationFileName": "",
+                "testApplicationFileName": "",
+                "deviceSerial": "",
+                "deviceMake": "",
+                "deviceModel": "",
+                "deviceCity": "",
+                "deviceCountry": "",
+                "deviceNetwork": "",
+                "devicePlatform": "",
+                "deviceOSVersion": "",
+                "deviceNetworkOperator": "",
+                "testStatus": "",
+                "testStatusDescription": "",
+                "testCasesTotal": "",
+                "testCasesPassed": "",
+                "testCasesFailed": "",
+                "testCases": [
+                    {
+                        "testCaseName": "",
+                        "testCaseResult": "PASS | FAIL",
+                        "testCaseStartDateTime": "",
+                        "testCaseEndDateTime": "",
+                    },
+                    {
+                        "testCaseName": "",
+                        "testCaseResult": "PASS | FAIL",
+                        "testCaseStartDateTime": "",
+                        "testCaseEndDateTime": "",
+                    },
+                    {
+                        "testCaseName": "",
+                        "testCaseResult": "PASS | FAIL",
+                        "testCaseStartDateTime": "",
+                        "testCaseEndDateTime": "",
+                    }
+                ],
+                "userExperienceKpis": [
+                    {
+                        "kpiName": "",
+                        "kpiValue": "",
+                        "testCaseName": ""
+                    },
+                    {
+                        "kpiName": "",
+                        "kpiValue": "",
+                        "testCaseName": ""
+                    },
+                    {
+                        "kpiName": "",
+                        "kpiValue": "",
+                        "testCaseName": ""
+                    }
+                ],
+                "events": [
+                    {
+                        "eventName": "",
+                        "eventDateTime": "",
+                        "testCaseName": ""
+                    },
+                    {
+                        "eventName": "",
+                        "eventDateTime": "",
+                        "testCaseName": ""
+                    },
+                    {
+                        "eventName": "",
+                        "eventDateTime": "",
+                        "testCaseName": ""
+                    }
+                ]
+            }
+        """
         analytics = TestAnalytics(client=self)
         test_info = analytics.get_test_information(analytics, test_id)
         test_cases = analytics.get_test_testcases(analytics, test_id)
