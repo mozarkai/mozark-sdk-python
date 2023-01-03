@@ -514,13 +514,14 @@ class Client:
             "captureDeviceScreenShots": False,
             "recordDeviceScreen": False
         }
+        config = {}
         if platform == "android":
             config = mobile_test_configuration
         elif platform == "ios":
             config = mobile_test_configuration
         elif platform == "living-room":
             config = living_room_test_configuration
-        return mobile_test_configuration
+        return config
 
     def get_default_test_parameters(self):
         test_parameters = {
@@ -611,8 +612,6 @@ class Client:
         action = TestExecute(client=self)
         status = action.abort_test(test_id=test_id)
         return status
-
-
 
     def schedule_test_execution(self,
                                 project_name=None,
@@ -838,6 +837,7 @@ class Client:
         analytics = TestAnalytics(client=self)
         test_list = analytics.get_test_list(from_date_time=from_date_time, to_date_time=to_date_time)
         return test_list
+
     def get_test_execution_info_full(self, test_id=None):
         """ Get test execution info by test id
 
