@@ -160,13 +160,13 @@ class TestExecute:
                 testIds = response.json()['data']['list'][0]['testExecutions']
                 testId_list = []
                 for tests in testIds:
-                    test_new = {"test_id": tests['uuid'], "test_start_time": tests['testScheduledTime']}
+                    test_new = {"testUUID": tests['uuid'], "testStartDateTime": tests['testScheduledTime']}
                     testId_list.append(test_new)
 
                 formatted_response = {
                     "message": "Success: Executed/Scheduled successfully",
-                    "scheduleId": scheduleId,
-                    "testIds": testId_list
+                    "scheduleUUID": scheduleId,
+                    "testRuns": testId_list
                 }
                 return formatted_response
             except Exception as e:
@@ -190,10 +190,10 @@ class TestExecute:
             test_details = {
                 "device": tests['devices'][0],
                 "testStartTime": tests['testScheduledTime'],
-                # "testEndTime": "",
+                "testEndTime": "",
                 "testUUID": tests['uuid'],
-                "testStatus": tests['testStatus']
-                # "testStatusDescription": ""
+                "testStatus": tests['testStatus'],
+                "testStatusDescription": ""
             }
             testInfo.append(test_details)
 
@@ -229,10 +229,10 @@ class TestExecute:
                 test_details = {
                     "device": tests['devices'][0],
                     "testStartTime": tests['testScheduledTime'],
-                    # "testEndTime": "",
+                    "testEndTime": "",
                     "testUUID": tests['uuid'],
-                    "testStatus": tests['testStatus']
-                    # "testStatusDescription": ""
+                    "testStatus": tests['testStatus'],
+                    "testStatusDescription": ""
                 }
                 testInfo.append(test_details)
             formatted_response = {
