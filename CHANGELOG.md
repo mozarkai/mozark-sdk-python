@@ -2,50 +2,46 @@
 
 ## 0.5 - 2023-01-03
 
+### User 
+* [ADDED] Login for obtaining authentication-toke to use other functionalities
+* [ADDED] Logout for closing an authenticated session
+
 ### Project
-* Add project
-* Get list of projects added
-* Update project name
-* Delete project
+* [ADDED] `create_project` for creating a project
+* [ADDED] `get_project_info` for getting project information
+* [ADDED] `delete_project` for deleting project
+* [ADDED] `get_project_list` for listing all projects
 
 ### File
-* Upload android application
-* Get list of android applications uploaded
-* Delete an uploaded android application
-* Upload android native-application
-* Get list of android native-applications uploaded
-* Delete an uploaded android native-application
-* Upload ios application
-* Get list of ios applications uploaded
-* Delete an uploaded ios application
-* Upload ios native-application
-* Get list of ios native-applications uploaded
-* Delete an uploaded ios native-application
+* [ADDED] `get_application_info` for getting file information
+* [ADDED] `delete_application` for deleting application
+* [ADDED] `get_application_list` for listing all application file information
+* [ADDED] `upload_native_test_application` for uploading native test application
+* [ADDED] `get_native_test_application_info` for getting native test application information
+* [ADDED] `delete_native_test_application` for deleting native test application
+* [ADDED] `get_native_test_application_list` for listing all native application
 
 ### Devices
-* Get list of android devices
-* Get list of ios devices
-* Get list of living room devices
+* [ADDED] `get_device_list` for listing device information of all devices
 
 ### Tray
-* Create a tray
-* Get list trays created
-* Get info of a tray
-* Update devices in a tray
-* Delete a tray
+* [ADDED] `create_tray` for creating tray
+* [ADDED] `get_tray_info` for getting information of tray
+* [ADDED] `update_tray` for updating device list in a tray
+* [ADDED] `delete_tray` for deleting tray
+* [ADDED] `get_tray_list` for listing all the trays created
 
 ### Execution
-* Execute test
-* Schedule test
-* Get schedule list
-* Get schedule info
-* Delete a schedule
+* [ADDED] `start_test_execution` for testing now
+* [ADDED] `get_test_info` for getting information of a test run
+* [ADDED] `abort_test_execution` for aborting a test run
+* [ADDED] `schedule_test_execution` for scheduling test
+* [ADDED] `get_test_schedule_info` for getting information of a schedule
+* [ADDED] `delete_test_schedule` for deleting scheduled tests
+* [ADDED] `get_test_schedule_list` for listing all the schedules added
 
 ### Analytics
-* Get list of test runs
-* Abort test execution
-* Get full info of a test
-* Get test section info 
-* Get screenshot list
-* Get output file list
-* Download file
+* [ADDED] `get_test_list` for listing all the test runs
+* [ADDED] `get_test_execution_info_full` for getting all information of a test run
+* [ADDED] `get_test_execution_info_by_section` for getting a section information of a test run
+* [ADDED] `download_by_section` for downloading test run information as a json file, raw file, list of raw files
