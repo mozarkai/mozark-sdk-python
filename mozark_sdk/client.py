@@ -612,43 +612,7 @@ class Client:
         status = action.abort_test(test_id=test_id)
         return status
 
-    def get_test_list(self, from_date_time=None, to_date_time=None):
-        """ get list of test info
 
-        Returns:
-            test_info(list): list of test info
-
-            [
-                {
-                    "projectName" : "",
-                    "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
-                    "applicationFileName": "",
-                    "testApplicationFileName": "",
-                    "device": "",
-                    "testStartTime": "",
-                    "testEndTime": "",
-                    "testUUID": "",
-                    "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
-                    "testStatusDescription": ""
-                },
-                {
-                    "projectName" : "",
-                    "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
-                    "applicationFileName": "",
-                    "testApplicationFileName": "",
-                    "device": "",
-                    "testStartTime": "",
-                    "testEndTime": "",
-                    "testUUID": "",
-                    "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
-                    "testStatusDescription": ""
-                }
-            ]
-        """
-        # pass
-        analytics = TestAnalytics(client=self)
-        test_list = analytics.get_test_list(from_date_time=from_date_time, to_date_time=to_date_time)
-        return test_list
 
     def schedule_test_execution(self,
                                 project_name=None,
@@ -837,7 +801,43 @@ class Client:
         return schedule_list
 
     # Test Analytics
+    def get_test_list(self, from_date_time=None, to_date_time=None):
+        """ get list of test info
 
+        Returns:
+            test_info(list): list of test info
+
+            [
+                {
+                    "projectName" : "",
+                    "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+                    "applicationFileName": "",
+                    "testApplicationFileName": "",
+                    "device": "",
+                    "testStartTime": "",
+                    "testEndTime": "",
+                    "testUUID": "",
+                    "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                    "testStatusDescription": ""
+                },
+                {
+                    "projectName" : "",
+                    "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+                    "applicationFileName": "",
+                    "testApplicationFileName": "",
+                    "device": "",
+                    "testStartTime": "",
+                    "testEndTime": "",
+                    "testUUID": "",
+                    "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+                    "testStatusDescription": ""
+                }
+            ]
+        """
+        # pass
+        analytics = TestAnalytics(client=self)
+        test_list = analytics.get_test_list(from_date_time=from_date_time, to_date_time=to_date_time)
+        return test_list
     def get_test_execution_info_full(self, test_id=None):
         """ Get test execution info by test id
 
@@ -959,19 +959,19 @@ class Client:
         analytics = TestAnalytics(client=self)
         response = None
         if section == "test_info":
-            response = analytics.get_test_information(analytics, test_id)
+            response = analytics.get_test_information(test_id=test_id)
         elif section == "test_cases":
-            response = analytics.get_test_testcases(analytics, test_id)
+            response = analytics.get_test_testcases(test_id=test_id)
         elif section == "events":
-            response = analytics.get_test_events(analytics, test_id)
+            response = analytics.get_test_events(test_id=test_id)
         elif section == "kpis":
-            response = analytics.get_test_kpis(analytics, test_id)
+            response = analytics.get_test_kpis(test_id=test_id)
         elif section == "http_api":
-            response = analytics.get_test_apis(analytics, test_id)
+            response = analytics.get_test_apis(test_id=test_id)
         elif section == "screenshots":
-            response = analytics.get_test_screenshot_list(analytics, test_id)
+            response = analytics.get_test_screenshot_list(test_id=test_id)
         elif section == "logs":
-            response = analytics.get_test_output_file_list(analytics, test_id)
+            response = analytics.get_test_output_file_list(test_id=test_id)
         return response
 
     def download_by_section(self, test_id=None, section=None):
