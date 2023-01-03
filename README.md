@@ -8,18 +8,15 @@ This Python SDK implements Client interface to access various MOZARK application
 
 Table of contents
 =================
-<!-- TOC -->
-* [Table of contents](#table-of-contents)
-  * [Features](#features)
-  * [Releases](#releases)
-  * [Installation](#installation)
-    * [Requirements](#requirements)
-    * [Configuration](#configuration)
-  * [Getting Started](#getting-started)
-    * [Integration](#integration)
-    * [Quickstart](#quickstart)
-    * [Examples](#examples)
-<!-- TOC -->
+* [Features](#features)
+* [Releases](#releases)
+* [Installation](#installation)
+  * [Requirements](#requirements)
+  * [Configuration](#configuration)
+* [Getting Started](#getting-started)
+  * [Integration](#integration)
+  * [Quickstart](#quickstart)
+  * [Examples](#examples)
 
 ## Features
 
