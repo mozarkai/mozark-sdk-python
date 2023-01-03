@@ -381,7 +381,7 @@ class Client:
         Args:
             platform(str): type of devices
             tray_name (str): Unique tray name(without spaces)
-            device_list (str): device list
+            device_list (list): device list
 
         Returns:
             message (str): 'Success' if tray is created successfully, 'Failure' along with failure reason
