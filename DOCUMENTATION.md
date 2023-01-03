@@ -45,8 +45,6 @@ Table of contents
   * [Delete test schedule](#delete-test-schedule)
   * [Get list of test schedules](#get-list-of-test-schedules)
 * [Analysing test outcomes](#analysing-test-outcomes)
-  * [Get test execution information](#get-test-execution-information-1)
-  * [Get test execution information by information section](#get-test-execution-information-by-information-section)
   * [Download test analytics information](#download-test-analytics-information)
 
 ## SDK Configuration
@@ -616,34 +614,305 @@ test_configuration = {
 }
 ```
 
-
-
-
-### List of Test Parameters 
+### List of Test Parameters
 
 ## Executing a test
 
 ### Execute a test now
 
+To execute test on set of devices, User need to pass following parameters to `start_test_execution()` API.
+
+| Parameter                  | Description                                                                                              |
+|----------------------------|----------------------------------------------------------------------------------------------------------|
+| project_name               | Name of the project                                                                                      |
+| test_framework             | Application automation testing framework                                                                 |
+| application_file_name      | Name of application package file uploaded                                                                |
+| test_application_file_name | Name of test application package file uploaded                                                           |
+| devices                    | List of device serials                                                                                   |
+| test_configuration         | Test configuration see [Test Configuration and Test Parameters](#test-configuration-and-test-parameters) |
+| test_parameters            | Test parameters see [Test Configuration and Test Parameters](#test-configuration-and-test-parameters)    |
+
+List of supported test frameworks:
+
+* `android-uiautomator` - Android native test framework
+* `ios-xcuitest` - iOS native test framework
+* `lr-android-uiautomator` - Living room device automation uses Android native test framework to automate TV remote control app.
+
+`start_test_execution()` returns a success message `Success: Executed/Scheduled successfully` along with the `testId` if the execution request is submitted successfully.
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+
+tray_list = client.get_tray_list()
+project_name = "Android App Performance Testing"
+test_framework = "android-uiautomator"
+application_file_name = "MyApplication-1.0.apk"
+test_application_file_name = "my-experience-test-1.0.apk"
+devices = ["a1234a", "a1234b", "a1234c"]
+test_configuration = {
+  "captureHAR": True,
+  "captureDeviceScreenShots": True,
+  "recordDeviceScreen": True,
+  "captureSystemDebugLogs": True,
+  "captureLiveLogs": True
+}
+test_parameters = {
+  "maxTestDuration": 10
+}
+response = client.start_test_execution(project_name=project_name,
+                                       test_framework="android-uiautomator",
+                                       application_file_name=application_file_name,
+                                       test_application_file_name=test_application_file_name,
+                                       devices=devices,
+                                       test_configuration=test_configuration,
+                                       test_parameters=test_parameters
+                                       )
+```
+
 ### Get test execution information
+
+After the test execution request is submitted, user can monitor the test status by checking the test information.
+
+In addition to the parameters passed to `start_test_execution()`, `get_test_info()` returns following information:
+
+| Key                   | Description                                               |
+|-----------------------|-----------------------------------------------------------|
+| testStartTime         | Date and time when the test execution is actually started |
+| testEndTime           | Date and time when the test execution is test completed   |
+| testUUID              | Unique ID of the test                                     |
+| testStatus            | Status of the test                                        |
+| testStatusDescription | Sub-status or Error description of a test status          |
+
+List of test status and its description:
+
+| Test Status | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| SCHEDULED   | Test execution request is submitted but test run is not yet started         |
+| STARTED     | Test run has started                                                        |
+| COMPLETED   | Test run has completed                                                      |
+| ABORTED     | Test run is aborted before it has finished `maxTestDuration`                |
+| FAILED(*)   | Test run has completed, but all the test cases in the test suite has failed |
+
+---
+**NOTE**
+
+TODO: Include `FAILED` test status
+
+---
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+test_id = "aa1234bb" # testUUID 
+test_info = client.get_test_info(test_id=test_id)
+```
 
 ### Abort test execution
 
+User can abort test execution of a test which is running at the time of abort. 
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+test_id = "aa1234bb" # testUUID 
+test_info = client.abort_test_execution(test_id=test_id)
+```
+
 ### Get list of test runs
+
+User can get list of test runs. `get_test_list()` returns list of test information objects as described in [Get test execution information](#get-test-execution-information).
+
+---
+**NOTE**
+
+Filter options `from_date_time` and `to_date_time` will be implemented in next release.
+
+---
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+test_id = "aa1234bb" # testUUID 
+test_info = client.get_test_list()
+```
 
 ## Scheduling tests
 
+Scheduling tests to execute in a recurrent manner could be useful in various scenarios. These scenarios may include but not limited to following:
+
+* Evaluate user experience by running same user scenarios throughout day or at specific time on a day.
+* Collect multiple test outcome - app performance metrics, user experience metrics etc. - to make data driven decision for product development.
+* Multiple test runs planned within schedule can be deleted easily.
+
 ### Scheduling recurrent tests
+
+Scheduling recurrent tests is similar to executing test now. In addition to the parameters passed in `start_test_execution()` (see [Execute a test now](#execute-a-test-now)), following parameters are required.
+
+| Parameter       | Description                                                           |
+|-----------------|-----------------------------------------------------------------------|
+| start_date_time | Date and time when schedule will start                                |
+| end_date_time   | Date and time when schedule will end                                  |
+| interval        | Interval(*in minutes*) between two test runs in a scheduled execution |
+
+`interval` should be greater than `maxTestDuration` in `test_parameters`. 
+
+`schedule_test_execution()` returns a status message along with `scheduleUUID` and list of test runs after the schedule test execution request is submitted successfully. 
+
+* `testStartDateTime` mentioned in a test object within `testRuns` array denote actual test start time when the test run is picked up for execution or the test run has completed execution. Alternatively, it denotes expected test start date and time if the test is yet to run(or the date time is in future).
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+
+tray_list = client.get_tray_list()
+project_name = "Android App Performance Testing"
+test_framework = "android-uiautomator"
+application_file_name = "MyApplication-1.0.apk"
+test_application_file_name = "my-experience-test-1.0.apk"
+devices = ["a1234a", "a1234b", "a1234c"]
+test_configuration = {
+  "captureHAR": True,
+  "captureDeviceScreenShots": True,
+  "recordDeviceScreen": True,
+  "captureSystemDebugLogs": True,
+  "captureLiveLogs": True
+}
+test_parameters = {
+  "maxTestDuration": 10
+}
+
+schedule_start_date_time = "2023-01-03T22:00:00.000+05:30"
+schedule_end_date_time = "2023-01-05T23:00:00.000+05:30"
+
+interval = 15
+
+response = client.schedule_test_execution(project_name=project_name, 
+                                          test_framework="android-uiautomator",
+                                          application_file_name=application_file_name,
+                                          test_application_file_name=test_application_file_name,
+                                          devices=devices,
+                                          test_configuration=test_configuration,
+                                          test_parameters=test_parameters,
+                                          start_date_time=schedule_start_date_time,
+                                          end_date_time=schedule_end_date_time,
+                                          interval=interval)
+```
+
+Submitting request for scheduling test runs will fail if the device slots in existing schedules conflicts with the new request. Getting a schedule information could help choose the free device slots for new schedule.
 
 ### Get test schedule information
 
+User can get test execution schedule information by passing `schedule_id` to `get_test_schedule_info()`. This API returns common parameters used while scheduling the test execution and a test specific parameters as specified below:
+
+Schedule information:
+
+```json
+{
+  "scheduleUUID": "",
+  "scheduleStartTime": "",
+  "scheduleEndTime": "",
+  "testInterval": "",
+  "testConfiguration": {}
+  "testParameters": {},
+  "projectName" : "",
+  "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
+  "applicationFileName": "",
+  "testApplicationFileName": ""
+}
+```
+
+Test specific parameters
+```json
+{
+    "device": "",
+    "testStartTime": "",
+    "testEndTime": "",
+    "testUUID": "",
+    "testStatus": "SCHEDULED | STARTED | COMPLETED | ABORTED | FAILED",
+    "testStatusDescription": ""
+}
+```
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+schedule_id = "aa1234bb" # scheduleUUID 
+schedule_info = client.get_test_schedule_info(schedule_id=schedule_id)
+```
+
+
 ### Delete test schedule
+
+User can delete a test schedule by passing a `schedule_id` passed in `delete_test_schedule()`.
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+schedule_id = "aa1234bb" # scheduleUUID 
+response = client.delete_test_schedule(schedule_id=schedule_id)
+```
+
+Deleting a test execution schedule deletes all the test runs which are yet to start execution at the time of schedule deletion.
 
 ### Get list of test schedules
 
+User can get list of all schedules, the `get_test_schedule_list()` returns list of schedule information same as described in [Get test schedule information](#get-test-schedule-information).
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+schedule_info = client.get_test_schedule_list()
+```
+
+---
+**NOTE**
+
+Filter options `from_date_time` and `to_date_time` will be implemented in next release.
+
+---
+
 ## Analysing test outcomes
 
-### Get test execution information
+### Get a complete test execution information
 
 ### Get test execution information by information section
 

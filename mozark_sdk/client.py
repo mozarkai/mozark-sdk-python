@@ -681,15 +681,15 @@ class Client:
 
             {
                 "message": "Success: Executed/Scheduled successfully",
-                "scheduleId": "",
-                testIds: [
+                "scheduleUUID": "",
+                "testRuns": [
                     {
-                        "test_id" : "",
-                        "test_start_time": "",
+                        "testUUID" : "",
+                        "testStartDateTime": "",
                     },
                     {
-                        "test_id" : "",
-                        "test_start_time": "",
+                        "testUUID" : "",
+                        "testStartDateTime": "",
                     }
                 ]
             }
