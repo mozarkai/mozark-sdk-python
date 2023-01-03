@@ -52,17 +52,55 @@ class TestExecute:
         test_api_url = self.config.get("api_url") + "testexecute/schedules"
         response = requests.post(test_api_url, json=data, headers=new_headers)
         if response.status_code == 200:
-            schedule_id = {
-                "scheduleId": response.json()["data"]["scheduleId"]
-            }
-            test_api_url = self.config.get("api_url") + "testexecute/schedules"
-            response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
+            try:
+                schedule_id = {
+                    "scheduleId": response.json()["data"]["scheduleId"]
+                }
+                test_api_url = self.config.get("api_url") + "testexecute/schedules"
+                response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
+                print(response.json())
+                schedule_details = response.json()['data']['list'][0]['testExecutions']
+                testIds = []
+                for tests in schedule_details:
+                    testIds.append(tests['uuid'])
+                response = {
+                    "message": "Success: Executed/Scheduled successfully",
+                    "testId": testIds
+                }
+                return response
+            except Exception as e:
+                print(e)
+                return {"statusCode:": response.status_code, "message": response.text}
 
-        print(response.json())
-        return response.json()['data']['list'][0]
+        else:
+            return {"statusCode:": response.status_code, "message": response.text}
 
     def get_test_info(self, test_id=None):
-        pass
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+        new_params = {
+        }
+        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/info"
+        # Fetch info of test
+        response = requests.get(test_api_url, params=new_params, headers=new_headers)
+        if response.status_code == 200:
+            test_list = json.loads(response.text)
+            test_list = test_list['body']
+            formatted_response = {
+                "projectName": test_list['projectName'],
+                # "testFramework": test_list['extra']['testType'],
+                "applicationFileName": test_list['appVersion'],
+                "testApplicationFileName": test_list['scriptName'],
+                "device": test_list['deviceName'],
+                "testStartTime": test_list['testStartTime'],
+                "testEndTime": test_list['testEndTime'],
+                "testUUID": test_list['uuid']['testId'],
+                "testStatus": test_list['testStatus']
+                # "testStatusDescription": ""
+            }
+            return formatted_response
+        else:
+            return {"statusCode:": response.status_code, "message": response.text}
 
     def schedule_test_executions(self,
                                  project_name=None,
@@ -108,18 +146,34 @@ class TestExecute:
         }
 
         print(data)
-
         test_api_url = self.config.get("api_url") + "testexecute/schedules"
         response = requests.post(test_api_url, json=data, headers=new_headers)
         if response.status_code == 200:
-            schedule_id = {
-                "scheduleId": response.json()["data"]["scheduleId"]
-            }
-            test_api_url = self.config.get("api_url") + "testexecute/schedules"
-            response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
+            try:
+                schedule_id = {
+                    "scheduleId": response.json()["data"]["scheduleId"]
+                }
+                test_api_url = self.config.get("api_url") + "testexecute/schedules"
+                response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
+                print(response.json())
+                scheduleId = response.json()['data']['list'][0]['uuid']
+                testIds = response.json()['data']['list'][0]['testExecutions']
+                testId_list = []
+                for tests in testIds:
+                    test_new = {"testUUID": tests['uuid'], "testStartDateTime": tests['testScheduledTime']}
+                    testId_list.append(test_new)
 
-        print(response.json())
-        return response.json()['data']['list'][0]
+                formatted_response = {
+                    "message": "Success: Executed/Scheduled successfully",
+                    "scheduleUUID": scheduleId,
+                    "testRuns": testId_list
+                }
+                return formatted_response
+            except Exception as e:
+                print(e.with_traceback())
+                return {"statusCode:": response.status_code, "message": response.text}
+        else:
+            return {"statusCode:": response.status_code, "message": response.text}
 
     def get_test_schedule_info(self, schedule_id=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -131,7 +185,33 @@ class TestExecute:
         response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
         print(response.json())
         response = response.json()['data']['list'][0]
-        return response
+        testInfo = []
+        for tests in response['testExecutions']:
+            test_details = {
+                "device": tests['devices'][0],
+                "testStartTime": tests['testScheduledTime'],
+                "testEndTime": "",
+                "testUUID": tests['uuid'],
+                "testStatus": tests['testStatus'],
+                "testStatusDescription": ""
+            }
+            testInfo.append(test_details)
+
+        formatted_response = {
+            "scheduleUUID": response['uuid'],
+            "scheduleStartTime": response['scheduleConfiguration']['startTime'],
+            "scheduleEndTime": response['scheduleConfiguration']['endTime'],
+            "testInterval": response['scheduleConfiguration']['interval'],
+            "testConfiguration": response['testExecutions'][0]['testConfiguration'],
+            "testParameters": response['testExecutions'][0]['testParameters'],
+            "projectName": response['testExecutions'][0]['testParameters']['projectName'],
+            "testFramework": response['testExecutions'][0]['testParameters']['testFramework'],
+            "applicationFileName": response['testExecutions'][0]['applicationUrl'],
+            "testApplicationFileName": response['testExecutions'][0]['testApplicationUrl'],
+            "testInfo": testInfo
+        }
+
+        return formatted_response
 
     def get_test_schedule_list(self, from_date_time=None, to_date_time=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -142,8 +222,34 @@ class TestExecute:
         }
         test_api_url = self.config.get("api_url") + "testexecute/schedules"
         response = requests.get(test_api_url, params=params, headers=new_headers)
-        print(response.json())
-        return response
+        complete_response = []
+        for res in response.json()['data']['list']:
+            testInfo = []
+            for tests in res['testExecutions']:
+                test_details = {
+                    "device": tests['devices'][0],
+                    "testStartTime": tests['testScheduledTime'],
+                    "testEndTime": "",
+                    "testUUID": tests['uuid'],
+                    "testStatus": tests['testStatus'],
+                    "testStatusDescription": ""
+                }
+                testInfo.append(test_details)
+            formatted_response = {
+                "scheduleUUID": res['uuid'],
+                "scheduleStartTime": res['scheduleConfiguration']['startTime'],
+                "scheduleEndTime": res['scheduleConfiguration']['endTime'],
+                "testInterval": res['scheduleConfiguration']['interval'],
+                "testConfiguration": res['testExecutions'][0]['testConfiguration'],
+                "testParameters": res['testExecutions'][0]['testParameters'],
+                "projectName": res['testExecutions'][0]['testParameters']['projectName'],
+                "testFramework": res['testExecutions'][0]['testParameters']['testFramework'],
+                "applicationFileName": res['testExecutions'][0]['applicationUrl'],
+                "testApplicationFileName": res['testExecutions'][0]['testApplicationUrl'],
+                "testInfo": testInfo
+            }
+            complete_response.append(formatted_response)
+        return complete_response
 
     def execute_test(self, client=None, device_list=None, test_configuration={}, schedule_configuration={},
                      test_parameters={},
@@ -189,7 +295,7 @@ class TestExecute:
             return {"statusCode:": response.status_code, "message": response.text}
         # return response.status_code, response.text
 
-    def delete_schedule(self, client=None, schedule_id=None):
+    def delete_schedule(self, schedule_id=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         new_params = {
@@ -206,7 +312,7 @@ class TestExecute:
             return {"statusCode:": response.status_code, "message": response.text}
         # return response.text
 
-    def abort_test(self, client=None, test_id=None):
+    def abort_test(self, test_id=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         data = {
