@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='mozark_sdk',
     packages=['mozark_sdk'],
-    version='0.4',
+    version='0.5',
     license='MIT',
     description='Automation test APIs',
     author='Mozark',
