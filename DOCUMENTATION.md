@@ -136,7 +136,6 @@ project_description = "This project evaluate the quality of application experien
 project_info = client.get_project_info(project_name=project_name)
 
 project_name = project_info["projectName"]
-project_description = project_info["projectDescription"]
 project_id = project_info["projectUUID"]
 ```
 
@@ -836,7 +835,7 @@ Schedule information:
   "scheduleStartTime": "",
   "scheduleEndTime": "",
   "testInterval": "",
-  "testConfiguration": {}
+  "testConfiguration": {},
   "testParameters": {},
   "projectName" : "",
   "testFramework": "android-uiautomator | ios-xcuitest | living-room-automate",
@@ -845,7 +844,7 @@ Schedule information:
 }
 ```
 
-Test specific parameters
+Test specific information
 ```json
 {
     "device": "",
@@ -914,10 +913,127 @@ Filter options `from_date_time` and `to_date_time` will be implemented in next r
 
 ### Get a complete test execution information
 
+Based on the test configuration, test outcome has various sections to display useful information about a test run.
+
+#### Basic test information
+
+Basic information about the test run includes:
+
+| Key                     | Description                                                      |
+|-------------------------|------------------------------------------------------------------|
+| testUUID                | Unique test ID                                                   |
+| testStartDateTime       | Start date time of a test run                                    |
+| testEndDateTime         | Date time when the test run was completed                        |
+| projectName             | Project name                                                     |
+| applicationFileName     | Uploaded application file name                                   |
+| testApplicationFileName | Uploaded test application file name                              |
+| deviceSerial            | Device serial                                                    |
+| deviceMake              | Make of a device                                                 |
+| deviceModel             | Model of a device                                                |
+| deviceCity              | City where device is provisioned                                 |
+| deviceCountry           | Country in which device is provisioned                           |
+| deviceNetwork           | Network which is enabled during test execution                   |
+| devicePlatform          | `android`, `ios`, or `living-room`                               |
+| deviceOSVersion         | Version of OS installed in a device                              |
+| deviceNetworkOperator   | Name of a network operator chosen while executing a test         |
+| testStatus              | `SCHEDULED` or `STARTED` or `COMPLETED` or `ABORTED` or `FAILED` |
+| testStatusDescription   | Test status description                                          |
+| testCasesTotal          | Total number of test cases executed                              |
+| testCasesPassed         | Total number of test cases passed                                |
+| testCasesFailed         | Total number of test cases failed                                |
+
+#### Test Cases
+
+| Key                      | Description                                                 |
+|--------------------------|-------------------------------------------------------------|
+| testCaseName             | test case name                                              |
+| testCaseResult           | `PASS` or `FAIL`                                            |
+| testCaseStartDateTime(*) | Date and time when the test code flow entered the test case |
+| testCaseEndDateTime(*)   | Date and time when the test code flow exited the test case  |
+
+---
+**NOTE**
+
+`testCaseStartDateTime` and `testCaseEndDateTime` can be captured if the test framework support.
+
+---
+
+#### User experience KPIs
+
+User experience KPIs are derived from the events captured during the automated user journey from the test code. These are captured within a scope of a test case. 
+
+`userExperienceKpis` section list all the KPIs which can be calculated based on events captured within a test case.
+
+| Key          | Description                                                 |
+|--------------|-------------------------------------------------------------|
+| kpiName      | Name of the KPI                                             |
+| kpiValue     | Value of KPI                                                |
+| testCaseName | Test case name within the events for this KPI were captured |
+
+(see [How KPIs are calculated](./documentation/user-experience-kpis.md#how-kpis-are-calculated)
+
+#### Events 
+
+User can capture and send events during the user journey within test code. These events are further used to send notification or calculate user experience KPIs.
+
+(see [How to capture events from the test code](./documentation/user-experience-kpis.md#how-to-capture-events-from-the-test-code))
+
+This section lists all the events captured during the test run. It includes:
+
+| Key           | Description                                  |
+|---------------|----------------------------------------------|
+| eventName     | Name of the event                            |
+| eventDateTime | Date and time at which the event is captured |
+| testCaseName  | Test case name within this event is captured |
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+test_id = "aa1234bb" # testUUID 
+response = client.get_test_execution_info_full(test_id=test_id)
+```
+
 ### Get test execution information by information section
+
+| Section name                            | Description                                               | Response/File Type         |
+|-----------------------------------------|-----------------------------------------------------------|----------------------------|
+| basic_test_info                         | same as [Basic test information](#basic-test-information) | json                       |
+| test_configuration                      | Same as [Test configuration](#test-configuration)         | json                       |
+| test_cases                              | Same as [Test cases](#test-cases)                         | json                       |
+| events                                  | Same as [Events](#events)                                 | json                       |
+| kpis_user_experience                    | Same as [User experience KPIs](#user-experience-kpis)     | json                       |
+| kpis_api_performance_http               | Same as [User experience KPIs](#user-experience-kpis)     | json                       |
+| files_device_screenshots                | List of File URLs - same as [File URL](#file-url)         | png                        |
+| files_device_screen_record              | Same as [File URL](#file-url)                             | mp4                        |
+| files_har                               | Same as [File URL](#file-url)                             | har                        |
+| files_device_cpu_metrics                | Same as [File URL](#file-url)                             | csv                        |
+| files_device_memory_metrics             | Same as [File URL](#file-url)                             | csv                        |
+| files_device_battery_metrics            | Same as [File URL](#file-url)                             | csv                        |
+| files_device_graphics_metrics           | Same as [File URL](#file-url)                             | csv                        |
+| files_device_network_packets            | Same as [File URL](#file-url)                             | pcap                       |
+| files_device_debug_logs                 | Same as [File URL](#file-url)                             | log                        |
+| files_test_execution_output             | Same as [File URL](#file-url)                             | log                        |
+| files_test_framework_output             | Same as [File URL](#file-url)                             | log or xml or json or html |
+| kpis_system_performance_cpu_metrics     | Same as [User experience KPIs](#user-experience-kpis)     | json                       |
+| kpis_system_performance_memory_metrics  | Same as [User experience KPIs](#user-experience-kpis)     | json                       |
+| kpis_system_performance_battery_metrics | Same as [User experience KPIs](#user-experience-kpis)     | json                       |
+| kpis_app_performance_graphics_metrics   | Same as [User experience KPIs](#user-experience-kpis)     | json                       |
+
+#### File URL
+
+Structure is as below:
+
+```json
+{
+  "fileURL" : ""
+}
+```
 
 ### Download test analytics information
 
-
-
-
+User can download test analytics information for various sections in the format specified in [Section information](#get-test-execution-information-by-information-section)
