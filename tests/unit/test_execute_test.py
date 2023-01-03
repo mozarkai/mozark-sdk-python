@@ -59,6 +59,14 @@ class TestSchedule(unittest.TestCase):
 
         print(response)
 
+    def test_info(self):
+        client = Client()
+        client.login()
+
+        response = client.get_test_info(test_id="26b96d95-1c67-4bfe-9d99-159b0ef64c62")
+
+        print(response)
+
     def test_schedule(self):
         client = Client()
         client.login()
@@ -100,9 +108,25 @@ class TestSchedule(unittest.TestCase):
                                                   devices=["RF8R70LNY6W"],
                                                   test_configuration=test_configuration,
                                                   test_parameters=test_parameters,
-                                                  start_date_time="2023-01-02T22:00:00.333658+05:30",
-                                                  end_date_time="2023-01-02T23:00:00.333658+05:30",
+                                                  start_date_time="2023-01-03T22:00:00.333658+05:30",
+                                                  end_date_time="2023-01-03T23:00:00.333658+05:30",
                                                   interval=15
                                                   )
+
+        print(response)
+
+    def test_delete_schedule(self):
+        client = Client()
+        client.login()
+
+        response = client.delete_test_schedule(schedule_id="450eeee0-3197-4d8d-a9e9-54939f97bd20")
+
+        print(response)
+
+    def test_schedule_list(self):
+        client = Client()
+        client.login()
+
+        response = client.get_test_schedule_list()
 
         print(response)

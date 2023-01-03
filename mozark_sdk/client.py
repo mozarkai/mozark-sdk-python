@@ -762,7 +762,7 @@ class Client:
             testScheduleStatus(str): 'Success' if deleted successfully. 'Failure' with failure reason
         """
         action = TestExecute(client=self)
-        status = action.delete_test_schedule_info(schedule_id=schedule_id)
+        status = action.delete_schedule(schedule_id=schedule_id)
         return status
 
     def get_test_schedule_list(self, from_date_time=None, to_date_time=None):
