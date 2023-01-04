@@ -958,21 +958,7 @@ class Client:
             section_info(dict): section information
         """
         analytics = TestAnalytics(client=self)
-        response = None
-        if section == "test_info":
-            response = analytics.get_test_information(test_id=test_id)
-        elif section == "test_cases":
-            response = analytics.get_test_testcases(test_id=test_id)
-        elif section == "events":
-            response = analytics.get_test_events(test_id=test_id)
-        elif section == "kpis":
-            response = analytics.get_test_kpis(test_id=test_id)
-        elif section == "http_api":
-            response = analytics.get_test_apis(test_id=test_id)
-        elif section == "screenshots":
-            response = analytics.get_test_screenshot_list(test_id=test_id)
-        elif section == "logs":
-            response = analytics.get_test_output_file_list(test_id=test_id)
+        response = analytics.get_test_execution_info_by_section(test_id=test_id, section=section)
         return response
 
     def download_by_section(self, test_id=None, section=None):
@@ -1004,7 +990,7 @@ class Client:
                         - 'kpis_app_performance_graphics_metrics'   - json
         Returns:
             message(str) : 'Success: File filename downloaded successfully.'
-                        : 'Failure: Error downloading ile filename.'
+                        : 'Failure: Error in downloading file filename.'
         """
         analytics = TestAnalytics(client=self)
         response = analytics.download_by_section(test_id=test_id, section=section)

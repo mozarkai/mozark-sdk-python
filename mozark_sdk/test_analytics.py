@@ -52,10 +52,8 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            if test_list['errorType']:
-                test_list = test_list['errorType']
-                return test_list
-            elif test_list['body']:
+
+            if test_list['body']:
                 test_info = test_list['body']
 
                 test_information = {
@@ -79,7 +77,6 @@ class TestAnalytics:
                     "testCasesTotal": test_info['testCaseSummary']['total'],
                     "testCasesPassed": test_info['testCaseSummary']['passed'],
                     "testCasesFailed": test_info['testCaseSummary']['failed'],
-
                 }
 
                 return test_information
@@ -97,10 +94,9 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            if test_list['errorType']:
-                test_list = test_list['errorType']
-                return test_list
-            elif test_list['body']:
+            # print("\n 222: ", test_list)
+
+            if test_list['body']:
                 testcases = test_list['body']
                 for i in range(len(testcases['testCases'])):
                     testCaseName = testcases['testCases'][i]['testCaseName']
@@ -131,10 +127,7 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            if test_list['errorType']:
-                test_list = test_list['errorType']
-                return test_list
-            elif test_list['body']:
+            if test_list['body']:
                 events = test_list['body']
                 for i in range(len(events["events"])):
                     eventname = events["events"][i]['eventName']
@@ -164,10 +157,8 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            if test_list['errorType']:
-                test_list = test_list['errorType']
-                return test_list
-            elif test_list['body']:
+
+            if test_list['body']:
                 kpi = test_list['body']
                 for i in range(len(kpi["experience"])):
                     kpiname = kpi["experience"][i]['kpiName']
@@ -194,10 +185,7 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            if test_list['errorType']:
-                test_list = test_list['errorType']
-                return test_list
-            elif test_list['body']:
+            if test_list['body']:
                 test_list = test_list['body']
                 return test_list
         else:
@@ -218,7 +206,7 @@ class TestAnalytics:
             test_list = test_list['data']['list']
             return test_list
         else:
-            return {"statusCode:": response.status_code, "message": response.text}
+            return None
 
     def get_test_output_file_list(self, test_id=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -237,32 +225,42 @@ class TestAnalytics:
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
-    def download_test_screenshot(self, test_id=None, file_name=None, output_path=None):
+    def download_test_screenshot(self, test_id=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
-        new_params = {
-            "testId": test_id,
-            "type": "screenshots",
-            "fileName": file_name
-        }
         test_api_url = self.config.get("api_url") + "testexecute/download"
-        # Fetch screenshots of test
-        response = requests.get(test_api_url, params=new_params, headers=new_headers)
-        if response.status_code == 200:
-            test_list = json.loads(response.text)
-            test_list = test_list['data']['list']
-            # print("\n 1.: ", test_list['fileName'])
-            # print("\n 2.: ", test_list['url'])
-            new_response = requests.get(test_list['url'])
+        make_test_id_dir = self.config.get("base_download_dir") + test_id
+        if not os.path.exists(make_test_id_dir):
+            os.mkdir(make_test_id_dir)
+        output_path = make_test_id_dir
+        list_screenshots = self.get_test_screenshot_list(test_id=test_id)
+        if list_screenshots:
+            for i in range(len(list_screenshots)):
+                file_name = list_screenshots[i]
+                new_params = {
+                    "testId": test_id,
+                    "type": "screenshots",
+                    "fileName": file_name
+                }
 
-            # print("\n 3.: ", new_response)
-            file_name = os.path.join(output_path, file_name)
-            open(file_name, "wb").write(new_response.content)
-            return "Downloaded " + file_name + " successfully"
+                # Fetch screenshots of test
+                response = requests.get(test_api_url, params=new_params, headers=new_headers)
+                if response.status_code == 200:
+                    test_list = json.loads(response.text)
+                    test_list = test_list['data']['list']
+                    new_response = requests.get(test_list['url'])
+                    file_name = os.path.join(output_path, file_name)
+                    open(file_name, "wb").write(new_response.content)
+            return f'Success: File downloaded successfully.'
         else:
-            return {"statusCode:": response.status_code, "message": response.text}
+            return f'Failure: Error in downloading file.'
 
-    def download_test_output_file(self, test_id=None, file_name=None, output_path=None):
+    def download_test_output_file(self, test_id=None, file_name=None):
+        make_test_id_dir = self.config.get("base_download_dir") + test_id
+        if not os.path.exists(make_test_id_dir):
+            os.mkdir(make_test_id_dir)
+        output_path = make_test_id_dir
+
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         new_params = {
@@ -270,20 +268,248 @@ class TestAnalytics:
             "type": "output",
             "fileName": file_name
         }
-        # print(str(new_params))
+
         test_api_url = self.config.get("api_url") + "testexecute/download"
-        # Fetch screenshots of test
+
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
             test_list = test_list['data']['list']
-            print("\n 1.: ", str(test_list))
-            print("\n 2.: ", test_list['fileName'])
-            print("\n 3: ", requests.utils.unquote(test_list['url']))
+
             new_response = requests.get(requests.utils.unquote(test_list['url']))
 
             file_name = os.path.join(output_path, file_name)
             open(file_name, "wb").write(new_response.content)
-            return "Downloaded " + file_name + " successfully"
+            return f'Success: File downloaded successfully.'
         else:
-            return {"statusCode:": response.status_code, "message": response.text}
+            return f'Failure: Error in downloading file.'
+
+    def download_by_section(self, test_id=None, section=None):
+
+        if section == 'basic_test_info':
+            make_json = self.get_test_information(test_id=test_id)
+            response = self.create_json(test_id=test_id, section=section, make_json=make_json)
+
+        elif section == 'test_configuration':
+            pass
+        elif section == 'test_cases':
+            make_json = self.get_test_testcases(test_id=test_id)
+            response = self.create_json(test_id=test_id, section=section, make_json=make_json)
+
+        elif section == 'events':
+            make_json = self.get_test_events(test_id=test_id)
+            response = self.create_json(test_id=test_id, section=section, make_json=make_json)
+
+        elif section == 'kpis_user_experience':
+            make_json = self.get_test_kpis(test_id=test_id)
+            response = self.create_json(test_id=test_id, section=section, make_json=make_json)
+
+        # need to handle error if body not present
+        elif section == 'kpis_api_performance_http':
+            make_json = self.get_test_apis(test_id=test_id)
+            print(make_json)
+            response = self.create_json(test_id=test_id, section=section, make_json=make_json)
+
+        elif section == 'files_device_screenshots':
+            response = self.download_test_screenshot(test_id=test_id)
+
+        elif section == 'kpis_system_performance_cpu_metrics':
+            pass
+        elif section == 'kpis_system_performance_memory_metrics':
+            pass
+        elif section == 'kpis_system_performance_battery_metrics':
+            pass
+        elif section == 'kpis_app_performance_graphics_metrics':
+            pass
+
+        else:
+            file_lists = self.get_test_output_file_list(test_id=test_id)
+            # print("\n file lists: ", file_lists)
+            if section == 'files_device_screen_record':
+                if 'final_video.mp4' in file_lists:
+                    file_name = 'final_video.mp4'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_har':
+                if 'har_logs.har' in file_lists:
+                    file_name = 'har_logs.har'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_cpu_metrics':
+                if 'cpu.txt' in file_lists:
+                    file_name = 'cpu.txt'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_memory_metrics':
+                if 'memory.txt' in file_lists:
+                    file_name = 'memory.txt'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_battery_metrics':
+                if 'battery.txt' in file_lists:
+                    file_name = 'battery.txt'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_graphics_metrics':
+                if 'frames.txt' in file_lists:
+                    file_name = 'frames.txt'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_network_packets':
+                if 'packet.pcap' in file_lists:
+                    file_name = 'packet.pcap'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_debug_logs':
+                if 'systemDebugLogs.log' in file_lists:
+                    file_name = 'systemDebugLogs.log'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_test_execution_output':
+                if 'execution.log' in file_lists:
+                    file_name = 'execution.log'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            # this file not available need error handle
+            elif section == 'files_test_framework_output':
+                if 'framework.log' in file_lists:
+                    file_name = 'framework.log'
+                    response = self.download_test_output_file(test_id=test_id, file_name=file_name)
+                else:
+                    response = f'Failure: Error in downloading file.'
+            else:
+                response = f'Failure: Error in downloading file.'
+        return response
+
+    def get_test_execution_info_by_section(self, test_id=None, section=None):
+        if section == 'basic_test_info':
+            response = self.get_test_information(test_id=test_id)
+        elif section == 'test_configuration':
+            pass
+        elif section == 'test_cases':
+            response = self.get_test_testcases(test_id=test_id)
+
+        elif section == 'events':
+            response = self.get_test_events(test_id=test_id)
+
+        elif section == 'kpis_user_experience':
+            response = self.get_test_kpis(test_id=test_id)
+
+        # need to handle error if body not present
+        elif section == 'kpis_api_performance_http':
+            response = self.get_test_apis(test_id=test_id)
+
+        elif section == 'files_device_screenshots':
+            response = self.get_test_screenshot_list(test_id=test_id)
+
+        elif section == 'kpis_system_performance_cpu_metrics':
+            pass
+        elif section == 'kpis_system_performance_memory_metrics':
+            pass
+        elif section == 'kpis_system_performance_battery_metrics':
+            pass
+        elif section == 'kpis_app_performance_graphics_metrics':
+            pass
+
+        else:
+            file_lists = self.get_test_output_file_list(test_id=test_id)
+            # print("\n file lists: ", file_lists)
+            if section == 'files_device_screen_record':
+                if 'final_video.mp4' in file_lists:
+                    response = 'final_video.mp4'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_har':
+                if 'har_logs.har' in file_lists:
+                    response = 'har_logs.har'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_cpu_metrics':
+                if 'cpu.txt' in file_lists:
+                    response = 'cpu.txt'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_memory_metrics':
+                if 'memory.txt' in file_lists:
+                    response = 'memory.txt'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_battery_metrics':
+                if 'battery.txt' in file_lists:
+                    response = 'battery.txt'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_graphics_metrics':
+                if 'frames.txt' in file_lists:
+                    response = 'frames.txt'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_network_packets':
+                if 'packet.pcap' in file_lists:
+                    response = 'packet.pcap'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_device_debug_logs':
+                if 'systemDebugLogs.log' in file_lists:
+                    response = 'systemDebugLogs.log'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            elif section == 'files_test_execution_output':
+                if 'execution.log' in file_lists:
+                    response = 'execution.log'
+                else:
+                    response = f'Failure: Error in downloading file.'
+
+            # this file not available need error handle
+            elif section == 'files_test_framework_output':
+                if 'framework.log' in file_lists:
+                    response = 'framework.log'
+                else:
+                    response = f'Failure: Error in downloading file.'
+            else:
+                response = f'Failure: Error in downloading file.'
+        return response
+
+    def create_json(self, test_id=None, section=None, make_json=None):
+        if "statusCode:" not in make_json:
+            file_name = self.write_to_file(test_id=test_id, section=section, make_json=make_json)
+            response = f'Success: File {file_name} downloaded successfully.'
+        else:
+            response = f'Failure: Error in downloading file.'
+        return response
+
+    def write_to_file(self, test_id=None, section=None, make_json=None):
+        make_test_id_dir = self.config.get("base_download_dir") + test_id
+        if not os.path.exists(make_test_id_dir):
+            os.mkdir(make_test_id_dir)
+        output_path = make_test_id_dir
+        file_name = f'{output_path}/{section}.json'
+        with open(file_name, "w") as outfile:
+            outfile.write(json.dumps(make_json))
+        return file_name
