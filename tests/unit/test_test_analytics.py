@@ -1,5 +1,6 @@
 from mozark_sdk.client import Client
 from unittest import TestCase
+from pathlib import Path
 
 
 class TestTestAnalytics(TestCase):
@@ -22,5 +23,19 @@ class TestTestAnalytics(TestCase):
         client = Client()
         client.login()
         test_id = '95549b4f-24a0-4a9e-8520-2fbcf7db0f12'
-        response = client.get_test_execution_info_by_section(test_id=test_id, section="screenshots")
+        section = "screenshots"
+        response = client.get_test_execution_info_by_section(test_id=test_id, section=section)
         print("\n 3 get test information : ", response)
+
+    def test_download_by_section(self):
+        client = Client()
+        client.login()
+        test_id = '95549b4f-24a0-4a9e-8520-2fbcf7db0f12'
+        output_path = Path.home()/"down"
+        section = 'output'
+        file_name = 'battery.txt'
+        # section = 'screenshots'
+        # file_name = '2023-01-02T23-40-26-305650.jpg'
+        response = client.download_by_section(test_id=test_id, section=section, file_name=file_name,
+                                              output_path=output_path)
+        print("\n 4 get test information : ", response)

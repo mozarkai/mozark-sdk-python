@@ -24,7 +24,8 @@ class Client:
         username = config.get("default", "MOZARK_APP_TESTING_USERNAME")
         password = config.get("default", "MOZARK_APP_TESTING_PASSWORD")
         client_id = config.get("default", "MOZARK_APP_TESTING_CLIENTID")
-        config = {"username": username, "password": password, "api_url": api_url, "client_id": client_id}
+        base_download_dir = config.get("default", "BASE_DOWNLOAD_DIR")
+        config = {"username": username, "password": password, "api_url": api_url, "client_id": client_id,"base_download_dir":base_download_dir}
         self.config = config
 
     def get_config(self):
@@ -1002,6 +1003,9 @@ class Client:
                         - 'kpis_system_performance_battery_metrics' - json
                         - 'kpis_app_performance_graphics_metrics'   - json
         Returns:
-            file(binary): based on the section/file requested.
+            message(str) : 'Success: File filename downloaded successfully.'
+                        : 'Failure: Error downloading ile filename.'
         """
-        pass
+        analytics = TestAnalytics(client=self)
+        response = analytics.download_by_section(test_id=test_id, section=section)
+        return response
