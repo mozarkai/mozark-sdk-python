@@ -4,6 +4,7 @@ Every API call to MOZARK platform is authorized using an `api_access_token` crea
 
 Table of contents
 =================
+
 * [SDK Configuration](#sdk-configuration)
 * [User Authentication](#user-authentication)
   * [Login](#login)
@@ -45,6 +46,13 @@ Table of contents
   * [Delete test schedule](#delete-test-schedule)
   * [Get list of test schedules](#get-list-of-test-schedules)
 * [Analysing test outcomes](#analysing-test-outcomes)
+  * [Get a complete test execution information](#get-a-complete-test-execution-information)
+    * [Basic test information](#basic-test-information)
+    * [Test Cases](#test-cases)
+    * [User experience KPIs](#user-experience-kpis)
+    * [Events](#events)
+  * [Get test execution information by information section](#get-test-execution-information-by-information-section)
+    * [File URL](#file-url)
   * [Download test analytics information](#download-test-analytics-information)
 
 ## SDK Configuration
@@ -59,6 +67,7 @@ MOZARK_APP_TESTING_URL={url}
 MOZARK_APP_TESTING_USERNAME={username}
 MOZARK_APP_TESTING_PASSWORD={password}
 MOZARK_APP_TESTING_CLIENTID={client_id}
+BASE_DOWNLOAD_DIR={local_download_base_dir}
 ```
 
 ## User Authentication

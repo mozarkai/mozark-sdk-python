@@ -8,6 +8,7 @@ This Python SDK implements Client interface to access various MOZARK application
 
 Table of contents
 =================
+
 * [Features](#features)
 * [Releases](#releases)
 * [Installation](#installation)
@@ -81,6 +82,7 @@ MOZARK_APP_TESTING_URL={url}
 MOZARK_APP_TESTING_USERNAME={username}
 MOZARK_APP_TESTING_PASSWORD={password}
 MOZARK_APP_TESTING_CLIENTID={client_id}
+BASE_DOWNLOAD_DIR={local_download_base_dir}
 ```
 
 The `login()` api reads the information mentioned in `$HOME/.mozark/config` and sets the `api_access_token` to be further used in subsequent APIs.
