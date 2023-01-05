@@ -37,5 +37,5 @@ class TestTray(TestCase):
 
         client = Client()
         client.login()
-        response = client.delete_tray(tray_name="Sample_Tray_10")
+        response = client.delete_tray(tray_name="Sample_Tray_11")
         print("\n 5 delete tray by name : ", response)

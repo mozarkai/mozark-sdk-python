@@ -81,7 +81,7 @@ class Tray:
             if response.status_code == 200:
                 my_resp = json.loads(response.text)
                 my_resp = my_resp['body']['message']
-                return my_resp
+                return 'Success'
             else:
                 return {"statusCode:": response.status_code, "message": response.text}
         else:
@@ -101,7 +101,7 @@ class Tray:
             if response.status_code == 200:
                 my_resp = json.loads(response.text)
                 my_resp = my_resp['body']['message']
-                return my_resp
+                return 'Success'
             else:
                 return {"statusCode:": response.status_code, "message": response.text}
         else:

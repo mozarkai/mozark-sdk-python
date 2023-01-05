@@ -1,6 +1,7 @@
 import json
 import requests
 import os
+from datetime import datetime
 
 
 class TestAnalytics:
@@ -22,12 +23,31 @@ class TestAnalytics:
             "userExperienceKpis": kpi,
             "events": events,
         }
-        # print("\n test_info: ", test_information)
-        # print("\n testinfo: ", test_info)
-        # print("\n event: ", test_full_info["events"]["events"])
+
         return test_information
 
+    def is_datetime_in_range(self, start_datetime=None, end_datetime=None, check_datetime=None):
+        # format = ['%Y-%m-%dT%H:%M%z', '%Y-%m-%dT%H:%M:%S.%f%z', '%Y-%m-%dT%H:%M:%S.%fZ']
+        # format = ['%Y-%m-%dT%H:%M', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%dT%H:%M:%S']
+        # if '+05:30' in check_datetime:
+        #     check_datetime = check_datetime.split('+')
+        #     check_datetime = datetime.strptime(check_datetime[0], format[0])
+        # elif '+0530' in check_datetime:
+        #     check_datetime = check_datetime.split('.')
+        #     check_datetime = datetime.strptime(check_datetime[0], format[1])
+        # else:
+        #     check_datetime = check_datetime.split('.')
+        #     check_datetime = datetime.strptime(check_datetime[0], format[2])
+        check_datetime = check_datetime.split('T')
+        if not check_datetime[0]:
+            return False
+        else:
+            # print("\n :datetime ",check_datetime)
+            check_datetime = datetime.strptime(check_datetime[0], '%Y-%m-%d')
+            return start_datetime <= check_datetime <= end_datetime
+
     def get_test_list(self, from_date_time=None, to_date_time=None):
+        test_info_list = []
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         new_params = {
@@ -38,7 +58,44 @@ class TestAnalytics:
         if response.status_code == 200:
             test_list = json.loads(response.text)
             test_list = test_list['body']
-            return test_list
+            for i in range(len(test_list)):
+                check_datetime = test_list[i]['testStartTime']
+                # check=self.is_datetime_in_range(from_date_time, to_date_time, check_datetime)
+                if self.is_datetime_in_range(from_date_time, to_date_time, check_datetime) == True:
+                    # print(i, test_list[i])
+                    if 'Scheduled' in test_list[i]['testStatus']:
+                        testStatus = 'SCHEDULED'
+                    elif 'Started' in test_list[i]['testStatus']:
+                        testStatus = 'STARTED'
+                    elif 'Completed' in test_list[i]['testStatus']:
+                        testStatus = 'COMPLETED'
+                    elif 'Aborted' in test_list[i]['testStatus']:
+                        testStatus = 'ABORTED'
+                    else:
+                        testStatus = 'FAILED'
+
+                    if '.ipa' in test_list[i]['scriptName']:
+                        testFramework = "ios-xcuitest"
+                    elif '.apk' in test_list[i]['scriptName']:
+                        testFramework = "android-uiautomator"
+                    else:
+                        testFramework = "living-room-automate"
+
+                    test_info = {
+                        "projectName": test_list[i]['projectName'],
+                        "testFramework": testFramework,
+                        "applicationFileName": test_list[i]['appVersion'],
+                        "testApplicationFileName": test_list[i]['scriptName'],
+                        "device": test_list[i]['deviceName'],
+                        "testStartTime": test_list[i]['testStartTime'],
+                        "testEndTime": "",
+                        "testUUID": test_list[i]['uuid']['testId'],
+                        "testStatus": testStatus,
+                        "testStatusDescription": test_list[i]['testStatus']
+                    }
+                    test_info_list.append(test_info)
+
+            return test_info_list
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
@@ -55,7 +112,7 @@ class TestAnalytics:
 
             if test_list['body']:
                 test_info = test_list['body']
-
+                print("\n test config: ", test_info)
                 test_information = {
                     "testUUID": test_info['uuid']['testId'],
                     "testStartDateTime": test_info['testStartTime'],
@@ -83,6 +140,26 @@ class TestAnalytics:
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
+    def get_test_configuration(self, test_id=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+        new_params = {
+        }
+        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/info"
+        # Fetch info of test
+        response = requests.get(test_api_url, params=new_params, headers=new_headers)
+        if response.status_code == 200:
+            test_list = json.loads(response.text)
+
+            if test_list['body']:
+                testConfiguration = test_list['body']['testConfiguration']
+                testConfig = {
+                    'testConfiguration': testConfiguration
+                }
+                return testConfig
+        else:
+            return {"statusCode:": response.status_code, "message": response.text}
+
     def get_test_testcases(self, test_id=None):
         testcaselist = []
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -94,7 +171,6 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            # print("\n 222: ", test_list)
 
             if test_list['body']:
                 testcases = test_list['body']
@@ -291,7 +367,8 @@ class TestAnalytics:
             response = self.create_json(test_id=test_id, section=section, make_json=make_json)
 
         elif section == 'test_configuration':
-            pass
+            make_json = self.get_test_configuration(test_id=test_id)
+            response = self.create_json(test_id=test_id, section=section, make_json=make_json)
         elif section == 'test_cases':
             make_json = self.get_test_testcases(test_id=test_id)
             response = self.create_json(test_id=test_id, section=section, make_json=make_json)
@@ -403,7 +480,7 @@ class TestAnalytics:
         if section == 'basic_test_info':
             response = self.get_test_information(test_id=test_id)
         elif section == 'test_configuration':
-            pass
+            response = self.get_test_configuration(test_id=test_id)
         elif section == 'test_cases':
             response = self.get_test_testcases(test_id=test_id)
 

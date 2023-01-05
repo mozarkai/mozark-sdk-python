@@ -1,6 +1,7 @@
 from mozark_sdk.client import Client
 from unittest import TestCase
-from pathlib import Path
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 class TestTestAnalytics(TestCase):
@@ -8,7 +9,11 @@ class TestTestAnalytics(TestCase):
     def test_get_test_list(self):
         client = Client()
         client.login()
-        response = client.get_test_list(from_date_time=None, to_date_time=None)
+        # from_date_time = datetime(2023, 1, 3, 18, 0, 0, tzinfo=ZoneInfo('Asia/Kolkata'))
+        # to_date_time = datetime(2023, 1, 3, 19, 0, 0, tzinfo=ZoneInfo('Asia/Kolkata'))
+        from_date_time = datetime(2023, 1, 3, 0, 0, 0)
+        to_date_time = datetime(2023, 1, 3, 0, 0, 0)
+        response = client.get_test_list(from_date_time=from_date_time, to_date_time=to_date_time)
         print("\n 1 get test list : ", response)
 
     def test_get_test_execution_info_full(self):
@@ -24,7 +29,7 @@ class TestTestAnalytics(TestCase):
         client.login()
         test_id = '95549b4f-24a0-4a9e-8520-2fbcf7db0f12'
         # section = 'basic_test_info'
-        # section = 'test_configuration'
+        section = 'test_configuration'
         # section = 'test_cases'
         # section = 'events'
         # section = 'kpis_user_experience'
@@ -32,7 +37,7 @@ class TestTestAnalytics(TestCase):
         # section = 'files_device_screenshots'
         # section = 'files_device_screen_record'
         # section = 'files_har'
-        section = 'files_device_cpu_metrics'
+        # section = 'files_device_cpu_metrics'
         # section = 'files_device_memory_metrics'
         # section = 'files_device_battery_metrics'
         # section = 'files_device_graphics_metrics'
@@ -51,8 +56,8 @@ class TestTestAnalytics(TestCase):
         client = Client()
         client.login()
         test_id = '95549b4f-24a0-4a9e-8520-2fbcf7db0f12'
-        section = 'basic_test_info'
-        # section = 'test_configuration'
+        # section = 'basic_test_info'
+        section = 'test_configuration'
         # section = 'test_cases'
         # section = 'events'
         # section = 'kpis_user_experience'
