@@ -476,6 +476,51 @@ class TestAnalytics:
                 response = f'Failure: Error in downloading file.'
         return response
 
+    def get_info_url_for_file(self, test_id=None, file_name=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+        new_params = {
+            "testId": test_id,
+            "type": "output",
+            "fileName": file_name
+        }
+
+        test_api_url = self.config.get("api_url") + "testexecute/download"
+
+        response = requests.get(test_api_url, params=new_params, headers=new_headers)
+        if response.status_code == 200:
+            test_list = json.loads(response.text)
+            test_list = test_list['data']['list']
+            return test_list['url']
+
+    def get_info_url_for_screenshot(self, test_id=None):
+        url_list = []
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+        test_api_url = self.config.get("api_url") + "testexecute/download"
+
+        list_screenshots = self.get_test_screenshot_list(test_id=test_id)
+        if list_screenshots:
+            for i in range(len(list_screenshots)):
+                file_name = list_screenshots[i]
+                new_params = {
+                    "testId": test_id,
+                    "type": "screenshots",
+                    "fileName": file_name
+                }
+
+                # Fetch screenshots of test
+                response = requests.get(test_api_url, params=new_params, headers=new_headers)
+                if response.status_code == 200:
+                    test_list = json.loads(response.text)
+                    test_list = test_list['data']['list']
+                    url_list.append(test_list['url'])
+            return url_list
+        else:
+            return f'Failure: Error in information.'
+
+
+
     def get_test_execution_info_by_section(self, test_id=None, section=None):
         if section == 'basic_test_info':
             response = self.get_test_information(test_id=test_id)
@@ -495,7 +540,8 @@ class TestAnalytics:
             response = self.get_test_apis(test_id=test_id)
 
         elif section == 'files_device_screenshots':
-            response = self.get_test_screenshot_list(test_id=test_id)
+            response = self.get_info_url_for_screenshot(test_id=test_id)
+            response = {"fileURL": response}
 
         elif section == 'kpis_system_performance_cpu_metrics':
             pass
@@ -511,62 +557,72 @@ class TestAnalytics:
             # print("\n file lists: ", file_lists)
             if section == 'files_device_screen_record':
                 if 'final_video.mp4' in file_lists:
-                    response = 'final_video.mp4'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='final_video.mp4')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             elif section == 'files_har':
                 if 'har_logs.har' in file_lists:
-                    response = 'har_logs.har'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='har_logs.har')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             elif section == 'files_device_cpu_metrics':
                 if 'cpu.txt' in file_lists:
-                    response = 'cpu.txt'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='cpu.txt')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             elif section == 'files_device_memory_metrics':
                 if 'memory.txt' in file_lists:
-                    response = 'memory.txt'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='memory.txt')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             elif section == 'files_device_battery_metrics':
                 if 'battery.txt' in file_lists:
-                    response = 'battery.txt'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='battery.txt')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             elif section == 'files_device_graphics_metrics':
                 if 'frames.txt' in file_lists:
-                    response = 'frames.txt'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='frames.txt')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             elif section == 'files_device_network_packets':
                 if 'packet.pcap' in file_lists:
-                    response = 'packet.pcap'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='packet.pcap')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             elif section == 'files_device_debug_logs':
                 if 'systemDebugLogs.log' in file_lists:
-                    response = 'systemDebugLogs.log'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='systemDebugLogs.log')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             elif section == 'files_test_execution_output':
                 if 'execution.log' in file_lists:
-                    response = 'execution.log'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='execution.log')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
 
             # this file not available need error handle
             elif section == 'files_test_framework_output':
                 if 'framework.log' in file_lists:
-                    response = 'framework.log'
+                    response = self.get_info_url_for_file(test_id=test_id, file_name='framework.log')
+                    response = {"fileURL": response}
                 else:
                     response = f'Failure: Error in downloading file.'
             else:
