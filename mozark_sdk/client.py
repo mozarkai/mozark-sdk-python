@@ -834,7 +834,6 @@ class Client:
                 }
             ]
         """
-        # pass
         analytics = TestAnalytics(client=self)
         test_list = analytics.get_test_list(from_date_time=from_date_time, to_date_time=to_date_time)
         return test_list

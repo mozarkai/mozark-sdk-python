@@ -5,55 +5,58 @@ Every API call to MOZARK platform is authorized using an `api_access_token` crea
 Table of contents
 =================
 
-* [SDK Configuration](#sdk-configuration)
-* [User Authentication](#user-authentication)
-  * [Login](#login)
-  * [Logout](#logout)
-* [Project](#project)
-  * [Create a project](#create-a-project)
-  * [Get project information](#get-project-information)
-  * [Delete a project](#delete-a-project)
-  * [Get list of all projects](#get-list-of-all-projects)
-* [Application Builds](#application-builds)
-  * [Upload an application package](#upload-an-application-package)
-  * [Get application package information](#get-application-package-information)
-  * [Delete application](#delete-application)
-  * [Get list of all applications](#get-list-of-all-applications)
-* [Test Application Builds](#test-application-builds)
-  * [Upload a native test application package](#upload-a-native-test-application-package)
-  * [Get test application package information](#get-test-application-package-information)
-  * [Delete test application](#delete-test-application)
-  * [Get list of all test applications](#get-list-of-all-test-applications)
-* [Devices](#devices)
-  * [Get list of all devices](#get-list-of-all-devices)
-* [Device Trays](#device-trays)
-  * [Create a device tray](#create-a-device-tray)
-  * [Get a device tray information](#get-a-device-tray-information)
-  * [Update a device tray](#update-a-device-tray)
-  * [Delete a device tray](#delete-a-device-tray)
-  * [Get device tray list](#get-device-tray-list)
-* [Test Configuration and Test Parameters](#test-configuration-and-test-parameters)
-  * [Get supported test configuration](#get-supported-test-configuration)
-  * [List of Test Parameters](#list-of-test-parameters)
-* [Executing a test](#executing-a-test)
-  * [Execute a test now](#execute-a-test-now)
-  * [Get test execution information](#get-test-execution-information)
-  * [Abort test execution](#abort-test-execution)
-  * [Get list of test runs](#get-list-of-test-runs)
-* [Scheduling tests](#scheduling-tests)
-  * [Scheduling recurrent tests](#scheduling-recurrent-tests)
-  * [Get test schedule information](#get-test-schedule-information)
-  * [Delete test schedule](#delete-test-schedule)
-  * [Get list of test schedules](#get-list-of-test-schedules)
-* [Analysing test outcomes](#analysing-test-outcomes)
-  * [Get a complete test execution information](#get-a-complete-test-execution-information)
-    * [Basic test information](#basic-test-information)
-    * [Test Cases](#test-cases)
-    * [User experience KPIs](#user-experience-kpis)
-    * [Events](#events)
-  * [Get test execution information by information section](#get-test-execution-information-by-information-section)
-    * [File URL](#file-url)
-  * [Download test analytics information](#download-test-analytics-information)
+* [Getting Started](#getting-started)
+* [Table of contents](#table-of-contents)
+  * [SDK Configuration](#sdk-configuration)
+  * [User Authentication](#user-authentication)
+    * [Login](#login)
+    * [Logout](#logout)
+  * [Project](#project)
+    * [Create a project](#create-a-project)
+    * [Get project information](#get-project-information)
+    * [Delete a project](#delete-a-project)
+    * [Get list of all projects](#get-list-of-all-projects)
+  * [Application Builds](#application-builds)
+    * [Upload an application package](#upload-an-application-package)
+    * [Get application package information](#get-application-package-information)
+    * [Delete application](#delete-application)
+    * [Get list of all applications](#get-list-of-all-applications)
+  * [Test Application Builds](#test-application-builds)
+    * [Upload a native test application package](#upload-a-native-test-application-package)
+    * [Get test application package information](#get-test-application-package-information)
+    * [Delete test application](#delete-test-application)
+    * [Get list of all test applications](#get-list-of-all-test-applications)
+  * [Devices](#devices)
+    * [Get list of all devices](#get-list-of-all-devices)
+  * [Device Trays](#device-trays)
+    * [Create a device tray](#create-a-device-tray)
+    * [Get a device tray information](#get-a-device-tray-information)
+    * [Update a device tray](#update-a-device-tray)
+    * [Delete a device tray](#delete-a-device-tray)
+    * [Get device tray list](#get-device-tray-list)
+  * [Test Configuration and Test Parameters](#test-configuration-and-test-parameters)
+    * [Get supported test configuration](#get-supported-test-configuration)
+    * [List of Test Parameters](#list-of-test-parameters)
+  * [Executing a test](#executing-a-test)
+    * [Execute a test now](#execute-a-test-now)
+    * [Get test execution information](#get-test-execution-information)
+    * [Abort test execution](#abort-test-execution)
+    * [Get list of test runs](#get-list-of-test-runs)
+  * [Scheduling tests](#scheduling-tests)
+    * [Scheduling recurrent tests](#scheduling-recurrent-tests)
+    * [Get test schedule information](#get-test-schedule-information)
+    * [Delete test schedule](#delete-test-schedule)
+    * [Get list of test schedules](#get-list-of-test-schedules)
+  * [Analysing test outcomes](#analysing-test-outcomes)
+    * [Get a complete test execution information](#get-a-complete-test-execution-information)
+      * [Basic test information](#basic-test-information)
+      * [Test Cases](#test-cases)
+      * [User experience KPIs](#user-experience-kpis)
+      * [Events](#events)
+    * [Get test execution list](#get-test-execution-list)
+    * [Get test execution information by information section](#get-test-execution-information-by-information-section)
+      * [File URL](#file-url)
+    * [Download test analytics information](#download-test-analytics-information)
 
 ## SDK Configuration
 
@@ -1006,6 +1009,23 @@ client.login()
 test_id = "aa1234bb" # testUUID 
 response = client.get_test_execution_info_full(test_id=test_id)
 ```
+### Get test execution list
+
+User can get list of all test execution information by passing `from_date_time` and `to_date_time` to get_test_list(). This API returns list of test information same as described in [Execute a test now](#execute-a-test-now).
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+import datetime
+
+client = Client()
+
+client.login()
+from_date_time = datetime(2023, 1, 7, 0, 0, 0)
+to_date_time = datetime(2023, 1, 8, 0, 0, 0)
+test_info_list = client.get_test_list(from_date_time=from_date_time,to_date_time=to_date_time)
+```
 
 ### Get test execution information by information section
 
@@ -1042,7 +1062,31 @@ Structure is as below:
   "fileURL" : ""
 }
 ```
+*Example*:
 
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+test_id = "aa1234bb" # testUUID 
+section = "basic_test_info"
+response = client.get_test_execution_info_by_section(test_id=test_id,section=section)
+```
 ### Download test analytics information
 
 User can download test analytics information for various sections in the format specified in [Section information](#get-test-execution-information-by-information-section)
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+test_id = "aa1234bb" # testUUID 
+section = "basic_test_info"
+response = client.download_by_section(test_id=test_id,section=section)
+```
