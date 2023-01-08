@@ -1,7 +1,6 @@
 from mozark_sdk.client import Client
 from unittest import TestCase
 from datetime import datetime
-from zoneinfo import ZoneInfo
 
 
 class TestTestAnalytics(TestCase):
