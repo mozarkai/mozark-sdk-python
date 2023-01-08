@@ -5,10 +5,6 @@ pipelines:
   branches:
     master:
       - step:
-          name: Just a simple echo!
-          script:
-            - echo "Hello world!"
-      - step:
           script:
             - git remote add sync git@github.com:mozarkai/mozark-sdk-python.git
             - git checkout master
