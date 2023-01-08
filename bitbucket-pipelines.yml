@@ -7,14 +7,7 @@ pipelines:
         - step:
            script:
              - git remote add sync git@github.com:mozarkai/mozark-sdk-python.git
-             - git checkout master
+             - git fetch --unshallow
              - git pull
              - git push sync master
-      refactor/cleanup-client:
-        - step:
-            script:
-              - git remote add sync git@github.com:mozarkai/mozark-sdk-python.git
-              - git checkout refactor/cleanup-client
-              - git pull
-              - git push sync master
 
