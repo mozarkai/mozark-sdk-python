@@ -1,7 +1,6 @@
 from mozark_sdk.client import Client
 from unittest import TestCase
 from datetime import datetime
-from zoneinfo import ZoneInfo
 
 
 class TestTestAnalytics(TestCase):
@@ -50,7 +49,7 @@ class TestTestAnalytics(TestCase):
         # section = 'kpis_system_performance_battery_metrics'
         # section = 'kpis_app_performance_graphics_metrics'
         response = client.get_test_execution_info_by_section(test_id=test_id, section=section)
-        print("\n 3 get test information : ", response)
+        print("\n 3 get test information by section: ", response)
 
     def test_download_by_section(self):
         client = Client()

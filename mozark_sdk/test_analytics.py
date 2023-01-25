@@ -110,7 +110,7 @@ class TestAnalytics:
         if response.status_code == 200:
             test_list = json.loads(response.text)
 
-            if test_list['body']:
+            try:
                 test_info = test_list['body']
                 print("\n test config: ", test_info)
                 test_information = {
@@ -137,6 +137,8 @@ class TestAnalytics:
                 }
 
                 return test_information
+            except KeyError:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
@@ -151,12 +153,14 @@ class TestAnalytics:
         if response.status_code == 200:
             test_list = json.loads(response.text)
 
-            if test_list['body']:
+            try:
                 testConfiguration = test_list['body']['testConfiguration']
                 testConfig = {
                     'testConfiguration': testConfiguration
                 }
                 return testConfig
+            except KeyError:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
@@ -172,7 +176,7 @@ class TestAnalytics:
         if response.status_code == 200:
             test_list = json.loads(response.text)
 
-            if test_list['body']:
+            try:
                 testcases = test_list['body']
                 for i in range(len(testcases['testCases'])):
                     testCaseName = testcases['testCases'][i]['testCaseName']
@@ -189,6 +193,8 @@ class TestAnalytics:
                     testcaselist.append(testcases_info)
                 test_cases = {'test_cases': testcaselist}
                 return test_cases
+            except KeyError:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
@@ -203,7 +209,7 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            if test_list['body']:
+            try:
                 events = test_list['body']
                 for i in range(len(events["events"])):
                     eventname = events["events"][i]['eventName']
@@ -218,6 +224,8 @@ class TestAnalytics:
                     eventexp.append(event_info)
                 events = {'events': eventexp}
                 return events
+            except KeyError:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
@@ -233,8 +241,7 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-
-            if test_list['body']:
+            try:
                 kpi = test_list['body']
                 for i in range(len(kpi["experience"])):
                     kpiname = kpi["experience"][i]['kpiName']
@@ -248,6 +255,8 @@ class TestAnalytics:
                     userexperiancekpi.append(kpi_info)
                 kpis_user_experience = {'kpis_user_experience': userexperiancekpi}
                 return kpis_user_experience
+            except KeyError:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
@@ -261,9 +270,11 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            if test_list['body']:
+            try:
                 test_list = test_list['body']
                 return test_list
+            except:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
         else:
             return {"statusCode:": response.status_code, "message": response.text}
 
@@ -279,7 +290,10 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            test_list = test_list['data']['list']
+            try:
+                test_list = test_list['data']['list']
+            except KeyError:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
             return test_list
         else:
             return None
@@ -296,7 +310,10 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            test_list = test_list['data']['list']
+            try:
+                test_list = test_list['data']['list']
+            except KeyError:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
             return test_list
         else:
             return {"statusCode:": response.status_code, "message": response.text}
@@ -323,10 +340,14 @@ class TestAnalytics:
                 response = requests.get(test_api_url, params=new_params, headers=new_headers)
                 if response.status_code == 200:
                     test_list = json.loads(response.text)
-                    test_list = test_list['data']['list']
-                    new_response = requests.get(test_list['url'])
-                    file_name = os.path.join(output_path, file_name)
-                    open(file_name, "wb").write(new_response.content)
+                    try:
+                        test_list = test_list['data']['list']
+                        new_response = requests.get(test_list['url'])
+                        file_name = os.path.join(output_path, file_name)
+                        open(file_name, "wb").write(new_response.content)
+                    except:
+                        return {"statusCode:": response.status_code,
+                                "message": f'Nothing in body for test_id {test_id}'}
             return f'Success: File downloaded successfully.'
         else:
             return f'Failure: Error in downloading file.'
@@ -350,13 +371,16 @@ class TestAnalytics:
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
             test_list = json.loads(response.text)
-            test_list = test_list['data']['list']
+            try:
+                test_list = test_list['data']['list']
 
-            new_response = requests.get(requests.utils.unquote(test_list['url']))
+                new_response = requests.get(requests.utils.unquote(test_list['url']))
 
-            file_name = os.path.join(output_path, file_name)
-            open(file_name, "wb").write(new_response.content)
-            return f'Success: File downloaded successfully.'
+                file_name = os.path.join(output_path, file_name)
+                open(file_name, "wb").write(new_response.content)
+                return f'Success: File downloaded successfully.'
+            except:
+                return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
         else:
             return f'Failure: Error in downloading file.'
 
@@ -513,13 +537,14 @@ class TestAnalytics:
                 response = requests.get(test_api_url, params=new_params, headers=new_headers)
                 if response.status_code == 200:
                     test_list = json.loads(response.text)
-                    test_list = test_list['data']['list']
-                    url_list.append(test_list['url'])
+                    try:
+                        test_list = test_list['data']['list']
+                        url_list.append(test_list['url'])
+                    except KeyError:
+                        return {"statusCode:": response.status_code, "message": f'Nothing in body for test_id {test_id}'}
             return url_list
         else:
             return f'Failure: Error in information.'
-
-
 
     def get_test_execution_info_by_section(self, test_id=None, section=None):
         if section == 'basic_test_info':
