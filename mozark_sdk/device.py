@@ -10,8 +10,23 @@ class Device:
     def __init__(self, client=None):
         self.config = client.get_config()
 
-    def add_device(self, client=None, project_name=None):
-        pass
+    def add_device(self, device_parameter=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+
+        if device_parameter["platform"] == "living-room":
+            device_parameter["platform"] = "TV"
+        # print(device_parameter)
+        device_api_url = self.config.get("api_url") + "testexecute/devices"
+        response = requests.post(device_api_url, json=device_parameter, headers=new_headers)
+        print(response.json())
+        try:
+            if response.json()["status"] == 200 and response.json()["message"] == "Success":
+                return "Success"
+            else:
+                return "Failure: Device with name " + device_parameter["serial"] + " already exists."
+        except KeyError:
+            return "Failure: Device with name " + device_parameter["serial"] + " already exists."
 
     def get_devices(self, platform=None, device_serial=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -77,7 +92,3 @@ class Device:
                                  }
                     return_message.append(file_info)
         return return_message
-
-
-
-

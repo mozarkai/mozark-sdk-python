@@ -21,12 +21,14 @@ class File:
 
         md5 = self.get_file_md5(filepath=file_path)
         data["md5sum"] = md5
-
-        file_object = open(file_path, 'rb')
-        files = {'file': file_object}
-        response_message = self.__upload(data=data, files=files)
-        file_object.close()
-        return response_message
+        try:
+            file_object = open(file_path, 'rb')
+            files = {'file': file_object}
+            response_message = self.__upload(data=data, files=files)
+            file_object.close()
+            return response_message
+        except FileNotFoundError:
+            return "Error: No such file or directory: " + filename
 
     def get_application_info(self, file_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -80,10 +82,13 @@ class File:
     def get_application_list(self, file_category=None, project_name=None):
         status_message = self.get_file_info_list(file_category=file_category, project_name=project_name)
         status_message_filtered = []
-        for f in status_message:
-            if f["fileCategory"] == "android-application" or f["fileCategory"] == "ios-application":
-                status_message_filtered.append(f)
-        return status_message_filtered
+        try:
+            for f in status_message:
+                if f["fileCategory"] == "android-application" or f["fileCategory"] == "ios-application":
+                    status_message_filtered.append(f)
+            return status_message_filtered
+        except TypeError:
+            return "Error: Project Name or File Name doesn't exist"
 
     # Native Test Application
 
@@ -97,22 +102,30 @@ class File:
         status_message = self.get_application_info(file_name=file_name)
         return status_message
 
+
     def get_native_test_application_list(self, file_category=None, project_name=None):
         status_message = self.get_file_info_list(file_category=file_category, project_name=project_name)
         status_message_filtered = []
-        for f in status_message:
-            if f["fileCategory"] == "android-test-application" or f["fileCategory"] == "ios-test-application":
-                status_message_filtered.append(f)
-        return status_message_filtered
+        try:
+            for f in status_message:
+                if f["fileCategory"] == "android-test-application" or f["fileCategory"] == "ios-test-application":
+                    status_message_filtered.append(f)
+            return status_message_filtered
+        except TypeError:
+            return "Error: Project Name Doesn't exist"
 
     def get_file_md5(self, filepath=None):
         import hashlib
         md5_hash = ''
-        with open(filepath, "rb") as f:
-            file_bytes = f.read()  # read file as bytes
-            readable_hash = hashlib.md5(file_bytes).hexdigest()
-            md5_hash = readable_hash
-        return md5_hash
+        try:
+            with open(filepath, "rb") as f:
+                file_bytes = f.read()  # read file as bytes
+                readable_hash = hashlib.md5(file_bytes).hexdigest()
+                md5_hash = readable_hash
+            return md5_hash
+        except FileNotFoundError:
+            return "Error: No such file or directory "
+
 
     def __upload(self, data=None, files=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -208,11 +221,15 @@ class File:
                        'Content-Type': 'application/json'}
 
         file_info = self.get_application_info(file_name=file_name)
-
-        file_api_url = self.config.get("api_url") + "testexecute/files?fileId=" + file_info["fileUUID"]
-
+        try:
+            file_api_url = self.config.get("api_url") + "testexecute/files?fileId=" + file_info["fileUUID"]
+        except TypeError:
+            return "Failure: File `" + file_name + "` not available"
         response = requests.delete(file_api_url, headers=new_headers)
-        if response.status_code == 200:
-            return "Success: File `" + file_name + "` deleted successfully."
-        else:
-            return "Failure: File `" + file_name + "` not deleted."
+        try:
+            if response.status_code == 200:
+                return "Success: File `" + file_name + "` deleted successfully."
+            else:
+                return "Failure: File `" + file_name + "` not deleted."
+        except TypeError:
+            return "Failure: File `" + file_name + "` not delete"

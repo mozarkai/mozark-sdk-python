@@ -25,7 +25,8 @@ class Client:
         password = config.get("default", "MOZARK_APP_TESTING_PASSWORD")
         client_id = config.get("default", "MOZARK_APP_TESTING_CLIENTID")
         base_download_dir = config.get("default", "BASE_DOWNLOAD_DIR")
-        config = {"username": username, "password": password, "api_url": api_url, "client_id": client_id,"base_download_dir":base_download_dir}
+        config = {"username": username, "password": password, "api_url": api_url, "client_id": client_id,
+                  "base_download_dir": base_download_dir}
         self.config = config
 
     def get_config(self):
@@ -130,6 +131,8 @@ class Client:
             "Success: File `" + file_name + "` uploaded successfully."
             "Failure: File `" + file_name + "` not uploaded."
             "Error: File `" + file_name + "` already exists."
+            "File Not Found Error: File `" + file_name + "` File not found or wrong path."
+
         """
         file = File(client=self)
         status = file.upload_application(file_category=file_category, project_name=project_name, file_path=file_path)
@@ -317,6 +320,20 @@ class Client:
         return app_list
 
     # Device
+    def add_device(self, device_parameter=None):
+        """ Add Devices
+
+                Args:
+                    device_parameter(json): device details
+
+                Returns:
+                    message (str): 'Success'
+
+                    "Failure: Device with name " + device_parameter["serial"] + " already exists."
+                """
+        device = Device(client=self)
+        device_added = device.add_device(device_parameter=device_parameter)
+        return device_added
 
     def get_device_list(self, platform=None, device_serial=None):
         """ Returns device information of all devices for a given platform or device_serial
@@ -671,6 +688,34 @@ class Client:
                                                  end_date_time=end_date_time,
                                                  interval=interval
                                                  )
+        return status
+
+    def update_schedule(self, data=None, schedule_id=None):
+        action = TestExecute(client=self)
+        """ Update schedule info
+
+                Args:
+                    schedule_id(str): schedule id
+                    data(json): parameter
+
+                Returns:
+                    schedule_update (dict): Schedule Update Successfully
+        """
+        status = action.update_schedule(data=data, schedule_id=schedule_id)
+        return status
+
+    def update_test(self, data=None,test_id=None):
+        action = TestExecute(client=self)
+        """ Update test info
+
+                Args:
+                    test_id(str): test id
+                    data(json): parameter
+                    
+                Returns:
+                    test_update (dict): Test Update Successfully
+        """
+        status = action.update_test(data=data, test_id=test_id)
         return status
 
     def get_test_schedule_info(self, schedule_id=None):

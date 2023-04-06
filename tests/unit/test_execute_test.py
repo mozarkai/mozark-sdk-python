@@ -5,7 +5,6 @@ from mozark_sdk.client import Client
 
 class TestSchedule(unittest.TestCase):
     def test_start_test_execution(self):
-
         client = Client()
         client.login()
         test_configuration = {
@@ -40,11 +39,11 @@ class TestSchedule(unittest.TestCase):
             "maxTestDuration": 10
         }
 
-        response = client.start_test_execution(project_name="5Gmark_android",
+        response = client.start_test_execution(project_name="JioCinema",
                                                test_framework="android-uiautomator",
-                                               application_file_name="fivegmark-debug.apk",
-                                               test_application_file_name="fivegmark-debug-androidTest_1.apk",
-                                               devices=["RF8R70LNY6W"],
+                                               application_file_name="JioCinema-debug.apk",
+                                               test_application_file_name="JioCinema-debug-androidTest.apk",
+                                               devices=["fa8a555c"],
                                                test_configuration=test_configuration,
                                                test_parameters=test_parameters
                                                )
@@ -55,7 +54,7 @@ class TestSchedule(unittest.TestCase):
         client = Client()
         client.login()
 
-        response = client.get_test_schedule_info(schedule_id="e36fc5ad-0cd0-41d3-ad9a-7adbd677e9c1")
+        response = client.get_test_schedule_info(schedule_id="f0abd6ea-83db-46ca-99b3-d5bcb6931d6c")
 
         print(response)
 
@@ -63,7 +62,7 @@ class TestSchedule(unittest.TestCase):
         client = Client()
         client.login()
 
-        response = client.get_test_info(test_id="26b96d95-1c67-4bfe-9d99-159b0ef64c62")
+        response = client.get_test_info(test_id="a5c7e7c5-1bb4-4f9c-b850-662b9ee5ef6d")
 
         print(response)
 
@@ -101,15 +100,15 @@ class TestSchedule(unittest.TestCase):
         test_parameters = {
             "maxTestDuration": 10
         }
-        response = client.schedule_test_execution(project_name="5Gmark_android",
+        response = client.schedule_test_execution(project_name="JioCinema",
                                                   test_framework="android-uiautomator",
-                                                  application_file_name="fivegmark-debug.apk",
-                                                  test_application_file_name="fivegmark-debug-androidTest_1.apk",
-                                                  devices=["RF8R70LNY6W"],
+                                                  application_file_name="JioCinema-debug.apk",
+                                                  test_application_file_name="JioCinema-debug-androidTest.apk",
+                                                  devices=["fa8a555c"],
                                                   test_configuration=test_configuration,
                                                   test_parameters=test_parameters,
-                                                  start_date_time="2023-01-03T22:00:00.333658+05:30",
-                                                  end_date_time="2023-01-03T23:00:00.333658+05:30",
+                                                  start_date_time="2023-04-07T10:00:00.333658+05:30",
+                                                  end_date_time="2023-04-07T10:30:00.333658+05:30",
                                                   interval=15
                                                   )
 
@@ -119,7 +118,7 @@ class TestSchedule(unittest.TestCase):
         client = Client()
         client.login()
 
-        response = client.delete_test_schedule(schedule_id="450eeee0-3197-4d8d-a9e9-54939f97bd20")
+        response = client.delete_test_schedule(schedule_id="fcbcc527-1b8c-4bf8-88d6-c05188a1bc2d")
 
         print(response)
 
@@ -129,4 +128,28 @@ class TestSchedule(unittest.TestCase):
 
         response = client.get_test_schedule_list()
 
+        print(response)
+
+    def test_update_schedule(self):
+        client = Client()
+        client.login()
+        schedule_id = "f0abd6ea-83db-46ca-99b3-d5bcb6931d6c"
+        update_data = {
+            "testParameters": {
+                "packageName": "1111"
+            }
+        }
+        response = client.update_schedule(data=update_data, schedule_id=schedule_id)
+        print(response)
+
+    def test_update_test(self):
+        client = Client()
+        client.login()
+        test_id = "a1c2e491-78be-47a1-aed8-7ca242b6a579"
+        update_data = {
+            "testParameters": {
+                "packageName": "0000"
+            }
+        }
+        response = client.update_test(data=update_data, test_id=test_id)
         print(response)

@@ -10,18 +10,19 @@ class TestFile(unittest.TestCase):
     def test_upload_application(self):
         client = Client()
         client.login()
-        response = client.upload_application(file_category="android-application",
-                                             project_name="Sample Android Project",
-                                             file_path="./tests/unit/5gmark.apk")
+        project_name = "Sample_Android_Project"
+        response = client.upload_application(file_category="android-test-application",
+                                             project_name=project_name,
+                                             file_path="5gmar.apk")
         print(response)
 
     def test_get_application_info(self):
         client = Client()
         client.login()
 
-        response = client.get_application_info(file_name="netflix-debug.apk")
+        response = client.get_application_info(file_name="5gmark.apk")
         print(response)
-        response = client.get_application_info(file_name="5gmark_build.ipa")
+        response = client.get_application_info(file_name="5gmark.apk")
         print(response)
 
     def test_delete_application(self):
@@ -32,7 +33,7 @@ class TestFile(unittest.TestCase):
 
     def test_get_application_list(self):
         # Android
-        project_name = "prime_android"
+        project_name = "Sample_Android_Project"
 
         client = Client()
         client.login()
@@ -40,7 +41,7 @@ class TestFile(unittest.TestCase):
         response = client.get_application_list(file_category='android-application', project_name=project_name)
         print(json.dumps(response))
 
-        project_name = '5Gmark_ios'
+        project_name = 'Sample_ios_Project'
         response = client.get_application_list(file_category='ios-application', project_name=project_name)
         print(json.dumps(response))
 
@@ -58,7 +59,7 @@ class TestFile(unittest.TestCase):
 
     def test_get_native_application_list(self):
         # Android
-        project_name = "prime_android"
+        project_name = "JioCinemscfscs"
 
         client = Client()
         client.login()
@@ -66,9 +67,9 @@ class TestFile(unittest.TestCase):
         response = client.get_native_test_application_list(file_category='android-test-application', project_name=project_name)
         print(json.dumps(response))
 
-        project_name = '5Gmark_ios'
-        response = client.get_native_test_application_list(file_category='ios-test-application', project_name=project_name)
-        print(json.dumps(response))
+        # project_name = 'JioCinema'
+        # response = client.get_native_test_application_list(file_category='ios-test-application', project_name=project_name)
+        # print(json.dumps(response))
 
         response = client.get_native_test_application_list()
         print(json.dumps(response))
