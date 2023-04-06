@@ -16,10 +16,6 @@ class TestClient(TestCase):
         client_id = config.get("default", "MOZARK_APP_TESTING_CLIENTID")
         print("1. ", username, "2. ", password, "3. ", api_url, "4. ", client_id)
 
-    def test_documentation(self):
-        client = Client()
-        help(client)
-
     def test_test_configuration(self):
         client = Client()
         config = client.get_supported_test_configuration(platform="living-room")

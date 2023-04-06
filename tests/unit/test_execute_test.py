@@ -39,10 +39,10 @@ class TestSchedule(unittest.TestCase):
             "maxTestDuration": 10
         }
 
-        response = client.start_test_execution(project_name="JioCinema",
+        response = client.start_test_execution(project_name="5gmark",
                                                test_framework="android-uiautomator",
-                                               application_file_name="JioCinema-debug.apk",
-                                               test_application_file_name="JioCinema-debug-androidTest.apk",
+                                               application_file_name="5gmark-debug.apk",
+                                               test_application_file_name="5gmark-debug-androidTest.apk",
                                                devices=["fa8a555c"],
                                                test_configuration=test_configuration,
                                                test_parameters=test_parameters
@@ -100,10 +100,10 @@ class TestSchedule(unittest.TestCase):
         test_parameters = {
             "maxTestDuration": 10
         }
-        response = client.schedule_test_execution(project_name="JioCinema",
+        response = client.schedule_test_execution(project_name="5gmark",
                                                   test_framework="android-uiautomator",
-                                                  application_file_name="JioCinema-debug.apk",
-                                                  test_application_file_name="JioCinema-debug-androidTest.apk",
+                                                  application_file_name="5gmark-debug.apk",
+                                                  test_application_file_name="5gmark-debug-androidTest.apk",
                                                   devices=["fa8a555c"],
                                                   test_configuration=test_configuration,
                                                   test_parameters=test_parameters,
