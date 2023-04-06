@@ -28,6 +28,7 @@ Table of contents
     * [Get list of all test applications](#get-list-of-all-test-applications)
   * [Devices](#devices)
     * [Get list of all devices](#get-list-of-all-devices)
+    * [Add devices](#add-devices)
   * [Device Trays](#device-trays)
     * [Create a device tray](#create-a-device-tray)
     * [Get a device tray information](#get-a-device-tray-information)
@@ -47,6 +48,8 @@ Table of contents
     * [Get test schedule information](#get-test-schedule-information)
     * [Delete test schedule](#delete-test-schedule)
     * [Get list of test schedules](#get-list-of-test-schedules)
+    * [Update all tests in schedules](#update-all-tests-in-schedule)
+    * [Update single test in schedules](#update-single-test-in-schedule)
   * [Analysing test outcomes](#analysing-test-outcomes)
     * [Get a complete test execution information](#get-a-complete-test-execution-information)
       * [Basic test information](#basic-test-information)
@@ -461,6 +464,54 @@ client.login()
 
 device_list = client.get_device_list(platform='android')
 ```
+
+
+### Add devices
+
+User can add devices in platform.
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+device_parameter = {
+              "brand": "Samsung",
+              "modelName": "Galaxy M20",
+              "serial": "3401868eba0a16fd",
+              "platform": "android",
+              "osVersion": "8.1.0",
+              "modelNumber": "",
+              "sdkVersion": [
+                "31",
+                "32"
+              ],
+              "deviceParameters": {
+                "controllerId": "dubai-mac-1",
+                "city": "Dubai",
+                "country": "United Arab Emirates",
+                "network": "",
+                "liveLog": "https://{TenantName}}-logs.mozark.ai:10024",
+                "deviceStatus": "free",
+                "appiumPort": "4933",
+                "mjpegServerPort": "1047",
+                "systemPort": "8224",
+                "chromedriverPort": "8024"
+              },
+              "logParameters": {
+                "serverIpAddress": "{TenantName}}-logs.mozark.ai",
+                "serverUserName": "ubuntu",
+                "port": "10024",
+                "mitmPort": "8024"
+              }
+            }
+
+response = client.add_device(device_parameter=device_parameter)
+```
+
 
 ---
 **NOTE**
@@ -912,6 +963,51 @@ client = Client()
 
 client.login()
 schedule_info = client.get_test_schedule_list()
+```
+
+
+### Update all tests in schedule
+
+User can test parameter in all test present in schedule by passing a `schedule_id` and `update_data` passed in `update_schedule()`.
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+schedule_id = "f0abd6ea-83db-46ca-99b3-d5bcb6931d6c" # scheduleUUID
+update_data = {
+            "testParameters": {
+                "packageName": "some name",
+                "custom key": "custom value"
+            }
+        }
+response = client.update_schedule(data=update_data,schedule_id=schedule_id)
+```
+
+### Update single test in schedule
+
+User can update test parameter in a single test by passing a `test_id` and `update_data` passed in `update_test()`.
+
+*Example*:
+
+```python
+from mozark_sdk.client import Client
+
+client = Client()
+
+client.login()
+test_id = "a1c2e491-78be-47a1-aed8-7ca242b6a579" # testUUID
+update_data = {
+            "testParameters": {
+                "packageName": "some name",
+                "custom key": "custom value"
+            }
+        }
+response = client.update_test(data=update_data,test_id=test_id)
 ```
 
 ---
