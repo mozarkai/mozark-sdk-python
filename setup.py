@@ -17,6 +17,7 @@ setup(
         'configparser==5.3.0',
         'requests==2.28.1'
     ],
+    description_file='README.md',
     classifiers=[
         'Development Status :: 3 - Alpha',
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package

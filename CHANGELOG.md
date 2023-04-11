@@ -23,6 +23,7 @@
 
 ### Devices
 * [ADDED] `get_device_list` for listing device information of all devices
+* [ADDED] `add_device` for adding devices in portal
 
 ### Tray
 * [ADDED] `create_tray` for creating tray
@@ -39,6 +40,10 @@
 * [ADDED] `get_test_schedule_info` for getting information of a schedule
 * [ADDED] `delete_test_schedule` for deleting scheduled tests
 * [ADDED] `get_test_schedule_list` for listing all the schedules added
+* [ADDED] `update_schedule` for update any test parameters in all test 
+* [ADDED] `update_test` for update any test parameters in a single test.
+
+
 
 ### Analytics
 * [ADDED] `get_test_list` for listing all the test runs
