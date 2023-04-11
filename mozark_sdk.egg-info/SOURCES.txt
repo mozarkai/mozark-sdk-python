@@ -9,7 +9,7 @@ mozark_sdk/executetest.py
 mozark_sdk/file.py
 mozark_sdk/project.py
 mozark_sdk/schedule.py
-mozark_sdk/testanalytics.py
+mozark_sdk/test_analytics.py
 mozark_sdk/tray.py
 mozark_sdk/user.py
 mozark_sdk.egg-info/PKG-INFO

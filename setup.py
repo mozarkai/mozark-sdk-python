@@ -1,8 +1,9 @@
-from distutils.core import setup
+# from distutils.core import setup
+from setuptools import setup
 
 setup(
-    name='mozark_sdk',
-    packages=['mozark_sdk'],
+    name='mozark-sdk',
+    packages=['mozark-sdk'],
     version='0.5',
     license='MIT',
     description='Automation test APIs',
@@ -10,6 +11,7 @@ setup(
     author_email='mozark-aws-staging@mozark.ai',
     url='https://mozark.ai',
     # download_url='https://github.com/user/reponame/archive/v_01.tar.gz',  # I explain this later on
+    # long_description_content_type = "text/markdown",
     keywords=['MOZARK', 'AUTOMATION', 'EXPERIENCE'],
     install_requires=[
         'configparser==5.3.0',
