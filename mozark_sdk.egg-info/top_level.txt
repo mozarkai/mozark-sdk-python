@@ -1,1 +1,1 @@
-mozark-sdk
+mozark_sdk

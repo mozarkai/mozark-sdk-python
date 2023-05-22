@@ -145,10 +145,10 @@ class File:
 
         s3_file_upload_url = response.json()['data']['uploadUrl']
 
-        print("\n s3 link: ", s3_file_upload_url)
+        # print("\n s3 link: ", s3_file_upload_url)
         # Leg 2 - upload the file using s3 upload URL
         response = requests.put(s3_file_upload_url, files=files)
-        print("\n s3 response: ", response)
+        # print("\n s3 response: ", response)
         if response.status_code == 200:
             return "Success: File `" + file_name + "` uploaded successfully."
         else:

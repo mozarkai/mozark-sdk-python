@@ -90,6 +90,9 @@ class File:
         except TypeError:
             return "Error: Project Name or File Name doesn't exist"
 
+    def get_application_list_all(self):
+        status_message = self.get_file_info_list_all()
+        return status_message
     # Native Test Application
 
     def upload_native_test_application(self, file_category=None, project_name=None, file_path=None):
@@ -101,7 +104,6 @@ class File:
     def get_native_test_application_info(self, file_name=None):
         status_message = self.get_application_info(file_name=file_name)
         return status_message
-
 
     def get_native_test_application_list(self, file_category=None, project_name=None):
         status_message = self.get_file_info_list(file_category=file_category, project_name=project_name)
@@ -126,7 +128,6 @@ class File:
         except FileNotFoundError:
             return "Error: No such file or directory "
 
-
     def __upload(self, data=None, files=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
@@ -144,9 +145,10 @@ class File:
 
         s3_file_upload_url = response.json()['data']['uploadUrl']
 
+        # print("\n s3 link: ", s3_file_upload_url)
         # Leg 2 - upload the file using s3 upload URL
         response = requests.put(s3_file_upload_url, files=files)
-
+        # print("\n s3 response: ", response)
         if response.status_code == 200:
             return "Success: File `" + file_name + "` uploaded successfully."
         else:
@@ -212,6 +214,61 @@ class File:
                                  "fileUUID": f['uuid'],
                                  "XCTestRunFileUrl": f['fileParameters']['xctestrunFileUrl'],
                                  "projectName": project_name
+                                 }
+                    return_message.append(file_info)
+            return return_message
+
+    def get_file_info_list_all(self):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+
+        file_api_url = self.config.get("api_url") + "testexecute/files"
+        # Fetch list of files uploaded
+        response = requests.get(file_api_url, headers=new_headers)
+
+        file_list = response.json()['data']['list']
+        return_message = []
+
+        if len(file_list) > 0:
+            for f in file_list:
+                file_category = f['fileCategory']
+                if file_category == 'android-application':
+                    file_info = {"fileName": f['fileName'],
+                                 "fileCategory": f['fileCategory'],
+                                 "md5": f['meta']['md5sum'],
+                                 "fileURL": f['meta']['s3Url'],
+                                 "fileUUID": f['uuid'],
+                                 "projectName": ""
+                                 }
+                    return_message.append(file_info)
+                elif file_category == 'ios-application':
+                    file_info = {"fileName": f['fileName'],
+                                 "fileCategory": f['fileCategory'],
+                                 "md5": f['meta']['md5sum'],
+                                 "fileURL": f['meta']['s3Url'],
+                                 "fileUUID": f['uuid'],
+                                 "projectName": ""
+                                 }
+                    return_message.append(file_info)
+                elif file_category == 'android-test-application':
+                    file_info = {"fileName": f['fileName'],
+                                 "fileCategory": f['fileCategory'],
+                                 "md5": f['meta']['md5sum'],
+                                 "fileURL": f['meta']['s3Url'],
+                                 "fileUUID": f['uuid'],
+                                 "testCodePackageName": f['fileParameters']['testCodePackageName'],
+                                 "testRunnerName": f['fileParameters']['testRunnerName'],
+                                 "projectName": ""
+                                 }
+                    return_message.append(file_info)
+                elif file_category == 'ios-test-application':
+                    file_info = {"fileName": f['fileName'],
+                                 "fileCategory": f['fileCategory'],
+                                 "md5": f['meta']['md5sum'],
+                                 "fileURL": f['meta']['s3Url'],
+                                 "fileUUID": f['uuid'],
+                                 "XCTestRunFileUrl": f['fileParameters']['xctestrunFileUrl'],
+                                 "projectName": ""
                                  }
                     return_message.append(file_info)
             return return_message
