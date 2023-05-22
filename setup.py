@@ -2,9 +2,9 @@
 from setuptools import setup
 
 setup(
-    name='mozark-sdk',
-    packages=['mozark-sdk'],
-    version='0.5',
+    name='mozark_sdk',
+    packages=['mozark_sdk'],
+    version='1.0.0',
     license='MIT',
     description='Automation test APIs',
     author='Mozark',

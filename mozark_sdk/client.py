@@ -214,6 +214,42 @@ class Client:
         app_list = file.get_application_list(file_category=file_category, project_name=project_name)
         return app_list
 
+    def get_application_list_all(self):
+        """ Returns list of all application file information
+
+        Args:
+            file_category (str): mandatory 'android-application' or 'ios-application'
+            project_name (str): optional project_name to filter the android application files
+
+        Returns:
+            fileinfo (list): dictionary containing the metadata about the file
+
+            [
+                {
+                    "fileName" : "",
+                    "fileCategory": "android-application",
+                    "md5": "",
+                    "fileURL": "",
+                    "fileUUID": "",
+                    "packageName": "",
+                    "projectName": ""
+                },
+                {
+                    "fileName" : "",
+                    "fileCategory": "ios-application",
+                    "md5": "",
+                    "fileURL": "",
+                    "fileUUID": "",
+                    "projectName": ""
+                }
+            ]
+
+            Note: "projectName" will be present in response if passed in a filter, else the value will be ""
+        """
+        file = File(client=self)
+        app_list = file.get_application_list_all()
+        return app_list
+
     # Native Test Application
 
     def upload_native_test_application(self, file_category=None, project_name=None, file_path=None):

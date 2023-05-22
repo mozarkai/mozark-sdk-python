@@ -16,7 +16,7 @@ class TestProject(TestCase):
         # self.assertEqual(response, "Failure: Project with "+project_name+" already exists.")
 
     def test_get_project_info(self):
-        project_name = "Sample Android Project"
+        project_name = "for_icici"
         client = Client()
         client.login()
 

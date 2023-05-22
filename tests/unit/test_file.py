@@ -10,8 +10,8 @@ class TestFile(unittest.TestCase):
     def test_upload_application(self):
         client = Client()
         client.login()
-        project_name = "Sample_Android_Project"
-        response = client.upload_application(file_category="android-test-application",
+        project_name = "for_icici"
+        response = client.upload_application(file_category="android-application",
                                              project_name=project_name,
                                              file_path="5gmark.apk")
         print(response)
@@ -33,7 +33,7 @@ class TestFile(unittest.TestCase):
 
     def test_get_application_list(self):
         # Android
-        project_name = "Sample_Android_Project"
+        project_name = "for_icici"
 
         client = Client()
         client.login()
@@ -46,6 +46,14 @@ class TestFile(unittest.TestCase):
         print(json.dumps(response))
 
         response = client.get_application_list()
+        print(json.dumps(response))
+
+    def test_get_application_list_all(self):
+        # Android
+        client = Client()
+        client.login()
+
+        response = client.get_application_list_all()
         print(json.dumps(response))
 
     def test_get_native_application_info(self):
@@ -64,7 +72,8 @@ class TestFile(unittest.TestCase):
         client = Client()
         client.login()
 
-        response = client.get_native_test_application_list(file_category='android-test-application', project_name=project_name)
+        response = client.get_native_test_application_list(file_category='android-test-application',
+                                                           project_name=project_name)
         print(json.dumps(response))
 
         response = client.get_native_test_application_list()
