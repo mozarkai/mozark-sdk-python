@@ -6,7 +6,7 @@ pipelines:
       master:
         - step:
            script:
-             - git remote add sync git@github.com:mozarkai/mozark_sdk-python.git
+             - git remote add sync git@github.com:mozarkai/mozark-sdk-python.git
              - git checkout master
              - git pull
              - git push sync master
