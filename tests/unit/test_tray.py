@@ -17,7 +17,7 @@ class TestTray(TestCase):
     def test_get_tray_info(self):
         client = Client()
         client.login()
-        response = client.get_tray_info(tray_name="Sample_Tray_11")
+        response = client.get_tray_info(tray_name="ioS")
         print("\n 2 get tray info : ", response)
 
     def test_get_tray_list(self):

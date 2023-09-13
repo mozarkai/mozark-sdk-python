@@ -45,13 +45,17 @@ class File:
             return "Failure: File with name `" + file_name + "` not found."
         elif len(file_list) == 1:
             file_category = file_list[0]['fileCategory']
+            try:
+                packageName = file_list[0]['fileParameters']['packageName']
+            except:
+                packageName = ""
             if file_category == 'android-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
                                   "md5": file_list[0]['meta']['md5sum'],
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid'],
-                                  "packageName": file_list[0]['fileParameters']['packageName']
+                                  "packageName": packageName
                                   }
             elif file_category == 'ios-application':
                 return_message = {"fileName": file_name,

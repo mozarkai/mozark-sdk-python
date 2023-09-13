@@ -97,6 +97,7 @@ class File:
     def get_application_list_all(self):
         status_message = self.get_file_info_list_all()
         return status_message
+
     # Native Test Application
 
     def upload_native_test_application(self, file_category=None, project_name=None, file_path=None):
@@ -236,10 +237,18 @@ class File:
         if len(file_list) > 0:
             for f in file_list:
                 file_category = f['fileCategory']
+                try:
+                    md5 = f['meta']['md5sum']
+                except:
+                    md5 = ''
+                try:
+                    xctestrunFileUrl=f['fileParameters']['xctestrunFileUrl']
+                except:
+                    xctestrunFileUrl = ''
                 if file_category == 'android-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "projectName": ""
@@ -248,7 +257,7 @@ class File:
                 elif file_category == 'ios-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "projectName": ""
@@ -257,7 +266,7 @@ class File:
                 elif file_category == 'android-test-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "testCodePackageName": f['fileParameters']['testCodePackageName'],
@@ -268,10 +277,10 @@ class File:
                 elif file_category == 'ios-test-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
-                                 "XCTestRunFileUrl": f['fileParameters']['xctestrunFileUrl'],
+                                 "XCTestRunFileUrl": xctestrunFileUrl,
                                  "projectName": ""
                                  }
                     return_message.append(file_info)

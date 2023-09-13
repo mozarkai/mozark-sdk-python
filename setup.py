@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name='mozark_sdk',
     packages=['mozark_sdk'],
-    version='1.0.1',
+    version='1.0.2',
     license='MIT',
     description='Automation test APIs',
     author='Mozark',
