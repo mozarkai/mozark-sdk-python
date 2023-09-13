@@ -24,9 +24,9 @@ class TestDevice(TestCase):
         client = Client()
         client.login()
         response = client.get_device_list(platform="android")
-        print(json.dumps(response))
+        # print(json.dumps(response))
 
-        response = client.get_device_list(device_serial="5200d8204e1")
+        response = client.get_device_list(device_serial="33498800000128586")
         print(json.dumps(response))
 
     def test_add_device(self):
