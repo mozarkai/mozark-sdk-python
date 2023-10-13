@@ -4,8 +4,8 @@ import json
 
 class TestProject(TestCase):
     def test_create_project(self):
-        project_name = "Sample_Android_Project"
-        project_description = "Sample Android Project Description"
+        project_name = "test2"
+        project_description = "test2"
         client = Client()
         client.login()
 
@@ -29,7 +29,7 @@ class TestProject(TestCase):
         # self.assertEqual(response, "Failure: Project with name `" + project_name + "` not found.")
 
     def test_delete_project(self):
-        project_name = "Sample_Android_Project"
+        project_name = "test1"
         client = Client()
         client.login()
 

@@ -14,7 +14,8 @@ class Project:
                        'Content-Type': 'application/json'}
         data = {
             "name": project_name,
-            "description": project_description
+            "description": project_description,
+            "testType": "app-automation"
         }
         project_api_url = self.config.get("api_url") + "testexecute/projects"
         response = requests.post(project_api_url, json=data, headers=new_headers)
