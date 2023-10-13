@@ -16,7 +16,8 @@ class File:
             "fileName": filename,
             "fileCategory": file_category,
             "userName": self.config.get("username"),
-            "projectName": project_name
+            "projectName": project_name,
+            "testType": "app-automation"
         }
 
         md5 = self.get_file_md5(filepath=file_path)
@@ -242,7 +243,7 @@ class File:
                 except:
                     md5 = ''
                 try:
-                    xctestrunFileUrl=f['fileParameters']['xctestrunFileUrl']
+                    xctestrunFileUrl = f['fileParameters']['xctestrunFileUrl']
                 except:
                     xctestrunFileUrl = ''
                 if file_category == 'android-application':

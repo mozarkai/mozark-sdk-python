@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.5 - 2023-01-03
+## 2.5 - 2023-13-10
 
 ### User 
 * [ADDED] Login for obtaining authentication-toke to use other functionalities
