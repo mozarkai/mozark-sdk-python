@@ -9,7 +9,7 @@ class File:
     def __init__(self, client=None):
         self.config = client.get_config()
 
-    def upload_application(self, file_category=None, project_name=None, file_path=None):
+    def upload_application(self, file_category=None, project_name=None, file_path=None, testType=None):
         path_object = Path(file_path)
         filename = path_object.name
         data = {
@@ -17,7 +17,7 @@ class File:
             "fileCategory": file_category,
             "userName": self.config.get("username"),
             "projectName": project_name,
-            "testType": "app-automation"
+            "testType": testType
         }
 
         md5 = self.get_file_md5(filepath=file_path)
@@ -47,13 +47,17 @@ class File:
         elif len(file_list) == 1:
             file_category = file_list[0]['fileCategory']
             try:
+                md5 = file_list[0]['meta']['md5sum']
+            except:
+                md5 = ""
+            try:
                 packageName = file_list[0]['fileParameters']['packageName']
             except:
                 packageName = ""
             if file_category == 'android-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
-                                  "md5": file_list[0]['meta']['md5sum'],
+                                  "md5": md5,
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid'],
                                   "packageName": packageName
@@ -61,14 +65,14 @@ class File:
             elif file_category == 'ios-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
-                                  "md5": file_list[0]['meta']['md5sum'],
+                                  "md5": md5,
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid']
                                   }
             elif file_category == 'android-test-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
-                                  "md5": file_list[0]['meta']['md5sum'],
+                                  "md5": md5,
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid'],
                                   "testCodePackageName": file_list[0]['fileParameters']['testCodePackageName'],
@@ -77,7 +81,7 @@ class File:
             elif file_category == 'ios-test-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
-                                  "md5": file_list[0]['meta']['md5sum'],
+                                  "md5": md5,
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid'],
                                   "XCTestRunFileUrl": file_list[0]['fileParameters']['xctestrunFileUrl']
@@ -182,10 +186,14 @@ class File:
         if len(file_list) > 0:
             for f in file_list:
                 file_category = f['fileCategory']
+                try:
+                    md5 = f['meta']['md5sum']
+                except:
+                    md5 = ''
                 if file_category == 'android-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "packageName": f['fileParameters']['packageName'],
@@ -195,7 +203,7 @@ class File:
                 elif file_category == 'ios-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "projectName": project_name
@@ -204,7 +212,7 @@ class File:
                 elif file_category == 'android-test-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "testCodePackageName": f['fileParameters']['testCodePackageName'],
@@ -215,7 +223,7 @@ class File:
                 elif file_category == 'ios-test-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "XCTestRunFileUrl": f['fileParameters']['xctestrunFileUrl'],
