@@ -29,7 +29,7 @@ class TestProject(TestCase):
         # self.assertEqual(response, "Failure: Project with name `" + project_name + "` not found.")
 
     def test_delete_project(self):
-        project_name = "ashwin_now"
+        project_name = "Sample_Android_Project"
         client = Client()
         client.login()
 
