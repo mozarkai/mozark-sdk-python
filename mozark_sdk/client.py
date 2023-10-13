@@ -118,13 +118,14 @@ class Client:
 
     # Application
 
-    def upload_application(self, file_category=None, project_name=None, file_path=None):
+    def upload_application(self, file_category=None, project_name=None, file_path=None, testType=None):
         """ Upload android or ios application(.apk or .ipa) from given file path
 
         Args:
             file_category (str): Mandatory 'android-application' or 'ios-application'
             project_name (str): Container project for the application
             file_path (str): relative or absolute path of the file
+            testType (str): testType as app-automation
 
         Returns:
             message (str): 'Success' if uploaded successfully, 'Failure' along with failure reason
@@ -136,7 +137,7 @@ class Client:
 
         """
         file = File(client=self)
-        status = file.upload_application(file_category=file_category, project_name=project_name, file_path=file_path)
+        status = file.upload_application(file_category=file_category, project_name=project_name, file_path=file_path, testType=testType)
         return status
 
     def get_application_info(self, file_name=None):
