@@ -8,6 +8,6 @@ pipelines:
            script:
              - git remote add sync git@github.com:mozarkai/mozark-sdk-python.git
              - git checkout master
-             - git pull sync
+             - git pull sync master --rebase
              - git push sync master
 
