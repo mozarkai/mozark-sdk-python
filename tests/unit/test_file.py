@@ -7,11 +7,20 @@ from mozark_sdk.client import Client
 
 class TestFile(unittest.TestCase):
 
-    def test_upload_application(self):
+    def test_build_upload_application(self):
         client = Client()
         client.login()
-        project_name = "for_icici"
+        project_name = "test2"
         response = client.upload_application(file_category="android-application",
+                                             project_name=project_name,
+                                             file_path="5gmark.apk")
+        print(response)
+
+    def test_script_upload_application(self):
+        client = Client()
+        client.login()
+        project_name = "test2"
+        response = client.upload_application(file_category="android-test-application",
                                              project_name=project_name,
                                              file_path="5gmark.apk")
         print(response)
