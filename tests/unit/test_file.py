@@ -11,9 +11,10 @@ class TestFile(unittest.TestCase):
         client = Client()
         client.login()
         project_name = "test2"
+        file_path="5gmark.apk"
         response = client.upload_application(file_category="android-application",
                                              project_name=project_name,
-                                             file_path="5gmark.apk")
+                                             file_path=file_path)
         print(response)
 
     def test_script_upload_application(self):
