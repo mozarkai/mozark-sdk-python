@@ -9,13 +9,13 @@ class Project:
     def __init__(self, client=None):
         self.config = client.get_config()
 
-    def create_project(self, project_name=None, project_description=None):
+    def create_project(self, project_name=None, project_description=None, testType=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
         data = {
             "name": project_name,
             "description": project_description,
-            "testType": "app-automation"
+            "testType": testType
         }
         project_api_url = self.config.get("api_url") + "testexecute/projects"
         response = requests.post(project_api_url, json=data, headers=new_headers)

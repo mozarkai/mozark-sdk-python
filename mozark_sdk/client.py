@@ -42,11 +42,12 @@ class Client:
 
     # Project
 
-    def create_project(self, project_name=None, project_description=None):
+    def create_project(self, project_name=None, project_description=None, testType=None):
         """Create a new project
         Args:
             project_name (str): unique project name
             project_description (str): short description for a project
+            testType (str): testType as app-automation
 
         Returns:
             message (str): 'Success' if successful, 'Failure' along with failure reason
@@ -54,7 +55,7 @@ class Client:
             "Failure: Project with `{project_name}` already exists." - in case if project with the given name already exists
         """
         project = Project(self)
-        status_message = project.create_project(project_name, project_description)
+        status_message = project.create_project(project_name, project_description, testType)
         return status_message
 
     def get_project_info(self, project_name=None):

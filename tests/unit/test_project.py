@@ -6,10 +6,11 @@ class TestProject(TestCase):
     def test_create_project(self):
         project_name = "test2"
         project_description = "test2"
+        testType = "app-automation"
         client = Client()
         client.login()
 
-        response = client.create_project(project_name=project_name, project_description=project_description)
+        response = client.create_project(project_name=project_name, project_description=project_description, testType=testType)
         print(json.dumps(response))
         # self.assertEqual(response, "Success")
         # response = client.create_project(project_name=project_name, project_description=project_description)
