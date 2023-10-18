@@ -9,6 +9,36 @@ class File:
     def __init__(self, client=None):
         self.config = client.get_config()
 
+    def __upload(self, data=None, files=None):
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+
+        file_api_url = self.config.get("api_url") + "v1/testexecute/files"
+        file_name = data["fileName"]
+        # Leg 1 - get the s3 file upload URL
+        response = requests.post(file_api_url, json=data, headers=new_headers)
+
+        if response.status_code == 200:
+            if response.json()['status'] == 409:
+                return "Error: File `" + file_name + "` already exists."
+        else:
+            return "Error: " + response.text
+
+        s3_file_upload_url = response.json()['data']['uploadUrl']
+
+        # print("...29...", response.json())
+
+        # print("\n s3 link: ", s3_file_upload_url)
+        # Leg 2 - upload the file using s3 upload URL
+        response = requests.put(s3_file_upload_url, files=files)
+        #
+        # print("\n s3 response: ", response)
+        if response.status_code == 200:
+            return "Success: File `" + file_name + "` uploaded successfully."
+        else:
+            return "Failure: File `" + file_name + "` not uploaded."
+
+
     def upload_application(self, file_category=None, project_name=None, file_path=None, testType=None):
         path_object = Path(file_path)
         filename = path_object.name
@@ -21,12 +51,20 @@ class File:
         }
 
         md5 = self.get_file_md5(filepath=file_path)
-        data["md5sum"] = md5
+        # data["md5sum"] = md5
+        # data["actualMd5sum"] = md5
         try:
             file_object = open(file_path, 'rb')
             files = {'file': file_object}
+            # files = {'file': ('5gmark.apk', open('5gmark.apk', 'rb'))}
+            # with open(file_path, 'rb') as file:
+            #     files = {'file': (file.name, file)}
+
+            # with open(file_path, "rb") as f:
+            #     file_bytes = f.read()
+            #     files = {'file': file_bytes}
             response_message = self.__upload(data=data, files=files)
-            file_object.close()
+            # file_object.close()
             return response_message
         except FileNotFoundError:
             return "Error: No such file or directory: " + filename
@@ -37,7 +75,7 @@ class File:
         new_params = {
             "fileName": file_name
         }
-        file_api_url = self.config.get("api_url") + "testexecute/files"
+        file_api_url = self.config.get("api_url") + "v1/testexecute/files"
         response = requests.get(file_api_url, params=new_params, headers=new_headers)
 
         file_list = response.json()['data']['list']
@@ -138,31 +176,6 @@ class File:
         except FileNotFoundError:
             return "Error: No such file or directory "
 
-    def __upload(self, data=None, files=None):
-        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
-                       'Content-Type': 'application/json'}
-
-        file_api_url = self.config.get("api_url") + "testexecute/files"
-        file_name = data["fileName"]
-        # Leg 1 - get the s3 file upload URL
-        response = requests.post(file_api_url, json=data, headers=new_headers)
-
-        if response.status_code == 200:
-            if response.json()['status'] == 409:
-                return "Error: File `" + file_name + "` already exists."
-        else:
-            return "Error: " + response.text
-
-        s3_file_upload_url = response.json()['data']['uploadUrl']
-
-        # print("\n s3 link: ", s3_file_upload_url)
-        # Leg 2 - upload the file using s3 upload URL
-        response = requests.put(s3_file_upload_url, files=files)
-        # print("\n s3 response: ", response)
-        if response.status_code == 200:
-            return "Success: File `" + file_name + "` uploaded successfully."
-        else:
-            return "Failure: File `" + file_name + "` not uploaded."
 
     def get_file_info_list(self, file_category=None, project_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -176,7 +189,7 @@ class File:
             "projectName": project_name,
             "fileStatus": "processed"
         }
-        file_api_url = self.config.get("api_url") + "testexecute/files"
+        file_api_url = self.config.get("api_url") + "v1/testexecute/files"
         # Fetch list of files uploaded
         response = requests.get(file_api_url, params=new_params, headers=new_headers)
 
@@ -236,7 +249,7 @@ class File:
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
 
-        file_api_url = self.config.get("api_url") + "testexecute/files"
+        file_api_url = self.config.get("api_url") + "v1/testexecute/files"
         # Fetch list of files uploaded
         response = requests.get(file_api_url, headers=new_headers)
 
@@ -301,7 +314,7 @@ class File:
 
         file_info = self.get_application_info(file_name=file_name)
         try:
-            file_api_url = self.config.get("api_url") + "testexecute/files?fileId=" + file_info["fileUUID"]
+            file_api_url = self.config.get("api_url") + "v1/testexecute/files?fileId=" + file_info["fileUUID"]
         except TypeError:
             return "Failure: File `" + file_name + "` not available"
         response = requests.delete(file_api_url, headers=new_headers)
