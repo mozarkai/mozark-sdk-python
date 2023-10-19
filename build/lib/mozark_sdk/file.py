@@ -9,6 +9,31 @@ class File:
     def __init__(self, client=None):
         self.config = client.get_config()
 
+    def __upload(self, data=None, files=None):
+
+        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
+                       'Content-Type': 'application/json'}
+
+        file_api_url = self.config.get("api_url") + "v1/testexecute/files"
+        file_name = data["fileName"]
+        # Leg 1 - get the s3 file upload URL
+        response = requests.post(file_api_url, json=data, headers=new_headers)
+
+        if response.status_code == 200:
+            if response.json()['status'] == 409:
+                return "Error: File `" + file_name + "` already exists."
+        else:
+            return "Error: " + response.text
+
+        s3_file_upload_url = response.json()['data']['uploadUrl']
+
+        response = requests.put(s3_file_upload_url, data=files)
+        if response.status_code == 200:
+            return "Success: File `" + file_name + "` uploaded successfully."
+        else:
+            return "Failure: File `" + file_name + "` not uploaded."
+
+
     def upload_application(self, file_category=None, project_name=None, file_path=None):
         path_object = Path(file_path)
         filename = path_object.name
@@ -25,7 +50,9 @@ class File:
         try:
             file_object = open(file_path, 'rb')
             files = {'file': file_object}
-            response_message = self.__upload(data=data, files=files)
+
+            print(file_path)
+            response_message = self.__upload(data=data, files=file_object)
             file_object.close()
             return response_message
         except FileNotFoundError:
@@ -37,7 +64,7 @@ class File:
         new_params = {
             "fileName": file_name
         }
-        file_api_url = self.config.get("api_url") + "testexecute/files"
+        file_api_url = self.config.get("api_url") + "v1/testexecute/files"
         response = requests.get(file_api_url, params=new_params, headers=new_headers)
 
         file_list = response.json()['data']['list']
@@ -47,13 +74,17 @@ class File:
         elif len(file_list) == 1:
             file_category = file_list[0]['fileCategory']
             try:
+                md5 = file_list[0]['meta']['md5sum']
+            except:
+                md5 = ""
+            try:
                 packageName = file_list[0]['fileParameters']['packageName']
             except:
                 packageName = ""
             if file_category == 'android-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
-                                  "md5": file_list[0]['meta']['md5sum'],
+                                  "md5": md5,
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid'],
                                   "packageName": packageName
@@ -61,14 +92,14 @@ class File:
             elif file_category == 'ios-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
-                                  "md5": file_list[0]['meta']['md5sum'],
+                                  "md5": md5,
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid']
                                   }
             elif file_category == 'android-test-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
-                                  "md5": file_list[0]['meta']['md5sum'],
+                                  "md5": md5,
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid'],
                                   "testCodePackageName": file_list[0]['fileParameters']['testCodePackageName'],
@@ -77,7 +108,7 @@ class File:
             elif file_category == 'ios-test-application':
                 return_message = {"fileName": file_name,
                                   "fileCategory": file_list[0]['fileCategory'],
-                                  "md5": file_list[0]['meta']['md5sum'],
+                                  "md5": md5,
                                   "fileURL": file_list[0]['meta']['s3Url'],
                                   "fileUUID": file_list[0]['uuid'],
                                   "XCTestRunFileUrl": file_list[0]['fileParameters']['xctestrunFileUrl']
@@ -134,31 +165,6 @@ class File:
         except FileNotFoundError:
             return "Error: No such file or directory "
 
-    def __upload(self, data=None, files=None):
-        new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
-                       'Content-Type': 'application/json'}
-
-        file_api_url = self.config.get("api_url") + "testexecute/files"
-        file_name = data["fileName"]
-        # Leg 1 - get the s3 file upload URL
-        response = requests.post(file_api_url, json=data, headers=new_headers)
-
-        if response.status_code == 200:
-            if response.json()['status'] == 409:
-                return "Error: File `" + file_name + "` already exists."
-        else:
-            return "Error: " + response.text
-
-        s3_file_upload_url = response.json()['data']['uploadUrl']
-
-        # print("\n s3 link: ", s3_file_upload_url)
-        # Leg 2 - upload the file using s3 upload URL
-        response = requests.put(s3_file_upload_url, files=files)
-        # print("\n s3 response: ", response)
-        if response.status_code == 200:
-            return "Success: File `" + file_name + "` uploaded successfully."
-        else:
-            return "Failure: File `" + file_name + "` not uploaded."
 
     def get_file_info_list(self, file_category=None, project_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
@@ -172,7 +178,7 @@ class File:
             "projectName": project_name,
             "fileStatus": "processed"
         }
-        file_api_url = self.config.get("api_url") + "testexecute/files"
+        file_api_url = self.config.get("api_url") + "v1/testexecute/files"
         # Fetch list of files uploaded
         response = requests.get(file_api_url, params=new_params, headers=new_headers)
 
@@ -182,10 +188,14 @@ class File:
         if len(file_list) > 0:
             for f in file_list:
                 file_category = f['fileCategory']
+                try:
+                    md5 = f['meta']['md5sum']
+                except:
+                    md5 = ''
                 if file_category == 'android-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "packageName": f['fileParameters']['packageName'],
@@ -195,7 +205,7 @@ class File:
                 elif file_category == 'ios-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "projectName": project_name
@@ -204,7 +214,7 @@ class File:
                 elif file_category == 'android-test-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "testCodePackageName": f['fileParameters']['testCodePackageName'],
@@ -215,7 +225,7 @@ class File:
                 elif file_category == 'ios-test-application':
                     file_info = {"fileName": f['fileName'],
                                  "fileCategory": f['fileCategory'],
-                                 "md5": f['meta']['md5sum'],
+                                 "md5": md5,
                                  "fileURL": f['meta']['s3Url'],
                                  "fileUUID": f['uuid'],
                                  "XCTestRunFileUrl": f['fileParameters']['xctestrunFileUrl'],
@@ -228,7 +238,7 @@ class File:
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
 
-        file_api_url = self.config.get("api_url") + "testexecute/files"
+        file_api_url = self.config.get("api_url") + "v1/testexecute/files"
         # Fetch list of files uploaded
         response = requests.get(file_api_url, headers=new_headers)
 
@@ -293,7 +303,7 @@ class File:
 
         file_info = self.get_application_info(file_name=file_name)
         try:
-            file_api_url = self.config.get("api_url") + "testexecute/files?fileId=" + file_info["fileUUID"]
+            file_api_url = self.config.get("api_url") + "v1/testexecute/files?fileId=" + file_info["fileUUID"]
         except TypeError:
             return "Failure: File `" + file_name + "` not available"
         response = requests.delete(file_api_url, headers=new_headers)
