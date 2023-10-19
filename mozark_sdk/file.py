@@ -10,10 +10,18 @@ class File:
         self.config = client.get_config()
 
     def __upload(self, data=None, files=None):
+
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
 
+        # idToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiQ1VTVE9NLVRPS0VOIiwiY29nbml0bzp1c2VybmFtZSI6InN1bWl0LWtAbW96YXJrLmFpIiwib3JpZ2luX2p0aSI6IkN1dXdOSVlWQkJHazViSHdYV3FNRFZadVYzYzRhUm45a1VoTmsxNG9mdjQ9IiwiY3VzdG9tOnRlbmFudElkIjoicGhvbmVwZSIsImN1c3RvbTp1c2VyUm9sZSI6IlRlbmFudEFkbWluIiwidG9rZW5fdXNlIjoiaWQiLCJqdGkiOiJBU0lBQTlENjNFQkNCNDBEQTk0ODMxOTQ3MTExIiwiZW1haWwiOiJzdW1pdC1rQG1vemFyay5haSIsImV4cCI6MTcyOTIzNzA0MCwiaWF0IjoxNjk3NzAxMDQwfQ.2w72mBM58mbRfm9HeG_mdnKumKJ-Lzv1ap_eb1SqmDs"
+        # headers_str = "Bearer " + idToken
+        # new_headers = {'Authorization': headers_str,
+        #                'Content-Type': 'application/json'}
+
         file_api_url = self.config.get("api_url") + "v1/testexecute/files"
+        # file_api_url = self.config.get("api_url") + "v1//testexecute/generate-presigned-url"
+        # /testexecute/generate-presigned-url
         file_name = data["fileName"]
         # Leg 1 - get the s3 file upload URL
         response = requests.post(file_api_url, json=data, headers=new_headers)
@@ -31,7 +39,7 @@ class File:
         # print("\n s3 link: ", s3_file_upload_url)
         # Leg 2 - upload the file using s3 upload URL
         response = requests.put(s3_file_upload_url, files=files)
-        #
+
         # print("\n s3 response: ", response)
         if response.status_code == 200:
             return "Success: File `" + file_name + "` uploaded successfully."
@@ -51,11 +59,13 @@ class File:
         }
 
         md5 = self.get_file_md5(filepath=file_path)
-        # data["md5sum"] = md5
+        data["md5sum"] = md5
         # data["actualMd5sum"] = md5
         try:
             file_object = open(file_path, 'rb')
             files = {'file': file_object}
+
+            print(file_path)
             # files = {'file': ('5gmark.apk', open('5gmark.apk', 'rb'))}
             # with open(file_path, 'rb') as file:
             #     files = {'file': (file.name, file)}
@@ -64,7 +74,7 @@ class File:
             #     file_bytes = f.read()
             #     files = {'file': file_bytes}
             response_message = self.__upload(data=data, files=files)
-            # file_object.close()
+            file_object.close()
             return response_message
         except FileNotFoundError:
             return "Error: No such file or directory: " + filename
