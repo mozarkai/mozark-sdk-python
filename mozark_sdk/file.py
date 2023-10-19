@@ -38,7 +38,7 @@ class File:
 
         # print("\n s3 link: ", s3_file_upload_url)
         # Leg 2 - upload the file using s3 upload URL
-        response = requests.put(s3_file_upload_url, files=files)
+        response = requests.put(s3_file_upload_url, data=files)
 
         # print("\n s3 response: ", response)
         if response.status_code == 200:
@@ -73,7 +73,7 @@ class File:
             # with open(file_path, "rb") as f:
             #     file_bytes = f.read()
             #     files = {'file': file_bytes}
-            response_message = self.__upload(data=data, files=files)
+            response_message = self.__upload(data=data, files=file_object)
             file_object.close()
             return response_message
         except FileNotFoundError:
