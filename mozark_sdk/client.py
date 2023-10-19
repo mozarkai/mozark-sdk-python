@@ -42,7 +42,7 @@ class Client:
 
     # Project
 
-    def create_project(self, project_name=None, project_description=None, testType=None):
+    def create_project(self, project_name=None, project_description=None):
         """Create a new project
         Args:
             project_name (str): unique project name
@@ -55,7 +55,7 @@ class Client:
             "Failure: Project with `{project_name}` already exists." - in case if project with the given name already exists
         """
         project = Project(self)
-        status_message = project.create_project(project_name, project_description, testType)
+        status_message = project.create_project(project_name, project_description)
         return status_message
 
     def get_project_info(self, project_name=None):
@@ -118,7 +118,7 @@ class Client:
 
     # Application
 
-    def upload_application(self, file_category=None, project_name=None, file_path=None, testType=None):
+    def upload_application(self, file_category=None, project_name=None, file_path=None):
         """ Upload android or ios application(.apk or .ipa) from given file path
 
         Args:
@@ -137,7 +137,7 @@ class Client:
 
         """
         file = File(client=self)
-        status = file.upload_application(file_category=file_category, project_name=project_name, file_path=file_path, testType=testType)
+        status = file.upload_application(file_category=file_category, project_name=project_name, file_path=file_path)
         return status
 
     def get_application_info(self, file_name=None):
