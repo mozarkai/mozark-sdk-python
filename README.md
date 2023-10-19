@@ -55,7 +55,9 @@ Table of contents
 
 Add `mozark-sdk` to your `requirements.txt` dependencies. You may also use pip command to install `mozark-sdk` into your Python virtual environment.
 ```commandline
-pip install mozark-sdk
+pip install mozark-sdk 
+or latest 
+pip install mozark-sdk==2.5.1
 ```
 
 ## Getting Started
