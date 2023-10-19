@@ -47,6 +47,7 @@ class Client:
         Args:
             project_name (str): unique project name
             project_description (str): short description for a project
+            testType (str): testType as app-automation
 
         Returns:
             message (str): 'Success' if successful, 'Failure' along with failure reason
@@ -124,6 +125,7 @@ class Client:
             file_category (str): Mandatory 'android-application' or 'ios-application'
             project_name (str): Container project for the application
             file_path (str): relative or absolute path of the file
+            testType (str): testType as app-automation
 
         Returns:
             message (str): 'Success' if uploaded successfully, 'Failure' along with failure reason

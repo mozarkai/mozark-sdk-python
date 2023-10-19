@@ -4,20 +4,20 @@ import json
 
 class TestProject(TestCase):
     def test_create_project(self):
-        project_name = "test2"
-        project_description = "test2"
+        project_name = "test20"
+        project_description = "test20"
         testType = "app-automation"
         client = Client()
         client.login()
 
-        response = client.create_project(project_name=project_name, project_description=project_description, testType=testType)
+        response = client.create_project(project_name=project_name, project_description=project_description)
         print(json.dumps(response))
         # self.assertEqual(response, "Success")
         # response = client.create_project(project_name=project_name, project_description=project_description)
         # self.assertEqual(response, "Failure: Project with "+project_name+" already exists.")
 
     def test_get_project_info(self):
-        project_name = "ashwin_now"
+        project_name = "now"
         client = Client()
         client.login()
 

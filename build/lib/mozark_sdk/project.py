@@ -17,7 +17,7 @@ class Project:
             "description": project_description,
             "testType": "app-automation"
         }
-        project_api_url = self.config.get("api_url") + "testexecute/projects"
+        project_api_url = self.config.get("api_url") + "v1/testexecute/projects"
         response = requests.post(project_api_url, json=data, headers=new_headers)
         if response.json()["status"] == 200 and response.json()["message"] == "Success":
             return "Success"
@@ -30,7 +30,7 @@ class Project:
         new_params = {
             "name": project_name
         }
-        project_api_url = self.config.get("api_url") + "testexecute/projects"
+        project_api_url = self.config.get("api_url") + "v1/testexecute/projects"
         # Fetch list of projects
         response = requests.get(project_api_url, params=new_params, headers=new_headers)
         project_list = response.json()["data"]["list"]
@@ -55,7 +55,7 @@ class Project:
         if project_info == "Failure: Project with name `" + project_name + "` not found.":
             return project_info
         else:
-            delete_project_url = self.config.get("api_url") + "testexecute/projects?projectId=" + project_info["projectUUID"]
+            delete_project_url = self.config.get("api_url") + "v1/testexecute/projects?projectId=" + project_info["projectUUID"]
             response = requests.delete(delete_project_url, headers=new_headers)
             if response.json()["status"] == 200 and response.json()["message"] == "Success":
                 return "Success"
@@ -64,7 +64,7 @@ class Project:
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
 
-        project_api_url = self.config.get("api_url") + "testexecute/projects"
+        project_api_url = self.config.get("api_url") + "v1/testexecute/projects"
         # Fetch list of projects
         response = requests.get(project_api_url, headers=new_headers)
         project_list = response.json()["data"]["list"]
