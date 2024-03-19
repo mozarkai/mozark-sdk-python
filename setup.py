@@ -7,6 +7,7 @@ setup(
     version='2.6.0',
     license='MIT',
     description='Automation test APIs',
+    long_description_content_type='text/markdown',
     author='Mozark',
     author_email='mozark-aws-staging@mozark.ai',
     url='https://mozark.ai',

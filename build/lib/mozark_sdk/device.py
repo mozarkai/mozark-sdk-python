@@ -17,7 +17,7 @@ class Device:
         if device_parameter["platform"] == "living-room":
             device_parameter["platform"] = "TV"
         # print(device_parameter)
-        device_api_url = self.config.get("api_url") + "testexecute/devices"
+        device_api_url = self.config.get("api_url") + "v1/testexecute/devices"
         response = requests.post(device_api_url, json=device_parameter, headers=new_headers)
         print(response.json())
         try:
@@ -37,7 +37,7 @@ class Device:
             "platform": platform,
             "serial": device_serial
         }
-        device_api_url = self.config.get("api_url") + "testexecute/devices"
+        device_api_url = self.config.get("api_url") + "v1/testexecute/devices"
         # Fetch list of devices
         response = requests.get(device_api_url, params=new_params, headers=new_headers)
 

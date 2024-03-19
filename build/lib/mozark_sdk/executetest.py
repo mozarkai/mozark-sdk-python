@@ -49,14 +49,14 @@ class TestExecute:
 
         print(data)
 
-        test_api_url = self.config.get("api_url") + "testexecute/schedules"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
         response = requests.post(test_api_url, json=data, headers=new_headers)
         if response.status_code == 200:
             try:
                 schedule_id = {
                     "scheduleId": response.json()["data"]["scheduleId"]
                 }
-                test_api_url = self.config.get("api_url") + "testexecute/schedules"
+                test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
                 response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
                 print(response.json())
                 schedule_details = response.json()['data']['list'][0]['testExecutions']
@@ -80,7 +80,7 @@ class TestExecute:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/info"
+        test_api_url = self.config.get("api_url") + "v1/analytics/tests/" + test_id + "/info"
         # Fetch info of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -146,14 +146,14 @@ class TestExecute:
         }
 
         print(data)
-        test_api_url = self.config.get("api_url") + "testexecute/schedules"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
         response = requests.post(test_api_url, json=data, headers=new_headers)
         if response.status_code == 200:
             try:
                 schedule_id = {
                     "scheduleId": response.json()["data"]["scheduleId"]
                 }
-                test_api_url = self.config.get("api_url") + "testexecute/schedules"
+                test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
                 response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
                 print(response.json())
                 scheduleId = response.json()['data']['list'][0]['uuid']
@@ -181,7 +181,7 @@ class TestExecute:
         schedule_id = {
             "scheduleId": schedule_id
         }
-        test_api_url = self.config.get("api_url") + "testexecute/schedules"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
         response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
         print(response.json())
         try:
@@ -223,7 +223,7 @@ class TestExecute:
             #        "startTime": from_date_time,
             #        "endTime": to_date_time
         }
-        test_api_url = self.config.get("api_url") + "testexecute/schedules"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
         response = requests.get(test_api_url, params=params, headers=new_headers)
         complete_response = []
         for res in response.json()['data']['list']:
@@ -272,7 +272,7 @@ class TestExecute:
             "testApplicationUrl": application_test_url,
             "executionType": execution_type
         }
-        test_api_url = self.config.get("api_url") + "testexecute/schedules"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
         response = requests.post(test_api_url, json=data, headers=new_headers)
         if response.status_code == 200:
             my_resp = json.loads(response.text)
@@ -287,7 +287,7 @@ class TestExecute:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "testexecute/schedules"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
         # Fetch list of schedules
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -304,7 +304,7 @@ class TestExecute:
         new_params = {
             "scheduleId": schedule_id
         }
-        test_api_url = self.config.get("api_url") + "testexecute/schedules"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
         # Delete schedule
         response = requests.delete(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -321,7 +321,7 @@ class TestExecute:
         data = {
             "testId": test_id
         }
-        test_api_url = self.config.get("api_url") + "testexecute/tests"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/tests"
         # abort test
         response = requests.put(test_api_url, json=data, headers=new_headers)
         return response.text
@@ -368,7 +368,7 @@ class TestExecute:
         schedule_id = {
             "uuid": schedule_id
         }
-        test_api_url = self.config.get("api_url") + "testexecute/edit/schedule"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/edit/schedule"
         response = requests.put(test_api_url, json=data, params=schedule_id, headers=new_headers)
         print(response.json())
 
@@ -378,6 +378,6 @@ class TestExecute:
         test_id = {
             "uuid": test_id
         }
-        test_api_url = self.config.get("api_url") + "testexecute/edit/test"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/edit/test"
         response = requests.put(test_api_url, json=data, params=test_id, headers=new_headers)
         print(response.json())
