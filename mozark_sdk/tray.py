@@ -18,7 +18,7 @@ class Tray:
             "devices": device_list,
             "platform": platform
         }
-        tray_api_url = self.config.get("api_url") + "tray/create"
+        tray_api_url = self.config.get("api_url") + "v1/tray/create"
         response = requests.post(tray_api_url, json=data, headers=new_headers)
         if response.status_code == 200 and response.json()["body"]["message"] == "Tray Created Successfully":
             return "Success"
@@ -31,7 +31,7 @@ class Tray:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        tray_api_url = self.config.get("api_url") + "tray/list"
+        tray_api_url = self.config.get("api_url") + "v1/tray/list"
         # Get list of tray created
         response = requests.get(tray_api_url, params=new_params, headers=new_headers)
         devices = {}
@@ -76,7 +76,7 @@ class Tray:
             data = {
                 "devices": device_list
             }
-            tray_api_url = self.config.get("api_url") + "tray/update"
+            tray_api_url = self.config.get("api_url") + "v1/tray/update"
             response = requests.put(tray_api_url, json=data, headers=new_headers, params=new_params)
             if response.status_code == 200:
                 my_resp = json.loads(response.text)
@@ -90,7 +90,7 @@ class Tray:
     def delete_tray(self, tray_name=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
-        tray_delete_api_url = self.config.get("api_url") + "tray/delete"
+        tray_delete_api_url = self.config.get("api_url") + "v1/tray/delete"
         tray_id = self.get_trayid_by_trayname(tray_name=tray_name, new_headers=new_headers)
         if tray_id:
             new_params = {
@@ -113,7 +113,7 @@ class Tray:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        tray_api_url = self.config.get("api_url") + "tray/list"
+        tray_api_url = self.config.get("api_url") + "v1/tray/list"
         # Get list of tray created
         response = requests.get(tray_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -139,7 +139,7 @@ class Tray:
             return {"statusCode:": response.status_code, "message": response.text}
 
     def get_trayid_by_trayname(self, tray_name=None, new_headers=None):
-        tray_list_api_url = self.config.get("api_url") + "tray/list"
+        tray_list_api_url = self.config.get("api_url") + "v1/tray/list"
         response = requests.get(tray_list_api_url, headers=new_headers)
         if response.status_code == 200:
             my_resp = json.loads(response.text)
