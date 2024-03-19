@@ -52,7 +52,7 @@ class TestAnalytics:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "analytics/tests"
+        test_api_url = self.config.get("api_url") + "v1/analytics/tests"
         # Fetch list of tests
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -104,7 +104,7 @@ class TestAnalytics:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/info"
+        test_api_url = self.config.get("api_url") + "v1/analytics/tests/" + test_id + "/info"
         # Fetch info of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -147,7 +147,7 @@ class TestAnalytics:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/info"
+        test_api_url = self.config.get("api_url") + "v1/analytics/tests/" + test_id + "/info"
         # Fetch info of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -170,7 +170,7 @@ class TestAnalytics:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/testcases"
+        test_api_url = self.config.get("api_url") + "v1/analytics/tests/" + test_id + "/testcases"
         # Fetch info of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -204,7 +204,7 @@ class TestAnalytics:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/app/events"
+        test_api_url = self.config.get("api_url") + "v1/analytics/tests/" + test_id + "/app/events"
         # Fetch events of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -236,7 +236,7 @@ class TestAnalytics:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/app/kpi/experience"
+        test_api_url = self.config.get("api_url") + "v1/analytics/tests/" + test_id + "/app/kpi/experience"
         # Fetch kpis of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -265,7 +265,7 @@ class TestAnalytics:
                        'Content-Type': 'application/json'}
         new_params = {
         }
-        test_api_url = self.config.get("api_url") + "analytics/tests/" + test_id + "/app/resource/httpapi"
+        test_api_url = self.config.get("api_url") + "v1/analytics/tests/" + test_id + "/app/resource/httpapi"
         # Fetch http apis of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -285,7 +285,7 @@ class TestAnalytics:
             "testId": test_id,
             "type": "screenshots"
         }
-        test_api_url = self.config.get("api_url") + "testexecute/download"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/download"
         # Fetch screenshots of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -305,7 +305,7 @@ class TestAnalytics:
             "testId": test_id,
             "type": "output"
         }
-        test_api_url = self.config.get("api_url") + "testexecute/download"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/download"
         # Fetch screenshots of test
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -321,7 +321,7 @@ class TestAnalytics:
     def download_test_screenshot(self, test_id=None):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
-        test_api_url = self.config.get("api_url") + "testexecute/download"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/download"
         make_test_id_dir = self.config.get("base_download_dir") + test_id
         if not os.path.exists(make_test_id_dir):
             os.mkdir(make_test_id_dir)
@@ -366,7 +366,7 @@ class TestAnalytics:
             "fileName": file_name
         }
 
-        test_api_url = self.config.get("api_url") + "testexecute/download"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/download"
 
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -509,7 +509,7 @@ class TestAnalytics:
             "fileName": file_name
         }
 
-        test_api_url = self.config.get("api_url") + "testexecute/download"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/download"
 
         response = requests.get(test_api_url, params=new_params, headers=new_headers)
         if response.status_code == 200:
@@ -521,7 +521,7 @@ class TestAnalytics:
         url_list = []
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
-        test_api_url = self.config.get("api_url") + "testexecute/download"
+        test_api_url = self.config.get("api_url") + "v1/testexecute/download"
 
         list_screenshots = self.get_test_screenshot_list(test_id=test_id)
         if list_screenshots:

@@ -38,12 +38,13 @@ class TestSchedule(unittest.TestCase):
         test_parameters = {
             "maxTestDuration": 10
         }
-
-        response = client.start_test_execution(project_name="5gmark",
+        # devices = "10BD2509DR004G0"
+        devices=["10BD2509DR004G0"]
+        response = client.start_test_execution(project_name="Phonepe_RC",
                                                test_framework="android-uiautomator",
-                                               application_file_name="5gmark-debug.apk",
-                                               test_application_file_name="5gmark-debug-androidTest.apk",
-                                               devices=["fa8a555c"],
+                                               application_file_name="amar-media-fragment-local-sdk.apk",
+                                               test_application_file_name="PP_J09_AppLaunch_RC.apk",
+                                               devices=devices,
                                                test_configuration=test_configuration,
                                                test_parameters=test_parameters
                                                )
@@ -100,16 +101,16 @@ class TestSchedule(unittest.TestCase):
         test_parameters = {
             "maxTestDuration": 10
         }
-        response = client.schedule_test_execution(project_name="5gmark",
+        response = client.schedule_test_execution(project_name="Phonepe_RC",
                                                   test_framework="android-uiautomator",
-                                                  application_file_name="5gmark-debug.apk",
-                                                  test_application_file_name="5gmark-debug-androidTest.apk",
-                                                  devices=["fa8a555c"],
+                                                  application_file_name="amar-media-fragment-local-sdk.apk",
+                                                  test_application_file_name="PP_J09_AppLaunch_RC.apk",
+                                                  devices=["10BD2509DR004G0"],
                                                   test_configuration=test_configuration,
                                                   test_parameters=test_parameters,
-                                                  start_date_time="2023-04-07T10:00:00.333658+05:30",
-                                                  end_date_time="2023-04-07T10:30:00.333658+05:30",
-                                                  interval=15
+                                                  start_date_time="2024-03-19T19:10:00+05:30",
+                                                  end_date_time="2024-03-19T19:20:00+05:30",
+                                                  interval=10
                                                   )
 
         print(response)
@@ -152,4 +153,53 @@ class TestSchedule(unittest.TestCase):
             }
         }
         response = client.update_test(data=update_data, test_id=test_id)
+        print(response)
+
+    def test_start_test_execution_robot(self):
+        client = Client()
+        client.login()
+        test_configuration = {
+            "captureHAR": False,
+            "captureCPUMetrics": False,
+            "captureMemoryMetrics": False,
+            "captureBatteryMetrics": True,
+            "captureGraphicsMetrics": False,
+            "captureDeviceScreenShots": True,
+            "recordDeviceScreen": False,
+            "captureDeviceNetworkPackets": True,
+            "captureAutomationLogs": True,
+            "captureSystemDebugLogs": True,
+            "captureLiveLogs": True
+        }
+        test_configuration = {
+            "captureBatteryMetrics": True,
+            "captureDeviceScreenShots": True,
+            "captureDeviceNetworkPackets": True,
+            "captureAutomationLogs": True,
+            "captureSystemDebugLogs": True,
+            "captureLiveLogs": True
+        }
+        # test_parameters = {
+        #     "testType": "app-automation",  # ?
+        #     "maxTestDuration": 10,
+        #     "testFramework": "android-uiautomator",  # ?
+        #     "projectName": "5Gmark_android",  # ?
+        #     "packageName": ""  # ?
+        # }
+        test_parameters = {
+            "maxTestDuration": 10,
+            "testExecution": "roboticArm",
+            "appVersion": "18.3",
+            "accountType": "retail"
+        }
+
+        response = client.start_test_execution(project_name="Phonepe_RC",
+                                               test_framework="android-uiautomator",
+                                               application_file_name="amar-media-fragment-local-sdk.apk",
+                                               test_application_file_name="PP_J09_AppLaunch_RC.apk",
+                                               devices=["fa8a555c"],
+                                               test_configuration=test_configuration,
+                                               test_parameters=test_parameters
+                                               )
+
         print(response)
