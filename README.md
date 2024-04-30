@@ -57,7 +57,7 @@ Add `mozark-sdk` to your `requirements.txt` dependencies. You may also use pip c
 ```commandline
 pip install mozark-sdk 
 or latest 
-pip install mozark-sdk==2.5.1
+pip install mozark-sdk==2.6.0
 ```
 
 ## Getting Started
