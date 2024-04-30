@@ -8,6 +8,6 @@ pipelines:
           script:
             - git remote add sync git@github.com:mozarkai/mozark-sdk-python.git
             - git checkout master
-            - git pull sync master --no-rebase
+            - git pull sync master --allow-unrelated-histories
             - git push sync master
 
