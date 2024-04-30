@@ -1,13 +1,13 @@
-      # You can specify a custom docker image from Docker Hub as your build environment.
+# You can specify a custom docker image from Docker Hub as your build environment.
 image: atlassian/default-image:3
 
 pipelines:
-    branches:
-      master:
-        - step:
-           script:
-             - git remote add sync git@github.com:mozarkai/mozark-sdk-python.git
-             - git checkout master
-             - git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch tests/unit/vinodh-mozark-app-launch-integration-on-mr.apk" HEAD
-             - git push sync master --force
+  branches:
+    master:
+      - step:
+          script:
+            - git remote add sync git@github.com:mozarkai/mozark-sdk-python.git
+            - git checkout master
+            - git pull sync master --rebase
+            - git push sync master
 
