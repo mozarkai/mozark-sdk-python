@@ -189,15 +189,15 @@ class TestSchedule(unittest.TestCase):
         test_parameters = {
             "maxTestDuration": 10,
             "testExecution": "roboticArm",
-            "appVersion": "18.3",
+            "appVersion": "12.0",
             "accountType": "retail"
         }
 
-        response = client.start_test_execution(project_name="Phonepe_RC",
-                                               test_framework="android-uiautomator",
-                                               application_file_name="amar-media-fragment-local-sdk.apk",
-                                               test_application_file_name="PP_J09_AppLaunch_RC.apk",
-                                               devices=["fa8a555c"],
+        response = client.start_test_execution(project_name="Fund_Transfer",
+                                               test_framework="appium-python",
+                                               application_file_name="",
+                                               test_application_file_name="IOS_DeletePayee_J5.zip",
+                                               devices=["00008110-000674113E9B801R"],
                                                test_configuration=test_configuration,
                                                test_parameters=test_parameters
                                                )
