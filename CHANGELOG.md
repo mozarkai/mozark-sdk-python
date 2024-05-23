@@ -1,4 +1,7 @@
 # CHANGELOG
+## 2.6 - 2024-05-23
+### Execution
+* [ADDED] `visualMonitoringEnabled` false
 
 ## 2.5 - 2023-10-19
 
