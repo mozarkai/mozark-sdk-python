@@ -188,6 +188,7 @@ class TestSchedule(unittest.TestCase):
         # }
         test_parameters = {
             "maxTestDuration": 10,
+            "visualMonitoringEnabled": True,
             "testExecution": "roboticArm",
             "appVersion": "12.0",
             "accountType": "retail"
@@ -197,6 +198,7 @@ class TestSchedule(unittest.TestCase):
                                                test_framework="appium-python",
                                                application_file_name="",
                                                test_application_file_name="IOS_DeletePayee_J5.zip",
+                                               visual_test_application = "KBank_TH_A53_J2.zip",
                                                devices=["00008110-000674113E9B801R"],
                                                test_configuration=test_configuration,
                                                test_parameters=test_parameters
