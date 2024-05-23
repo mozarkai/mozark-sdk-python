@@ -22,12 +22,24 @@ class TestExecute:
                          ):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
+        visualMonitoringEnabled = False
+        try:
+            if test_parameters["visualMonitoringEnabled"]:
+                visualMonitoringEnabled = test_parameters["visualMonitoringEnabled"]
+        except KeyError:
+            visualMonitoringEnabled = False
         test_parameters_req = {
             "testType": "app-automation",
             "maxTestDuration": test_parameters["maxTestDuration"],
             "testFramework": test_framework,
             "projectName": project_name,
-            "packageName": ""
+            "packageName": "",
+            "browserName": "",
+            "browserVersion": "",
+            "trayName": "",
+            "visualMonitoringEnabled": visualMonitoringEnabled,
+            "visualTestApplicationUrl": ""
+
         }
         application_url = self.client.get_application_info(file_name=application_file_name)["fileURL"]
         test_application_url = self.client.get_native_test_application_info(file_name=test_application_file_name)[
@@ -51,6 +63,7 @@ class TestExecute:
 
         test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
         response = requests.post(test_api_url, json=data, headers=new_headers)
+        # print("54: ", response.json())
         if response.status_code == 200:
             try:
                 schedule_id = {
@@ -58,7 +71,7 @@ class TestExecute:
                 }
                 test_api_url = self.config.get("api_url") + "v1/testexecute/schedules"
                 response = requests.get(test_api_url, params=schedule_id, headers=new_headers)
-                print(response.json())
+                print("61: ", response.json())
                 schedule_details = response.json()['data']['list'][0]['testExecutions']
                 testIds = []
                 for tests in schedule_details:
@@ -116,12 +129,25 @@ class TestExecute:
                                  ):
         new_headers = {'Authorization': "Bearer " + self.config.get("api_access_token"),
                        'Content-Type': 'application/json'}
+        visualMonitoringEnabled = False
+        try:
+            if test_parameters["visualMonitoringEnabled"]:
+                visualMonitoringEnabled = test_parameters["visualMonitoringEnabled"]
+        except KeyError:
+            visualMonitoringEnabled = False
+
         test_parameters_req = {
             "testType": "app-automation",
             "maxTestDuration": test_parameters["maxTestDuration"],
             "testFramework": test_framework,
             "projectName": project_name,
-            "packageName": ""
+            "packageName": "",
+            "browserName": "",
+            "browserVersion": "",
+            "trayName": "",
+            "visualMonitoringEnabled": visualMonitoringEnabled,
+            "visualTestApplicationUrl": ""
+
         }
         application_url = self.client.get_application_info(file_name=application_file_name)["fileURL"]
         test_application_url = self.client.get_native_test_application_info(file_name=test_application_file_name)[

@@ -36,10 +36,10 @@ class TestSchedule(unittest.TestCase):
         #     "packageName": ""  # ?
         # }
         test_parameters = {
-            "maxTestDuration": 10
+            "maxTestDuration": 10,
         }
         # devices = "10BD2509DR004G0"
-        devices=["10BD2509DR004G0"]
+        devices = ["RZCW111X0HN"]
         response = client.start_test_execution(project_name="Phonepe_RC",
                                                test_framework="android-uiautomator",
                                                application_file_name="amar-media-fragment-local-sdk.apk",
@@ -49,13 +49,13 @@ class TestSchedule(unittest.TestCase):
                                                test_parameters=test_parameters
                                                )
 
-        print(response)
+        print("52..:", response)
 
     def test_schedule_info(self):
         client = Client()
         client.login()
 
-        response = client.get_test_schedule_info(schedule_id="f0abd6ea-83db-46ca-99b3-d5bcb6931d6c")
+        response = client.get_test_schedule_info(schedule_id="3fb33497-398a-471b-9041-6eea98721d1f")
 
         print(response)
 
@@ -105,11 +105,11 @@ class TestSchedule(unittest.TestCase):
                                                   test_framework="android-uiautomator",
                                                   application_file_name="amar-media-fragment-local-sdk.apk",
                                                   test_application_file_name="PP_J09_AppLaunch_RC.apk",
-                                                  devices=["10BD2509DR004G0"],
+                                                  devices=["a3fac2b8"],
                                                   test_configuration=test_configuration,
                                                   test_parameters=test_parameters,
-                                                  start_date_time="2024-03-19T19:10:00+05:30",
-                                                  end_date_time="2024-03-19T19:20:00+05:30",
+                                                  start_date_time="2024-05-23T17:45:00+05:30",
+                                                  end_date_time="2024-05-23T17:59:00+05:30",
                                                   interval=10
                                                   )
 
