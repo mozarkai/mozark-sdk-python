@@ -8,7 +8,7 @@ from mozark_sdk.device import Device
 from mozark_sdk.tray import Tray
 from mozark_sdk.executetest import TestExecute
 from mozark_sdk.test_analytics import TestAnalytics
-
+from mozark_sdk.jobrunner import JobRunner
 
 class Client:
     config = None
@@ -1077,3 +1077,40 @@ class Client:
         analytics = TestAnalytics(client=self)
         response = analytics.download_by_section(test_id=test_id, section=section)
         return response
+
+    # Test Job-Runner
+
+    def get_testsuite_list(self, test_filename=None):
+        """ Returns all the Test Management suites created by the user to execute on devices
+        if we pass Args as filename it will return the entire hierarchy of test suite that the user has mentioned
+        such as test cased, test classes, test suites.
+
+        Args:
+            test_filename (str): filename type: .csv, e.g. test.csv'
+
+
+        Returns:
+            test.csv (list): contains test cases, test classes , test suites.
+
+        """
+        jobrunner = JobRunner(client=self)
+        testsuite_list = jobrunner.get_testsuite(test_filename=test_filename)
+        return testsuite_list
+
+    def get_job_list(self, id=None):
+        """ Returns all the Test Management suites created by the user to execute on devices
+        if we pass Args as filename it will return the entire hierarchy of test suite that the user has mentioned
+        such as test cased, test classes, test suites.
+
+        Args:
+            test_filename (str): filename type: .csv, e.g. test.csv'
+
+
+        Returns:
+            test.csv (list): contains test cases, test classes , test suites.
+
+        """
+        jobrunner = JobRunner(client=self)
+        job_list = jobrunner.get_job(id=id)
+        return job_list
+

@@ -42,6 +42,8 @@ class Device:
         response = requests.get(device_api_url, params=new_params, headers=new_headers)
 
         device_list = response.json()['data']['list']
+        device_list = [device for device in device_list
+                       if device.get("platform") == "WEBCAM" or device.get("type") != "session-definition"]
         return_message = []
         if len(device_list) > 0:
             for d in device_list:

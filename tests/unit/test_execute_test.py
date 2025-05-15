@@ -101,15 +101,16 @@ class TestSchedule(unittest.TestCase):
         test_parameters = {
             "maxTestDuration": 10
         }
+        devices=["RZCW111X0HN"]
         response = client.schedule_test_execution(project_name="Phonepe_RC",
                                                   test_framework="android-uiautomator",
                                                   application_file_name="amar-media-fragment-local-sdk.apk",
                                                   test_application_file_name="PP_J09_AppLaunch_RC.apk",
-                                                  devices=["a3fac2b8"],
+                                                  devices=devices,
                                                   test_configuration=test_configuration,
                                                   test_parameters=test_parameters,
-                                                  start_date_time="2024-05-23T17:45:00+05:30",
-                                                  end_date_time="2024-05-23T17:59:00+05:30",
+                                                  start_date_time="2024-07-26T11:59:00+05:30",
+                                                  end_date_time="2024-07-26T12:17:00+05:30",
                                                   interval=10
                                                   )
 
